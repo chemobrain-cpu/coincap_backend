@@ -1,0 +1,236 @@
+.content {
+    display: flex;
+    padding-top: 70px;
+    padding-bottom: 40px
+}
+
+.leftContent {
+    width: 80%;
+    padding-left: 5%;
+
+}
+
+.rightContent {
+    width: 30%
+}
+
+/*styling the heading section*/
+.headingSection {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: 40px;
+
+}
+
+.headingSection h1 {
+    font-family: poppins;
+    font-size: 2.5rem;
+    margin-bottom: 10px
+}
+
+.headingSection p {
+    color: rgb(100, 100, 100);
+    font-size: 1.3rem
+}
+
+.leftContent>img {
+    width: 70%;
+    margin-bottom: 50px
+}
+
+/*styling the definition section*/
+.definitionSection {
+    width: 70%;
+    background-color: var(--color-fade);
+    padding: 20px;
+    box-sizing: border-box;
+    margin-bottom: 40px
+}
+
+.definitionSection>h1 {
+    font-size: 2rem
+}
+
+.definitionSection>p {
+    font-size: 1.2rem;
+    line-height: 30px;
+    color: rgb(100, 100, 100)
+}
+/*content section*/
+.contentSection{
+    width:100%;
+    padding-bottom:50px;
+}
+
+/* styling stand alone paragraph*/
+
+.contentSection>p {
+    font-size: 1.4rem;
+    line-height: 34px;
+    width: 70%;
+    margin-bottom:30px
+}
+/* styling the guide section*/
+.guideSection{
+    display:flex;
+    justify-content:space-around;
+    align-items:flex-start;
+    width:95%;
+    margin-right:auto;
+    margin-left:auto;
+    padding-top: 10px;
+    margin-bottom:40px;
+    gap:2rem
+
+}
+
+/* styling the earn section*/
+
+.earnSection{
+    background-color: var(--color-blue);
+    padding-top:70px;
+    padding-bottom:70px;
+    display:flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items:center
+
+}
+.earnLeft{
+    width:100%;
+    display:flex;
+    flex-direction: column;
+    align-items:center
+}
+
+
+.earnLeft> h1{
+    font-size:2.5rem;
+    color:var(--color-background);
+    margin-bottom:20px;
+    font-family: poppins;
+}
+
+.earnLeft> p{
+    font-size:1.1rem;
+    color:var(--color-background);
+    margin-bottom:20px;
+    font-family: poppins;
+}
+
+.earnLeft> button{
+    width:150px;
+    height:50px;
+    font-size:1rem;
+    border-radius:2px
+    
+
+}
+
+button:hover{
+    opacity:0.5;
+    transition:all 2s
+}
+
+
+
+
+
+@media screen and (max-width: 768px) {
+    .content {
+        flex-direction: column;
+        align-items: Center
+    }
+
+    .leftContent {
+        width: 95%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-left: 0%;
+    }
+
+    .rightContent {
+        display: none
+    }
+
+
+
+
+
+    .headingSection {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        margin-bottom: 40px;
+
+    }
+
+    .headingSection h1 {
+        font-family: poppins;
+        font-size: 1.8rem;
+        margin-bottom: 10px
+    }
+
+    .headingSection p {
+        color: rgb(100, 100, 100);
+        font-size: 1.2rem
+    }
+
+    /*styling the image section*/
+    .leftContent>img {
+        width: 100%
+    }
+
+    /* styling the definition section */
+
+    .definitionSection {
+        width: 100%;
+
+
+    }
+
+    /* styling stand alone paragraph*/
+
+    .contentSection>p {
+        font-size: 1.4rem;
+        line-height: 34px;
+        width:100%
+    }
+
+     /* guide section*/
+     .guideSection{
+        width:100%;
+        flex-direction:Column;
+        align-items:center
+    }
+
+     /*earn section*/
+
+     .earnSection{
+        background-color: var(--color-blue);
+        padding-top:70px;
+        padding-bottom:70px;
+        display:flex;
+        flex-direction:column;
+        align-items: center;
+    
+    }
+    .earnSection > .earnLeft{
+        width:90%
+    }
+    .earnLeft> h1{
+        font-size:2.1rem;
+        color:var(--color-background);
+        margin-bottom:20px;
+        text-align: center;
+    }
+    
+    .earnLeft> p{
+        font-size:1rem;
+        color:var(--color-background);
+        margin-bottom:20px;
+        text-align: center;
+    }
+}

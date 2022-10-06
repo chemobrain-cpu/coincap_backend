@@ -1,0 +1,48 @@
+.action_section {
+    padding-bottom: 70px;
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 20px;
+    align-items:center
+}
+
+.action_container {
+    width: 75%;
+    display: flex;
+    justify-content: space-between;
+
+}
+.action {
+    text-align:center;
+    padding-top:10px;
+    padding-bottom:10px;
+
+}
+.action i{
+    font-size:4rem;
+    margin-bottom: 30px;
+    color:var(--color-blue)
+}
+.action  h1{
+    font-size:1.5rem;
+    font-family: poppins;
+}
+
+@media screen and (max-width: 600px) {
+    .action_container {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        
+
+    }
+
+    .action {
+        text-align:center;
+        padding-top:30px;
+        padding-bottom:30px
+    }
+}

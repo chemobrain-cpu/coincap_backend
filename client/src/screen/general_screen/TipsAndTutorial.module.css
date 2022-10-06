@@ -1,0 +1,194 @@
+.content {
+    display: flex;
+    flex-direction: column;
+    padding-top:70px;
+}
+.headingSection{
+    display:flex;
+    flex-direction:column;
+    justify-content:Center;
+    align-items:center;
+    width:100%;
+    margin-bottom:40px;
+    
+}
+.headingSection h1{
+    font-family: poppins;
+    font-size:2.5rem;
+    margin-bottom:10px
+}
+.headingSection p{
+    color:rgb(100,100,100);
+    font-size:1.5rem
+}
+
+/* styling the guide section*/
+.guideSection{
+    display:flex;
+    justify-content:space-around;
+    align-items:flex-start;
+    width:95%;
+    margin-right:auto;
+    margin-left:auto;
+    padding-top: 10px;
+    margin-bottom:40px;
+    gap:2rem
+
+}
+
+/* button section */
+.buttonSection{
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-bottom:60px
+}
+.buttonSection >button{
+    width:200px;
+    height:50px;
+    background-color: var(--color-blue);
+    color:var(--color-background);
+    font-family: poppins;
+    font-size:1rem
+
+}
+
+/*what is section*/
+.whatIsSection{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align: center;
+    width:100%;
+    background-color: var(--color-fade);
+    padding-top:80px;
+    padding-bottom:80px;
+    margin-bottom:70px
+}
+
+.whatIsSection > .headingSection{
+    margin-bottom:20px
+}
+
+.whatIsSection > .buttonContainer{
+    width:90%;
+    margin-right:auto;
+    margin-left:auto;
+    margin-bottom:30px
+
+}
+.whatIsSection > .buttonContainer > button{
+    padding-right:30px;
+    padding-left:30px;
+    background-color:var(--color-background);
+    padding-top:15px;
+    padding-bottom:15px;
+    font-size:1.2rem;
+    font-family:poppins;
+    margin:10px;
+    border-radius:10px
+}
+.whatIsSection > button{
+    background-color: var(--color-blue);
+    width:150px;
+    height:50px;
+    color:var(--color-background);
+    font-size:1rem;
+    font-family:poppins;
+    border-radius:2px
+}
+/* styling the earn section*/
+
+.earnSection{
+    background-color: var(--color-blue);
+    padding-top:70px;
+    padding-bottom:70px;
+    display:flex;
+    flex-direction: row;
+
+}
+.earnLeft{
+    width:50%;
+    padding-left:5%
+}
+.earnRight{
+    width:50%
+}
+
+.earnLeft> h1{
+    font-size:3.5rem;
+    color:var(--color-background);
+    margin-bottom:20px
+}
+
+.earnLeft> p{
+    font-size:1.3rem;
+    color:var(--color-background);
+    margin-bottom:20px
+}
+
+.earnLeft> button{
+    width:150px;
+    height:50px;
+    font-size:1rem;
+    border-radius:2px
+    
+
+}
+
+button:hover{
+    opacity:0.5;
+    transition:all 2s
+}
+
+
+
+
+
+
+
+/* for smaller screens*/
+
+
+
+@media screen and (max-width: 768px) {
+    
+    .headingSection h1{
+        font-size:1.8rem;
+        text-align: center;
+    }
+    .headingSection p{
+        
+        text-align: center;
+        font-size:1.1rem
+    }
+
+
+    /* guide section*/
+    .guideSection{
+        width:100%;
+        flex-direction:Column;
+        align-items:center
+    }
+
+    /*earn section*/
+
+    .earnSection{
+        background-color: var(--color-blue);
+        padding-top:70px;
+        padding-bottom:70px;
+        display:flex;
+        flex-direction:column;
+    
+    }
+    .earnLeft,.earnRight{
+        width:100%;
+        
+    }
+  
+    
+    
+  
+
+}

@@ -1,0 +1,45 @@
+.footer_section{
+  padding-top:50px;
+  display:flex;
+  align-items: center;
+  justify-content: center;
+
+}
+.footer_section_inner{
+  display:flex;
+  width:95%;
+  justify-content: space-between;
+
+}
+
+.coinbase{
+  font-size:2rem;
+  color:var(--color-blue)
+
+}
+.footer_section_inner p,.footer_section_inner li{
+  font-size:.9rem;
+  color:rgb(100,100,100);
+  font-family: poppins;
+  margin-bottom: 5px;
+
+}
+.footer_section_inner h1,.footer_section_inner li{
+  font-size:1rem;
+  margin-bottom: 10px;
+}
+
+@media screen and (max-width: 850px) {
+  .footer_section_inner{
+      display:flex;
+      width:80%;
+      flex-direction: column;
+  
+  }
+  .footer_category{
+      margin-bottom:40px
+  }
+  
+ 
+
+}
