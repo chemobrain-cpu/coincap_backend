@@ -45,13 +45,14 @@ function LoginScreen() {
 
   const submitHandler = async(e)=>{
     e.preventDefault()
+    
+   
     setIsLoading(true)
     //if forms are not valid,do nothing
-    if(!isFormValid){
-      return
-    }
+    
 
     let response = await dispatch(adminlogin({userEmail,userPassword}))
+
     if(!response.bool){
       setIsLoading(false)
       setIsError(true)
@@ -95,7 +96,7 @@ function LoginScreen() {
           setFormDetails={setFormDetails}
         />
 
-        <SubmitBtn  style={{opacity:isFormValid?1:0.5}} text='Login'/>
+        <SubmitBtn  text='Login'/>
 
         <div className={styles.piracyContainer} >
           <p>Forget Pasword</p>

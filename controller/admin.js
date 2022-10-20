@@ -74,15 +74,11 @@ module.exports.signupAdmin = async (req, res, next) => {
 }
 
 module.exports.loginAdmin = async (req, res, next) => {
+    
 
     try {
         const { userEmail, userPassword } = req.body
-        const errors = validationResult(req)
-        if (!errors.isEmpty()) {
-            let error = new Error("invalid user input")
-            return next(error)
-        }
-
+        
         let adminExist = await Admin.findOne({ email: userEmail })
         if (!adminExist) {
             //if user does not exist return 404 response
@@ -93,9 +89,8 @@ module.exports.loginAdmin = async (req, res, next) => {
         //authenticate user i.e checking password
         let passwordFromStorage = adminExist.password
         if (passwordFromStorage !== userPassword) {
-            return res.status(404).json({
-                response: "password incorrect"
-            })
+            let error = new Error("password mismatch")
+            return next(error)
         }
         const accessToken = generateAcessToken(adminExist._id)
 
