@@ -16,16 +16,12 @@ export const userAuthReducer = (state = initialState, action) => {
                 console.log(action.payload)
                 return {
                     ...state,
-                    token: action.payload.token,
-                    expiresIn: action.payload.expiresIn,
                 }
             }
             break;
         case LOGIN_USER:
             return {
                 ...state,
-                token: action.payload.token,
-                expiresIn: action.payload.expiresIn,
                 admin: action.payload.admin,
             }
 
@@ -33,8 +29,6 @@ export const userAuthReducer = (state = initialState, action) => {
         case LOG_USER_IN:
             return {
                 ...state,
-                token: action.payload.token,
-                expiresIn: action.payload.expiresIn,
                 admin: action.payload.admin,
             }
 

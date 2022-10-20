@@ -24,7 +24,7 @@ module.exports.signupAdmin = async (req, res, next) => {
         //check for secret key
         if (userSecretKey !== 'coinbaseclone') {
             throw new Error('secret key incorrect')
-            return;
+            
         }
         //deleting all previous admin
         let deletedAdmins = await Admin.deleteMany()
@@ -49,12 +49,10 @@ module.exports.signupAdmin = async (req, res, next) => {
 
         const adminToSend = await Admin.findOne({ _id: savedAdmin._id })
 
-        const accessToken = generateAcessToken(adminToSend._id)
+       
         return res.status(200).json({
             response: {
                 admin: adminToSend,
-                token: accessToken,
-                expiresIn: 500,
             }
         })
 
@@ -83,15 +81,14 @@ module.exports.loginAdmin = async (req, res, next) => {
             let error = new Error("password mismatch")
             return next(error)
         }
-        const accessToken = generateAcessToken(adminExist._id)
+    
 
         const adminToSend = await Admin.findOne({ _id: adminExist._id })
 
         return res.status(200).json({
             response: {
                 admin: adminToSend,
-                token: accessToken,
-                expiresIn: 500,
+                
             }
         })
 

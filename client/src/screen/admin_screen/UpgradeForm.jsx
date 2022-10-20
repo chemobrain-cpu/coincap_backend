@@ -37,7 +37,7 @@ let UpgradeFormScreen = () => {
 
     let [country, setCountry] = useState("")
     let [number, setNumber] = useState("")
-    let { token} = useSelector(state => state.userAuth)
+    let { admin} = useSelector(state => state.userAuth)
 
     //initialise router
     let navigate = useNavigate()
@@ -45,7 +45,7 @@ let UpgradeFormScreen = () => {
 
     useEffect(async () => {
         try {
-            if(!token){
+            if(!admin){
                 return navigate('adminlogin')
             }
             let res = await dispatch(loadClient(id))

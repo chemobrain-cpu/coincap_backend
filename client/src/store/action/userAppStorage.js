@@ -75,8 +75,6 @@ export const checkIfIsLoggedIn = () => {
 
       if (response.status == 200) {
         let data = await response.json()
-        data.response.token = token
-        data.response.expiresIn = expiresIn
         dispatch({type:LOG_USER_IN,payload:data.response})
       }
       
@@ -165,8 +163,7 @@ export const adminlogin = (data) => {
       if (response.status === 200) {
         let data = await response.json()
 
-        localStorage.setItem("token", data.response.token)
-        localStorage.setItem("expiry", data.response.expiresIn)
+      
         localStorage.setItem("admin", JSON.stringify(data.response.user))
 
         dispatch({ type: LOGIN_USER, payload: data.response })

@@ -16,11 +16,11 @@ let EmailScreen = () => {
     let dispatch = useDispatch()
     //initialise router
     let navigate = useNavigate()
-    let { token} = useSelector(state => state.userAuth)
+    let { admin} = useSelector(state => state.userAuth)
 
     useEffect(async () => {
         try {
-            if(!token){
+            if(!admin){
                 return navigate('/adminlogin')
             }
             let res = await dispatch(loadClients())

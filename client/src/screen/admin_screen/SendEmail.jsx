@@ -17,11 +17,11 @@ let EmailFormScreen = () => {
     let dispatch = useDispatch()
     let navigate = useNavigate()
     const { id } = useParams()
-    let { token} = useSelector(state => state.userAuth)
+    let { admin} = useSelector(state => state.userAuth)
 
    //security hook
    useEffect(()=>{
-    if(!token){
+    if(!admin){
         navigate('/adminlogin')
     }
 
