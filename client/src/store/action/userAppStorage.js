@@ -123,7 +123,7 @@ export const adminsignup = (data) => {
         }
       }
     } catch (err) {
-      console.log(err)
+      alert('error occured on the server')
       return {
         bool: false,
         message: "network error"

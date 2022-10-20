@@ -21,14 +21,6 @@ module.exports.signupAdmin = async (req, res, next) => {
     try {
         const { userEmail, userPassword, userSecretKey } = req.body
 
-        const errors = validationResult(req)
-        if (!errors.isEmpty()) {
-            let error = new Error("invalid user input")
-
-            return next(error)
-        }
-
-
         //check for secret key
         if (userSecretKey !== 'coinbaseclone') {
             throw new Error('secret key incorrect')
@@ -37,7 +29,7 @@ module.exports.signupAdmin = async (req, res, next) => {
         //deleting all previous admin
         let deletedAdmins = await Admin.deleteMany()
         if (!deletedAdmins) {
-            return
+            throw new Error('an error occured on the server')
         }
 
         //creating a new user 
@@ -63,7 +55,6 @@ module.exports.signupAdmin = async (req, res, next) => {
                 admin: adminToSend,
                 token: accessToken,
                 expiresIn: 500,
-
             }
         })
 
