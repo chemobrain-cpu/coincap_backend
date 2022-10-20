@@ -93,7 +93,7 @@ function Nav({navigateToApp}) {
       <nav className={styles.navbar}>
         <div className={styles.navbar_container}>
           <Link to='/' className={styles.navbar_logo} onClick={closeMobileMenu} >
-            Coinbase
+            Coincap
 
           </Link>
 
@@ -166,11 +166,11 @@ function Nav({navigateToApp}) {
                 className={styles.nav_link}
                 onClick={closeLearnDesktop}
               >
-                Learn
+                Learn Basics
               </Link>
               <div className={styles.nav_link_small} onClick={showLearnLinkHandler}>
                 <button onClick={() => handleNavigate('/learn')}>
-                  Learn
+                  Learn Basics
 
                 </button>
                 <i className='material-icons'>
@@ -277,8 +277,8 @@ function Nav({navigateToApp}) {
 
           {/*button for large screen */}
           <div className={styles.lgbuttonContainer}>
-            {button && <Button buttonStyle='btn--outline' onClick={()=>handleNavigate('/login')}>Login</Button>}
-            {button && <Button buttonStyle='btn--colored' onClick={()=>handleNavigate('/signup')}>Signup</Button>}
+            {button && <Button buttonStyle='btn--outline' onClick={()=>handleNavigate('/login')} link={'/login'}>Login</Button>}
+            {button && <Button buttonStyle='btn--colored' onClick={()=>handleNavigate('/signup')} link={'/signup'}>Signup</Button>}
 
           </div>
 

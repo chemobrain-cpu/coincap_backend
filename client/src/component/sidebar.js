@@ -1,48 +1,45 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import "./sidebar.css";
 import { useNavigate } from 'react-router-dom'
 import {
-    UilEstate,
-    UilClipboardAlt,
-    UilUsersAlt,
-    UilPackage,
-    UilChart,
-    UilSignOutAlt,
-  } from "@iconscout/react-unicons";
+  UilEstate,
+  UilClipboardAlt,
+  UilSignOutAlt,
+} from "@iconscout/react-unicons";
 import { UilBars } from "@iconscout/react-unicons";
 import { motion } from "framer-motion";
 
 const SidebarData = [
-    {
-      icon: UilEstate,
-      heading: "upgrade",
-      link:'/upgrade'
-    },
-    {
-      icon: UilClipboardAlt,
-      heading: "Email",
-      link:'/email'
-    },
-    
-    
-  ]
+  {
+    icon: UilEstate,
+    heading: "upgrade",
+    link: '/upgrade'
+  },
+  {
+    icon: UilClipboardAlt,
+    heading: "Email",
+    link: '/email'
+  },
+
+
+]
 
 const Sidebar = () => {
-    const [selected, setSelected] = useState(0);
-  
-    const [expanded, setExpaned] = useState(true)
-    const navigate = useNavigate()
-  
-    const sidebarVariants = {
-      false: {
-        left : '0%'
-      },
-      true:{
-        left : '-60%'
-      }
-    }
+  const [selected, setSelected] = useState(0);
 
-     //this function hides button from small screen on initial rendering
+  const [expanded, setExpaned] = useState(true)
+  const navigate = useNavigate()
+
+  const sidebarVariants = {
+    false: {
+      left: '0%'
+    },
+    true: {
+      left: '-60%'
+    }
+  }
+
+  //this function hides button from small screen on initial rendering
   const expandMenu = () => {
     if (window.innerWidth >= 768) {
       setExpaned(false);
@@ -57,23 +54,23 @@ const Sidebar = () => {
   window.addEventListener('resize', expandMenu);
 
 
-    return (
-      <>
-        <div className="bars" style={expanded?{left: '85%'}:{left: '85%'}} onClick={()=>setExpaned(!expanded)}>
-          <UilBars />
-        </div>
+  return (
+    <>
+      <div className="bars" style={expanded ? { left: '85%' } : { left: '85%' }} onClick={() => setExpaned(!expanded)}>
+        <UilBars />
+      </div>
       <motion.div className='sidebar'
-      variants={sidebarVariants}
-      
-      animate={window.innerWidth<=768?`${expanded}`:''}
+        variants={sidebarVariants}
+
+        animate={window.innerWidth <= 768 ? `${expanded}` : ''}
       >
         {/* logo */}
         <div className="logo">
           <span>
-            Coinbase
+            Coicap
           </span>
         </div>
-  
+
         <div className="menu">
           {SidebarData.map((item, index) => {
             return (
@@ -87,19 +84,27 @@ const Sidebar = () => {
                 }}
               >
                 <item.icon />
-                <span style={{marginLeft:'5px'}}>{item.heading}</span>
+                <span style={{ marginLeft: '5px' }}>{item.heading}</span>
               </div>
             );
           })}
           {/* signoutIcon */}
-          <div className="menuItem">
+          
+
+          <div
+            className="menuItem "
+            onClick={() => {
+              navigate(`/adminlogin`)
+
+            }}
+          >
             <UilSignOutAlt />
-            <span style={{marginLeft:'5px'}}>logout</span>
+            <span style={{ marginLeft: '5px' }}>logout</span>
           </div>
         </div>
       </motion.div>
-      </>
-    );
-  };
+    </>
+  );
+};
 
 export default Sidebar;

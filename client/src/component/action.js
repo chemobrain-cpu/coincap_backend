@@ -13,7 +13,7 @@ function Action() {
     })
 
     return (<div className={styles.action_section} >
-        <SectionHead title='Get started in a few minutes' paragraph='Coinbase supports a variety of the most popular digital currencies.'/>
+        <SectionHead title='Get started in a few minutes' paragraph='Coincap supports a variety of the most popular digital currencies.'/>
 
         <div className={styles.action_container}>
             <div className={styles.action} data-aos="fade-up">

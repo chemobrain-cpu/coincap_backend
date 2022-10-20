@@ -20,7 +20,7 @@ function Portfolio() {
     return (<>
         <div className={styles.portfolio_section} >
 
-            <SectionHead title="Create your cryptocurrency portfolio today" paragraph="Coinbase has a variety of features that make it the best place to start trading" />
+            <SectionHead title="Create your cryptocurrency portfolio today" paragraph="Coincap has a variety of features that make it the best place to start trading" />
 
             <div className={styles.portfolio_container}>
                 <div className={styles.portfolio_contentCon}>
@@ -102,7 +102,7 @@ function Portfolio() {
 
                         <div className={styles.portfolio_content_writeup}>
                             <h1>Mobile apps</h1>
-                            <p>Stay on top of the markets with the Coinbase app for Android or iOS.</p>
+                            <p>Stay on top of the markets with the Coincap app for Android or iOS.</p>
 
                         </div>
 

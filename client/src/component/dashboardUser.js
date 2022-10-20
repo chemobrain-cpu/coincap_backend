@@ -3,7 +3,7 @@ import styles from './dashboardUser.module.css'
 
 let DashboardUser = ({username,email,imageUrl,navigateHandler,id}) => {
     if(!imageUrl){
-        imageUrl = '../../action1.jpg'
+        imageUrl = '../../smile.png'
     }
 
     const truncate = (str, len) => {

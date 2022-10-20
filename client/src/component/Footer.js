@@ -12,8 +12,8 @@ function Footer() {
     return (<div className={styles.footer_section}>
         <div className={styles.footer_section_inner}>
              <div className={styles.footer_category}>
-            <h1 className={styles.coinbase}>Coinbase</h1>
-            <p>© 2022 Coinbase</p>
+            <h1 className={styles.coinbase}>Coincap</h1>
+            <p>© 2022 Coincap</p>
         </div>
         <div className={styles.footer_category}>
             <h1>Company</h1>

@@ -5,13 +5,13 @@ import NavBar from "../../component/UserNav"
 import LearnCard from "../../component/learnCard"
 import Footer from "../../component/Footer"
 //let { admin} = useSelector(state => state.userAuth)
-
+import {useNavigate } from 'react-router-dom'
 function Dogecoin() {
 
-    let navigate = useNavigate()      
-let handleNavigate = (url) => {
+    let navigate = useNavigate()
+    let handleNavigate = (url) => {
         navigate(url)
-}
+    }
 
     return (<>
         <NavBar />

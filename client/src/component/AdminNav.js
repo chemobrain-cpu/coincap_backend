@@ -93,7 +93,7 @@ function Nav({navigateToApp}) {
       <nav className={styles.navbar}>
         <div className={styles.navbar_container}>
           <Link to='/' className={styles.navbar_logo} onClick={closeMobileMenu} >
-            Coinbase
+            Coinapp
 
           </Link>
 
@@ -277,8 +277,8 @@ function Nav({navigateToApp}) {
 
           {/*button for large screen */}
           <div className={styles.lgbuttonContainer}>
-            {button && <Button buttonStyle='btn--outline' onClick={()=>handleNavigate('/login')}>Login</Button>}
-            {button && <Button buttonStyle='btn--colored' onClick={()=>handleNavigate('/signup')}>Signup</Button>}
+            {button && <Button buttonStyle='btn--outline' onClick={()=>handleNavigate('/adminlogin')} link={'/login'}>Login</Button>}
+            {button && <Button buttonStyle='btn--colored' onClick={()=>handleNavigate('/adminsignup')} link={'/signup'}>Signup</Button>}
 
           </div>
 

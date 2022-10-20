@@ -30,14 +30,14 @@ function Policy() {
         <div className={styles.content}>
             <div className={styles.innerContent}>
                 <h1 className={styles.legalHeading}>Legal</h1>
-                <h1 className={styles.privacyHeading}>Coinbase Global Privacy Policy</h1>
+                <h1 className={styles.privacyHeading}>coincap Global Privacy Policy</h1>
                 <p className={styles.date}>Last updated: August 29, 2022</p>
                 <div className={styles.line}>
 
                 </div>
 
                 <p className={styles.paragraph}>
-                    We at Coinbase (defined below) respect and protect the privacy of visitors to our websites and our customers. This Privacy Policy describes our information handling practices when you access our services,when you use the Coinbase mobile app, the Coinbase Card App (as defined below), any Coinbase, Coinbase Exchange, Coinbase Prime, or Coinbase Custody API or third party applications relying on such an API, and related services (referred to collectively hereinafter as "Services").
+                    We at coincap (defined below) respect and protect the privacy of visitors to our websites and our customers. This Privacy Policy describes our information handling practices when you access our services,when you use the coincap mobile app, the coincap Card App (as defined below), any coincap, coincap Exchange, coincap Prime, or coincap Custody API or third party applications relying on such an API, and related services (referred to collectively hereinafter as "Services").
 
                 </p>
                 <p className={styles.paragraph}>
@@ -78,7 +78,7 @@ function Policy() {
                         <tr>
                             <td> Anywhere but the United States and Japan</td>
                             <td>Custodial services</td>
-                            <td>Coinbase Custody International Limited (unless otherwise indicated in your service contract) Company No: 657718</td>
+                            <td>coincap Custody International Limited (unless otherwise indicated in your service contract) Company No: 657718</td>
                             <td>70 Sir John Rogerson's Quay Dublin 2, Ireland</td>
                         </tr>
                         <tr>
@@ -86,7 +86,7 @@ function Policy() {
 
                             <td>Digital Currency services</td>
 
-                            <td>Coinbase Europe, Limited. Company No: 675475</td>
+                            <td>coincap Europe, Limited. Company No: 675475</td>
 
                             <td> 70 Sir John Rogerson's Quay Dublin 2, Ireland</td>
                         </tr>
@@ -95,7 +95,7 @@ function Policy() {
 
                             <td>Digital Currency services</td>
 
-                            <td>Coinbase Germany GmbH. Company No: HRB 213709 B. BaFin-ID 10158674</td>
+                            <td>coincap Germany GmbH. Company No: HRB 213709 B. BaFin-ID 10158674</td>
 
                             <td> Kurfürstendamm 22, 10719 Berlin, Germany</td>
                         </tr>
@@ -104,7 +104,7 @@ function Policy() {
 
                             <td>Fiat Wallet services</td>
 
-                            <td>Coinbase Ireland, Limited. Company No: 630350 CBI Register No: C188493</td>
+                            <td>coincap Ireland, Limited. Company No: 630350 CBI Register No: C188493</td>
 
                             <td> 70 Sir John Rogerson's Quay Dublin 2, Ireland</td>
                         </tr>
@@ -115,7 +115,7 @@ function Policy() {
 
                             <td>Digital Currency services, Fiat Wallet services</td>
 
-                            <td>Coinbase Singapore Pte. Ltd. Unique Entity No.: 201935002N</td>
+                            <td>coincap Singapore Pte. Ltd. Unique Entity No.: 201935002N</td>
 
                             <td> One Marina Boulevard, #28-00, Singapore 018989</td>
                         </tr>
@@ -125,7 +125,7 @@ function Policy() {
 
                             <td>Digital Currency services, Fiat Wallet services, Custodial services</td>
 
-                            <td>Coinbase KK. Company No: 0100-01-173138 FSA Register No: Kanto Finance Bureau Directory-General No. 00028</td>
+                            <td>coincap KK. Company No: 0100-01-173138 FSA Register No: Kanto Finance Bureau Directory-General No. 00028</td>
 
                             <td> Otemachi Building 4F FINOLAB, 1-6-1 Otemachi, Chiyoda-ku, Tokyo</td>
                         </tr>
@@ -136,7 +136,7 @@ function Policy() {
 
                             <td>Digital Currency Services</td>
 
-                            <td>Coinbase Ascending Markets Kenya Limited (“CB Kenya”)</td>
+                            <td>coincap Ascending Markets Kenya Limited (“CB Kenya”)</td>
 
                             <td> P.O. Box 10643, G.P.O. Nairobi, Kenya</td>
                         </tr>
@@ -154,9 +154,9 @@ function Policy() {
 
                             <td>Digital Currency services, Fiat Wallet services</td>
 
-                            <td>Coinbase, Inc. CA Entity No.: C3548456</td>
+                            <td>coincap, Inc. CA Entity No.: C3548456</td>
 
-                            <td>Coinbase, Inc. c/o C T Corporation System 818 West Seventh St., Ste. 930 Los Angeles, California 90017</td>
+                            <td>coincap, Inc. c/o C T Corporation System 818 West Seventh St., Ste. 930 Los Angeles, California 90017</td>
                         </tr>
 
 
@@ -165,9 +165,9 @@ function Policy() {
 
                             <td>Custodial services</td>
 
-                            <td>Coinbase Custody Trust Company, LLC (unless otherwise indicated in your service contract) NYS License # 122506</td>
+                            <td>coincap Custody Trust Company, LLC (unless otherwise indicated in your service contract) NYS License # 122506</td>
 
-                            <td>Coinbase Custody Trust Company, LLC c/o C T Corporation System 28 Liberty Street New York, New York 10005</td>
+                            <td>coincap Custody Trust Company, LLC c/o C T Corporation System 28 Liberty Street New York, New York 10005</td>
                         </tr>
 
                         <tr>
@@ -175,9 +175,9 @@ function Policy() {
 
                             <td>Credit and Lending services, Margin Trading services</td>
 
-                            <td>Coinbase Credit, Inc. CA Entity No.: C4315976</td>
+                            <td>coincap Credit, Inc. CA Entity No.: C4315976</td>
 
-                            <td>Coinbase Credit, Inc. c/o C T Corporation System 818 West Seventh St., Ste. 930 Los Angeles, California 90017</td>
+                            <td>coincap Credit, Inc. c/o C T Corporation System 818 West Seventh St., Ste. 930 Los Angeles, California 90017</td>
                         </tr>
 
                         <tr>
@@ -185,9 +185,9 @@ function Policy() {
 
                             <td>Digital Currency services, Fiat Wallet services</td>
 
-                            <td>Coinbase Australia Pty Ltd; ACN 654 922 442</td>
+                            <td>coincap Australia Pty Ltd; ACN 654 922 442</td>
 
-                            <td>Coinbase Australia c/o TMF Corporate Services (Aust) Pty Limited, Suite 1 Level 11, 66 Goulburn Street, Sydney NSW 2000 Australia</td>
+                            <td>coincap Australia c/o TMF Corporate Services (Aust) Pty Limited, Suite 1 Level 11, 66 Goulburn Street, Sydney NSW 2000 Australia</td>
                         </tr>
 
                     </tbody>
@@ -198,7 +198,7 @@ function Policy() {
                     The CB operating entity you contract with determines the means and purposes of processing your personal information in relation to the Services provided to you (typically referred to as a “data controller”).
                 </p>
                 <p className={styles.paragraph}>
-                    You may be asked to provide personal information anytime you are in contact with any CB companies. The CB companies may share your personal information with each other and use it consistent with this Privacy Policy. They may also combine it with other information to provide and improve our products, services, and content (additional details below). For example, even if you do not reside in the United States (the “US”), your information may be shared with Coinbase, Inc. which provides global support for all Services including technical infrastructure, product development, security, compliance, fraud prevention, and customer support..
+                    You may be asked to provide personal information anytime you are in contact with any CB companies. The CB companies may share your personal information with each other and use it consistent with this Privacy Policy. They may also combine it with other information to provide and improve our products, services, and content (additional details below). For example, even if you do not reside in the United States (the “US”), your information may be shared with coincap, Inc. which provides global support for all Services including technical infrastructure, product development, security, compliance, fraud prevention, and customer support..
                 </p>
                 <p className={styles.paragraph}>
                     If you have any questions about your CB Account, your personal information, or this Privacy Policy, please submit your request via our Support Portal.
@@ -432,7 +432,7 @@ function Policy() {
                     </div>
 
                     <p className={styles.paragraph}>
-                        Our Coinbase Family of Companies: Our “family of companies” is the group of companies related to us by common control or ownership (“Affiliates”). In accordance with applicable law, we may obtain information about you from our Affiliates as a normal part of conducting business, if you link your various Coinbase accounts (e.g., Coinbase Wallet account or Coinbase Commerce account in order to convert cryptocurrency into fiat and make withdrawals into your bank account), so that we may offer our Affiliates’ Services to you.
+                        Our coincap Family of Companies: Our “family of companies” is the group of companies related to us by common control or ownership (“Affiliates”). In accordance with applicable law, we may obtain information about you from our Affiliates as a normal part of conducting business, if you link your various coincap accounts (e.g., coincap Wallet account or coincap Commerce account in order to convert cryptocurrency into fiat and make withdrawals into your bank account), so that we may offer our Affiliates’ Services to you.
                     </p>
 
                 </div>
@@ -497,7 +497,7 @@ function Policy() {
                 <p className={styles.paragraph}>Anonymization is a data processing technique that modifies personal information so that it cannot be associated with a specific individual. Except for this section, none of the other provisions of this Privacy Policy applies to anonymized or aggregated customer data (i.e. information about our customers that we combine together so that it no longer identifies or references an individual customer).
                 </p>
 
-                <p className={styles.paragraph}>Coinbase may use anonymized or aggregate customer data for any business purpose, including to better understand customer needs and behaviors, improve our Services, conduct business intelligence and marketing, and detect security threats. We may perform our own analytics on anonymized data or enable analytics provided by third parties.
+                <p className={styles.paragraph}>coincap may use anonymized or aggregate customer data for any business purpose, including to better understand customer needs and behaviors, improve our Services, conduct business intelligence and marketing, and detect security threats. We may perform our own analytics on anonymized data or enable analytics provided by third parties.
                 </p>
 
                 <p className={styles.paragraph}>Types of data we may anonymize include, transaction data, click-stream data, performance metrics, and fraud indicators.</p>
@@ -526,7 +526,7 @@ function Policy() {
                 <p className={styles.paragraph}>(3) To detect and prevent fraud and/or funds loss</p>
                 <p className={styles.paragraph}>We process your personal information in order to help detect, prevent, and mitigate fraud and abuse of our services and to protect you against account compromise or funds loss.</p>
 
-                <p className={styles.paragraph}>(4) To provide Coinbase's Services</p>
+                <p className={styles.paragraph}>(4) To provide coincap's Services</p>
 
                 <p className={styles.paragraph}>
                     We process your personal information to provide the Services to you. For example, when you want to store funds on our platform, we require certain information such as your identification, contact information, and payment information. We cannot provide you with Services without such information. Third parties such as identity verification services may also access and/or collect your personal information when providing identity verification and/or fraud prevention services.
@@ -569,7 +569,7 @@ function Policy() {
 
                 </p>
                 <p className={styles.paragraph}>
-                    We process your personal information to better understand the way you use and interact with Coinbase's Services. In addition, we use such information to customize, measure, and improve Coinbase's Services and the content and layout of our website and applications, and to develop new services. Without such processing, we cannot ensure your continued enjoyment of our Services.
+                    We process your personal information to better understand the way you use and interact with coincap's Services. In addition, we use such information to customize, measure, and improve coincap's Services and the content and layout of our website and applications, and to develop new services. Without such processing, we cannot ensure your continued enjoyment of our Services.
                 </p>
 
 
@@ -644,7 +644,7 @@ function Policy() {
 
                     <tbody>
                         <tr>
-                            <td> (2) To enforce our terms in our user agreement and other agreements (4) To provide Coinbase's Services (5) To provide Service communications (6) To provide customer service (7) To ensure quality control</td>
+                            <td> (2) To enforce our terms in our user agreement and other agreements (4) To provide coincap's Services (5) To provide Service communications (6) To provide customer service (7) To ensure quality control</td>
                             <td>Based on our contract with you or to take steps at your request prior to entering into a contract.</td>
 
                         </tr>
@@ -982,7 +982,7 @@ function Policy() {
 
                 </p>
                 <p className={styles.paragraph}>
-                    For example, we use computer safeguards such as firewalls and data encryption, we enforce physical access controls to our buildings and files, and we authorize access to personal information only for those employees who require it to fulfill their job responsibilities. Full credit card data is securely transferred and hosted off-site by payment vendors like Worldpay, (UK) Limited, Worldpay Limited, or Worldpay AP Limited (collectively “Worldpay”) in compliance with Payment Card Industry Data Security Standards (PCI DSS). This information is not accessible to CB or Coinbase staff.
+                    For example, we use computer safeguards such as firewalls and data encryption, we enforce physical access controls to our buildings and files, and we authorize access to personal information only for those employees who require it to fulfill their job responsibilities. Full credit card data is securely transferred and hosted off-site by payment vendors like Worldpay, (UK) Limited, Worldpay Limited, or Worldpay AP Limited (collectively “Worldpay”) in compliance with Payment Card Industry Data Security Standards (PCI DSS). This information is not accessible to CB or coincap staff.
 
                 </p>
 
@@ -1079,7 +1079,7 @@ function Policy() {
 
 
                 <p className={styles.paragraph}>
-                    If you authorize one or more third-party applications to access your CB Services, then information you have provided to CB may be shared with those third parties. A connection you authorize or enable between your CB account and a non-CB account, payment instrument, or platform is considered an “account connection.” Unless you provide further permissions, Coinbase will not authorize these third parties to use this information for any purpose other than to facilitate your transactions using CB Services. Please note that third parties you interact with may have their own privacy policies, and CB is not responsible for their operations or their use of data they collect. Information collected by third parties, which may include such things as contact details, financial information, or location data, is governed by their privacy practices and Coinbase is not responsible for unauthorized third-party conduct. We encourage you to learn about the privacy practices of those third parties.
+                    If you authorize one or more third-party applications to access your CB Services, then information you have provided to CB may be shared with those third parties. A connection you authorize or enable between your CB account and a non-CB account, payment instrument, or platform is considered an “account connection.” Unless you provide further permissions, coincap will not authorize these third parties to use this information for any purpose other than to facilitate your transactions using CB Services. Please note that third parties you interact with may have their own privacy policies, and CB is not responsible for their operations or their use of data they collect. Information collected by third parties, which may include such things as contact details, financial information, or location data, is governed by their privacy practices and coincap is not responsible for unauthorized third-party conduct. We encourage you to learn about the privacy practices of those third parties.
 
                 </p>
                 <p className={styles.paragraph}>
@@ -1115,7 +1115,7 @@ function Policy() {
 
 
                 <p className={styles.paragraph}>
-                    Information that we share with a third party based on an account connection will be used and disclosed in accordance with the third party's privacy practices. Please review the privacy notice of any third party that will gain access to your personal information. Coinbase is not responsible for such third party conduct.
+                    Information that we share with a third party based on an account connection will be used and disclosed in accordance with the third party's privacy practices. Please review the privacy notice of any third party that will gain access to your personal information. coincap is not responsible for such third party conduct.
 
                 </p>
 
@@ -1144,13 +1144,13 @@ function Policy() {
                 </h2>
 
                 <p className={styles.paragraph}>
-                    We rely primarily on the European Commission’s Standard Contractual Clauses to facilitate the international and onward transfer of personal information collected in the European Economic Area (“EEA”), the United Kingdom and Switzerland (collectively “European Personal Information”), to the extent the recipients of the European Personal Information are located in a country that the EU considers to not provide an adequate level of data protection. This includes transfers from our EU-based CB operating entities to our US-based operating entity, Coinbase, Inc. We may also rely on an adequacy decision of the European Commission confirming an adequate level of data protection in the jurisdiction of the party receiving the information, or derogations in specific situations.
+                    We rely primarily on the European Commission’s Standard Contractual Clauses to facilitate the international and onward transfer of personal information collected in the European Economic Area (“EEA”), the United Kingdom and Switzerland (collectively “European Personal Information”), to the extent the recipients of the European Personal Information are located in a country that the EU considers to not provide an adequate level of data protection. This includes transfers from our EU-based CB operating entities to our US-based operating entity, coincap, Inc. We may also rely on an adequacy decision of the European Commission confirming an adequate level of data protection in the jurisdiction of the party receiving the information, or derogations in specific situations.
                 </p>
                 <p className={styles.paragraph}>
-                    Coinbase, Inc. is responsible for the processing of personal information it receives and subsequently transfers to a third party acting as an agent on its behalf. Before we share your information with any third party, Coinbase, Inc. will enter into a written agreement that the third party provides at least the same level of protection for the personal information as required under applicable data protection laws.
+                    coincap, Inc. is responsible for the processing of personal information it receives and subsequently transfers to a third party acting as an agent on its behalf. Before we share your information with any third party, coincap, Inc. will enter into a written agreement that the third party provides at least the same level of protection for the personal information as required under applicable data protection laws.
                 </p>
                 <p className={styles.paragraph}>
-                    Coinbase, Inc., also participates in and has certified its compliance with the EU-US Privacy Shield Framework. Under the Privacy Shield Framework, Coinbase, Inc. is subject to the authority of the Federal Trade Commission.
+                    coincap, Inc., also participates in and has certified its compliance with the EU-US Privacy Shield Framework. Under the Privacy Shield Framework, coincap, Inc. is subject to the authority of the Federal Trade Commission.
 
 
                 </p>
@@ -1274,7 +1274,7 @@ function Policy() {
                     16. HOW TO CONTACT US
                 </h2>
                 <p className={styles.paragraph}>
-                    If you have questions or concerns regarding this Privacy Policy, or if you have a complaint, please contact us on our Support page, at dpo@coinbase.com, or by writing to us at the address of your operating entity (provided above).
+                    If you have questions or concerns regarding this Privacy Policy, or if you have a complaint, please contact us on our Support page, or by writing to us at the address of your operating entity (provided above).
 
                 </p>
 

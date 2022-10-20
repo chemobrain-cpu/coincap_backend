@@ -67,10 +67,10 @@ function Cefi() {
 
                 <div className={styles.contentSection}>
                     <p>
-                        CeFi creates the potential for earning yield via crypto-based accounts that are functionally similar to a traditional bank’s savings accounts — but may offer substantially higher returns.  Unlike conventional savings accounts, crypto deposits aren’t currently eligible for government-backed FDIC or SIPC insurance so you should make sure to understand the risks involved. Coinbase, however, does offer a principal guarantee on the USDC you deposit for CeFi lending.
+                        CeFi creates the potential for earning yield via crypto-based accounts that are functionally similar to a traditional bank’s savings accounts — but may offer substantially higher returns.  Unlike conventional savings accounts, crypto deposits aren’t currently eligible for government-backed FDIC or SIPC insurance so you should make sure to understand the risks involved. Coincap, however, does offer a principal guarantee on the USDC you deposit for CeFi lending.
                     </p>
                     <p>
-                        The general concept involves holding some of your crypto on one of the many platforms that offer this kind of product. Via Coinbase, US-based customers in many states can now sign up for a waitlist to start earning an annual yield of 4% for holding USD Coin (USDC).
+                        The general concept involves holding some of your crypto on one of the many platforms that offer this kind of product. Via Coincap, US-based customers in many states can now sign up for a waitlist to start earning an annual yield of 4% for holding USD Coin (USDC).
                     </p>
                 </div>
                 <div className={styles.headingSection}>
@@ -93,7 +93,7 @@ function Cefi() {
                         CeFi makes it possible to borrow money against your crypto holdings, the same way you’d use traditional assets as collateral to apply for a bank loan. It’s the flip side of lending — the interest users pay for borrowing money is where the yield you can earn for holding crypto via CeFi is generated.
                     </p>
                     <p>
-                        Unlike bank loans, CeFi loans typically require little or no paperwork. Via Coinbase, US-based customers in many states can borrow up to $100,000 without a credit check.
+                        Unlike bank loans, CeFi loans typically require little or no paperwork. Via Coincap, US-based customers in many states can borrow up to $100,000 without a credit check.
                     </p>
 
                 </div>
@@ -105,14 +105,14 @@ function Cefi() {
                     text="Each CeFi product and provider is unique and may put your deposited crypto to work in ways that have higher or lower levels of risk. It’s important to do your homework and understand how your crypto is being used, how the yield you’re earning is generated, and what risks are entailed."
                 />
                 <BulletList
-                    text="Remember: crypto deposits aren’t currently eligible for the government-backed insurance that protects savings held by a traditional bank. (That said, Coinbase’s CeFi lending product offers a principal guarantee.)"
+                    text="Remember: crypto deposits aren’t currently eligible for the government-backed insurance that protects savings held by a traditional bank. (That said, Coincap’s CeFi lending product offers a principal guarantee.)"
                 />
                 <BulletList
-                    text="Some CeFi providers might lock up your principal for a period of time. Coinbase, however, allows you to access your USDC at any time. "
+                    text="Some CeFi providers might lock up your principal for a period of time. Coincap, however, allows you to access your USDC at any time. "
                 />
 
                 <BulletList
-                    text="All stablecoins aren’t created equal. For example, USDC is based on open-source code that anyone can scrutinize. USDC is backed by dollar-denominated assets of at least equal fair value to the USDC in circulation, in segregated accounts with US regulated financial institutions. You can buy USDC via exchanges like Coinbase, and hold it in any Ethereum compatible wallet. There are no fees for transferring a US dollar to USDC. The launch of USDC was powered by a collaboration between Coinbase and Circle through the co-founding of the CENTRE Consortium."
+                    text="All stablecoins aren’t created equal. For example, USDC is based on open-source code that anyone can scrutinize. USDC is backed by dollar-denominated assets of at least equal fair value to the USDC in circulation, in segregated accounts with US regulated financial institutions. You can buy USDC via exchanges like Coincap, and hold it in any Ethereum compatible wallet. There are no fees for transferring a US dollar to USDC. The launch of USDC was powered by a collaboration between Coincap and Circle through the co-founding of the CENTRE Consortium."
                 />
 
                 <div className={styles.guideSection}>

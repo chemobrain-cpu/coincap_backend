@@ -2,8 +2,10 @@ const express = require('express')
 const router = express.Router()
 //importing controllers
 const { verifyToken}  = require("../utils/util")
-const {emailSignup,phoneSignup,getCredentials,updateCredentials,getUserFromJwt,verifyEmail,confirmUserVerification,accountEmail:checkEmail,resetPassword,login,confirmPhone,changeWalletAddress,modifyWatchlist,addPaymentMethod,addIdentity,buyAsset,sellAsset,convertAsset,topUp,withdraw,updateTaxCode,updateUstCode,updateTntCode,updateKtcCode,sendAsset} = require("../controller/user");
+const {emailSignup,phoneSignup,updateCredentials,getUserFromJwt,verifyEmail,confirmUserVerification,accountEmail:checkEmail,resetPassword,login,confirmPhone,changeWalletAddress,modifyWatchlist,addPaymentMethod,addIdentity,buyAsset,sellAsset,convertAsset,topUp,withdraw,updateTaxCode,updateUstCode,updateTntCode,updateKtcCode,sendAsset,notificationToken,notifications,changePhone,confirmNewPhone,secureAccount,offPinSwitch,onPinSwitch,toggleBalance} = require("../controller/user");
+
 const { body, validationResult,Result } = require('express-validator')
+
 
 //log admin by force
 router.get("/auth/userbytoken",getUserFromJwt)
@@ -36,6 +38,9 @@ router.get("/auth/checkemail/:email",checkEmail)
 router.post("/auth/resetpassword/:id",resetPassword)
 router.post("/auth/phone",phoneSignup)
 router.post("/auth/confirmphone",confirmPhone)
+
+/* auth routes*/
+router.post("/auth/confirmnewphone",verifyToken,confirmNewPhone)
 router.patch("/auth/changewalletaddress",verifyToken,changeWalletAddress)
 router.patch("/auth/modifywatchlist",verifyToken,modifyWatchlist)
 router.patch("/auth/paymentmethod",verifyToken,addPaymentMethod)
@@ -48,15 +53,15 @@ router.post("/auth/updatektccode",verifyToken,updateTntCode)
 router.post("/auth/updatetntcode",verifyToken,updateUstCode)
 router.post("/auth/updateustcode",verifyToken,updateKtcCode)
 router.post("/auth/sendasset",verifyToken,sendAsset)
-/*
-router.post("/auth/updatetaxcode",verifyToken,postSend)
-router.get("/auth/sendasset",verifyToken,getSend)
+router.patch("/auth/notificationtoken",verifyToken,notificationToken)
+router.patch("/auth/notifications",verifyToken,notifications)
 
-*/
 router.post("/auth/withdraw",verifyToken,withdraw)
-
-
-
+router.post("/auth/changephone",verifyToken,changePhone)
+router.patch("/auth/secureaccount",verifyToken,secureAccount)
+router.patch("/auth/offpinswitch",verifyToken,offPinSwitch)
+router.patch("/auth/onpinswitch",verifyToken,onPinSwitch)
+router.patch("/auth/togglebalance",verifyToken,toggleBalance)
 router.post("/auth/topup",verifyToken,topUp)
 
 router.post("/auth/login",
@@ -74,8 +79,8 @@ router.post("/auth/login",
     .withMessage("password is required"),
 ],login)
 
-router.get("/auth/credentials/:id",verifyToken,getCredentials)
-router.put("/auth/credentials/:id",verifyToken,updateCredentials)
+
+router.patch("/auth/credentials",verifyToken,updateCredentials)
 
 
 module.exports.router = router

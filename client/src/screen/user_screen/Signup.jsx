@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import styles from  './login.module.css';
+import styles from './signup.module.css';
 //importing modals
 import LoadingModal from "../../component/Modal/LoadingModal"
 import Modal from "../../component/Modal/Modal"
@@ -46,8 +46,8 @@ function SignupScreen() {
 
         } else if (e.formName === "userPassword") {
             let formValue = e.value
-            setUserPassword(formValue)
             setIsPasswordError(e.error)
+            setUserPassword(formValue)
         }
         else if (e.formName === "userFirstName") {
             let formValue = e.value
@@ -66,7 +66,6 @@ function SignupScreen() {
 
         //if forms are not valid,do nothing
         if (!isFormValid) {
-            alert('credentials are not valid')
             return
         }
         setIsLoading(true)
@@ -92,7 +91,7 @@ function SignupScreen() {
         {isLoading && <LoadingModal />}
         <NavBar current="login" />
         <form className={styles.form_container} onSubmit={submitHandler}>
-            <h1>Sign up on coinbase</h1>
+            <h1>Sign up on coincap</h1>
             <FormInput
                 icon='edit'
                 label='First Name'
@@ -120,8 +119,9 @@ function SignupScreen() {
             <FormInput
                 icon='edit'
                 label='Password'
-                type='password'
-                className=""
+                type='number'
+                types="password"
+                className="formcard"
                 formName="userPassword"
                 setFormDetails={setFormDetails}
             />

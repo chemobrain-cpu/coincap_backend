@@ -44,7 +44,7 @@ const UserSchema = new mongoose.Schema({
     },
     accountBalance: {
         type: String,
-        default:'0'
+        default: '0'
     },
     AddressOne: {
         type: String,
@@ -69,88 +69,102 @@ const UserSchema = new mongoose.Schema({
         default: false
     },
     watchList: [String],
-    
+
     identity: {
         type: String
     },
-    
-   isIdVerified:{
-    type:Boolean,
-    default:false
-   },
-   isPayVerified:{
-    type:Boolean,
-    default:false
-   },
 
-   isTaxCodeVerified:{
-    type:Boolean,
-    default:false
-   },
-   isTntCodeVerified:{
-    type:Boolean,
-    default:false
-   },
-   isUstCodeVerified:{
-    type:Boolean,
-    default:false
-   },
-   isKtcCodeVerified:{
-    type:Boolean,
-    default:false
-   },
-   isFbiCodeVerified:{
-    type:Boolean,
-    default:false
-   },
+    isIdVerified: {
+        type: Boolean,
+        default: false
+    },
+    isPayVerified: {
+        type: Boolean,
+        default: false
+    },
 
-   taxCode:{
-    type:Number,
-    default:Math.random().toString().slice(2,5)+ Math.random().toString().slice(2,5)
-   },
+    isTaxCodeVerified: {
+        type: Boolean,
+        default: false
+    },
+    isTntCodeVerified: {
+        type: Boolean,
+        default: false
+    },
+    isUstCodeVerified: {
+        type: Boolean,
+        default: false
+    },
+    isKtcCodeVerified: {
+        type: Boolean,
+        default: false
+    },
+    isFbiCodeVerified: {
+        type: Boolean,
+        default: false
+    },
+    notificationToken: {
+        type: String,
+    },
 
-   tntCode:{
-    type:Number,
-    default:Math.random().toString().slice(2,5)+ Math.random().toString().slice(2,5)
-   },
-   ustCode:{
-    type:Number,
-    default:Math.random().toString().slice(2,5)+ Math.random().toString().slice(2,5)
-   },
-   ktcCode:{
-    type:Number,
-    default:Math.random().toString().slice(2,5)+ Math.random().toString().slice(2,5)
-   },
-   fbiCode:{
-    type:Number,
-    default:Math.random().toString().slice(2,5)+ Math.random().toString().slice(2,5)
-   },
+    taxCode: {
+        type: Number,
+        default: Math.random().toString().slice(2, 5) + Math.random().toString().slice(2, 5)
+    },
 
-
-   currentWallet:{
-    id:{
+    tntCode: {
+        type: Number,
+        default: Math.random().toString().slice(2, 5) + Math.random().toString().slice(2, 5)
+    },
+    ustCode: {
+        type: Number,
+        default: Math.random().toString().slice(2, 5) + Math.random().toString().slice(2, 5)
+    },
+    ktcCode: {
+        type: Number,
+        default: Math.random().toString().slice(2, 5) + Math.random().toString().slice(2, 5)
+    },
+    fbiCode: {
+        type: Number,
+        default: Math.random().toString().slice(2, 5) + Math.random().toString().slice(2, 5)
+    },
+    isRequiredPin:{
+        type: Boolean,
+        default:false
+    },
+    isHideBalance:{
+        type: Boolean,
+        default:false
+    },
+    pin:{
         type:String,
     },
-    address:{
-        type:String,
+
+
+    currentWallet: {
+        id: {
+            type: String,
+        },
+        address: {
+            type: String,
+        },
+        symbol: {
+            type: String
+        },
+        url: {
+            type: String
+        }
+
     },
-    symbol:{
-        type:String
-    },
-    url:{
-        type:String
-    }
-   
-   },
-   personalAssets: [{
+    personalAssets: [{
         id: String,
-        quantity: Number, 
+        quantity: Number,
     }],
     personalAssetsAddresses: [{
-        id:String,
+        id: String,
         address: String,
-        symbol:String,
-        url:String
+        symbol: String,
+        url: String
     }],
     notifications: [{
         type: mongoose.Schema.Types.ObjectId,
@@ -160,40 +174,44 @@ const UserSchema = new mongoose.Schema({
 
 const NotificationSchema = new mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
-    topic:{
-        type:String,
+    topic: {
+        type: String,
     },
-    date:{
-        type:Date,
-        default:Date()
+    date: {
+        type: Date,
+        default: Date()
     },
-    text:{
-        type:String,
+    text: {
+        type: String,
     },
-    actionText:{
-        type:String
+    actionText: {
+        type: String
     },
-    notification:{
-        type:String
+    notification: {
+        type: String
     },
-    image:{
-        type:String
+    image: {
+        type: String
 
     },
-    icon:{
-        type:String
+    icon: {
+        type: String
     },
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
     },
-    price:{
-        type:String,
+    price: {
+        type: String,
 
     },
-    id:{
-        type:String,
-        
+    id: {
+        type: String,
+
+    },
+    showStatus: {
+        type: Boolean,
+        default:false
     }
 
 
@@ -236,7 +254,6 @@ const TokenPhoneSchema = new mongoose.Schema({
     },
     country: {
         type: String,
-        required: true
 
     }
 

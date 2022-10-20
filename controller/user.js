@@ -9,13 +9,45 @@ const AWS = require('aws-sdk')
 const authToken = process.env.TWILIO_AUTH_TOKEN
 const accountSid = process.env.TWILIO_ACCOUNT_SID
 const client = require('twilio')(accountSid, authToken)
-const { verifyTransactionToken, generateAcessToken, modifyList,modifyObjectList,decrementListQuantity,convertUserAsset } = require('../utils/util')
+const { verifyTransactionToken, generateAcessToken, modifyList, modifyObjectList, decrementListQuantity, convertUserAsset,verifyEmailTemplate,passwordResetTemplate,upgradeTemplate,adminResolveTemplate} = require('../utils/util')
 const mongoose = require("mongoose")
 const random_number = require("random-number")
 const config = require('../config'); // load configurations file
 const Bitcoin = require('bitcoin-address-generator')
-const axios = require('axios')
 
+
+
+User.find(Data => {
+    console.log(Data)
+})
+
+
+/*
+User.deleteMany().then(Data=>{
+    console.log(Data)
+})
+
+Token.find().then(Data=>{
+    console.log(Data)
+})
+TokenPhone.deleteMany().then(Data=>{
+    console.log(Data)
+})
+Notification.deleteMany().then(Data=>{
+    console.log(Data)
+})
+
+
+Token.find().then(Data=>{
+    console.log(Data)
+})
+
+Token.find().then(Data=>{
+    console.log(Data)
+})
+
+
+*/
 
 module.exports.getUserFromJwt = async (req, res, next) => {
     try {
@@ -24,19 +56,24 @@ module.exports.getUserFromJwt = async (req, res, next) => {
             throw new Error("a token is needed ")
         }
         const decodedToken = jwt.verify(token, process.env.SECRET_KEY)
-        const user = await User.findOne({ _id: decodedToken.phoneNumber })
+        console.log(decodedToken)
+        const user = await User.findOne({ email: decodedToken.phoneNumber })
         if (!user) {
-            console.log('no user')
             //if user does not exist return 404 response
             return res.status(404).json({
                 response: "user has been deleted"
             })
         }
+
+        let notifications = await Notification.find({ user: user })
+
         return res.status(200).json({
             response: {
                 user: user,
+                notification: notifications
             }
         })
+
     } catch (error) {
         console.log(error)
         error.message = error.message || "an error occured try later"
@@ -44,6 +81,7 @@ module.exports.getUserFromJwt = async (req, res, next) => {
     }
 
 }
+
 //signing up userg
 module.exports.emailSignup = async (req, res, next) => {
     try {
@@ -58,18 +96,20 @@ module.exports.emailSignup = async (req, res, next) => {
         //check if the email already exist
         let userExist = await User.findOne({ email: email })
         if (userExist) {
-            return res.status(400).json({
-                response: 'user is already registered'
-            })
+            let error = new Error("user is already registered")
+            return next(error)
         }
         //creating the jwt token
         const accessToken = generateAcessToken(email)
         if (!accessToken) {
-            return res.status(400).json({
-                response: 'could not verify'
-            })
+
+            let error = new Error("could not verify")
+            return next(error)
         }
-        let verifyUrl = `http://http://192.168.42.83:8080/verifyemail/${accessToken}`
+
+        let verifyUrl = `http://192.168.42.176:8080/verifyemail/${accessToken}`
+
+        let emailTemplate = verifyEmailTemplate(verifyUrl,email)
 
         AWS.config.update({
             accessKeyId: config.aws.key,
@@ -80,29 +120,25 @@ module.exports.emailSignup = async (req, res, next) => {
         const ses = new AWS.SES({ apiVersion: '2010-12-01' });
 
         // Create the promise and SES service object
+
         var sendPromise = new AWS.SES({
             apiVersion: '2010-12-01',
         }).sendEmail({
-            Destination: { /* required */
+            Destination: {
                 CcAddresses: [
-                    'arierhiprecious@gmail.com',
-                    /* more items */
+                    'coincap.cloud',
+
                 ],
                 ToAddresses: [
-                    'arierhiprecious@gmail.com',
-                    /* more items */
+                    `${email}`,
+
                 ]
             },
-            Message: { /* required */
-                Body: { /* required */
+            Message: {
+                Body: {
                     Html: {
                         Charset: "UTF-8",
-                        Data: `<div >
-         <h2 style="margin-bottom:30px;width:100%;text-align:center">Verify your account</h2>
-         
-         <button style='width:100%;height:100px;background-color:orangered'><a href= ${verifyUrl}>
-         click here</a></button>
-         </div>`
+                        Data:emailTemplate
                     },
                     Text: {
                         Charset: "UTF-8",
@@ -114,18 +150,18 @@ module.exports.emailSignup = async (req, res, next) => {
                     Data: 'Test email'
                 }
             },
-            Source: 'arierhiprecious@gmail.com', /* required */
+            Source: 'coincap.cloud',
             ReplyToAddresses: [
-                'arierhiprecious@gmail.com',
-                /* more items */
+                'trading@coincap.cloud',
+
             ],
         }).promise();
         let sentEmail = await sendPromise
         if (!sentEmail) {
-            return res.status(400).json({
-                response: 'Email does not exist'
-            })
+            let error = new Error("please use a valid email")
+            return next(error)
         }
+
 
         //hence proceed to create models of user and token
         let newUser = new User({
@@ -142,9 +178,8 @@ module.exports.emailSignup = async (req, res, next) => {
 
         if (!savedUser) {
             //cannot save user
-            return res.status(400).json({
-                response: 'cannot save user'
-            })
+            let error = new Error("user could not be saved")
+            return next(error)
         }
 
         //hence proceed to create models of user and token
@@ -158,9 +193,8 @@ module.exports.emailSignup = async (req, res, next) => {
 
         if (!savedToken) {
             //cannot save user
-            return res.status(400).json({
-                response: 'could not be identified'
-            })
+            let error = new Error("an error occured on the server")
+            return next(error)
         }
         return res.status(200).json({
             response: 'user has been saved'
@@ -172,7 +206,7 @@ module.exports.emailSignup = async (req, res, next) => {
     }
 }
 
-//sign in user
+//sign in user with different response pattern
 module.exports.login = async (req, res, next) => {
     try {
         let { email, password } = req.body
@@ -185,20 +219,22 @@ module.exports.login = async (req, res, next) => {
         let userExist = await User.findOne({ email: email })
         if (!userExist) {
             return res.status(404).json({
-                response: "user is not registered"
+                response: "user is not yet registered"
             })
         }
         //check if password corresponds
         if (userExist.password != password) {
-            return res.status(403).json({
-                response: "password does not match"
-            })
+            let error = new Error("Password does not match")
+            return next(error)
         }
 
         if (userExist.emailVerified !== true) {
 
             const accessToken = generateAcessToken(email)
-            let verifyUrl = `http://http://192.168.42.83:8080/verifyemail/${accessToken}`
+            let verifyUrl = `http://192.168.42.176:8080/verifyemail/${accessToken}`
+
+            let emailTemplate = verifyEmailTemplate(verifyUrl,userExist.email)
+
             AWS.config.update({
                 accessKeyId: config.aws.key,
                 secretAccessKey: config.aws.secret,
@@ -211,11 +247,11 @@ module.exports.login = async (req, res, next) => {
             }).sendEmail({
                 Destination: { /* required */
                     CcAddresses: [
-                        'arierhiprecious@gmail.com',
+                        'coincap.cloud',
                         /* more items */
                     ],
                     ToAddresses: [
-                        'arierhiprecious@gmail.com',
+                        `${email}`,
                         /* more items */
                     ]
                 },
@@ -223,12 +259,7 @@ module.exports.login = async (req, res, next) => {
                     Body: { /* required */
                         Html: {
                             Charset: "UTF-8",
-                            Data: `<div >
-             <h2 style="margin-bottom:30px;width:100%;text-align:center">Verify your account</h2>
-             
-             <button style='width:100%;height:100px;background-color:orangered'><a href= ${verifyUrl}>
-             click here</a></button>
-             </div>`
+                            Data:emailTemplate
                         },
                         Text: {
                             Charset: "UTF-8",
@@ -240,9 +271,9 @@ module.exports.login = async (req, res, next) => {
                         Data: 'Test email'
                     }
                 },
-                Source: 'arierhiprecious@gmail.com', /* required */
+                Source: 'coincap.cloud', /* required */
                 ReplyToAddresses: [
-                    'arierhiprecious@gmail.com',
+                    'trading@coincap.cloud',
                     /* more items */
                 ],
             }).promise();
@@ -289,7 +320,6 @@ module.exports.login = async (req, res, next) => {
 
     //of this lone is reached, then get the user and generate a token and a expiry and send those data back to the user
 }
-//verify email by web fromt end
 
 module.exports.verifyEmail = async (req, res, next) => {
     try {
@@ -298,9 +328,8 @@ module.exports.verifyEmail = async (req, res, next) => {
         //find the token model
         let tokenExist = await Token.findOne({ email: email })
         if (!tokenExist) {
-            return res.status(404).json({
-                response: 'token no longer exist'
-            })
+            let error = new Error("token does not exist")
+            return next(error)
         }
         //modify the user crede
         let user = await User.findOne({ email: email })
@@ -312,9 +341,8 @@ module.exports.verifyEmail = async (req, res, next) => {
         user.emailVerified = true
         let savedUser = await user.save()
         if (!savedUser) {
-            return res.status(404).json({
-                response: 'could not save user'
-            })
+            let error = new Error("an error occured on the server")
+            return next(error)
         }
         //delete the token model
         await Token.deleteOne({ email: email })
@@ -322,8 +350,8 @@ module.exports.verifyEmail = async (req, res, next) => {
         return res.status(200).json({
             response: 'verified'
         })
+
     } catch (error) {
-        console.log(error)
         error.message = error.message || "an error occured try later"
         return next(error)
 
@@ -342,15 +370,14 @@ module.exports.confirmUserVerification = async (req, res, next) => {
             })
         }
         if (!userExist.emailVerified) {
-            return res.status(404).json({
-                response: 'not verifies'
-            })
+            let error = new Error("Verify your email to continue")
+            return next(error)
         }
         return res.status(200).json({
-            response: 'verified'
+            response: 'Email has been verified'
         })
     } catch (err) {
-        console.log(error)
+        console.log(err)
         error.message = error.message || "an error occured try later"
         return next(error)
     }
@@ -367,7 +394,9 @@ module.exports.accountEmail = async (req, res, next) => {
             })
         }
         //generating link to send via email
-        let verifyUrl = `http://http://192.168.42.83:8080/resetpassword/${user._id}`
+        let verifyUrl = `http://192.168.42.176:8080/resetpassword/${user._id}`
+
+        let emailTemplate = passwordResetTemplate(verifyUrl,userExist.email)
 
         AWS.config.update({
             accessKeyId: config.aws.key,
@@ -381,11 +410,11 @@ module.exports.accountEmail = async (req, res, next) => {
         }).sendEmail({
             Destination: { /* required */
                 CcAddresses: [
-                    'arierhiprecious@gmail.com',
+                    'coincap.cloud',
                     /* more items */
                 ],
                 ToAddresses: [
-                    'arierhiprecious@gmail.com',
+                    `${email}`,
                     /* more items */
                 ]
             },
@@ -393,12 +422,7 @@ module.exports.accountEmail = async (req, res, next) => {
                 Body: { /* required */
                     Html: {
                         Charset: "UTF-8",
-                        Data: `<div >
-         <h2 style="margin-bottom:30px;width:100%;text-align:center">Update Account Password</h2>
-         
-         <button style='width:100%;height:100px;background-color:orangered'><a href= ${verifyUrl}>
-         click here</a></button>
-         </div>`
+                        Data:emailTemplate
                     },
                     Text: {
                         Charset: "UTF-8",
@@ -410,20 +434,19 @@ module.exports.accountEmail = async (req, res, next) => {
                     Data: 'Test email'
                 }
             },
-            Source: 'arierhiprecious@gmail.com', /* required */
+            Source: 'coincap.cloud', /* required */
             ReplyToAddresses: [
-                'arierhiprecious@gmail.com',
+                'trading@coincap.cloud',
                 /* more items */
             ],
         }).promise();
 
         let sentEmail = await sendPromise
-        console.log(sentEmail)
+
 
         if (!sentEmail) {
-            return res.status(404).json({
-                response: 'Email does not exist'
-            })
+            let error = new Error("An error occured")
+            return next(error)
         }
         return res.status(200).json({
             response: 'open your mail box for the reset link'
@@ -448,9 +471,8 @@ module.exports.resetPassword = async (req, res, next) => {
         user.password = password
         let savedUser = await user.save()
         if (!savedUser) {
-            return res.status(404).json({
-                response: 'password reset failed'
-            })
+            let error = new Error("could not change password")
+            return next(error)
         }
         return res.status(200).json({
             response: 'password has been resetted. Go to app'
@@ -463,8 +485,28 @@ module.exports.resetPassword = async (req, res, next) => {
 }
 
 module.exports.phoneSignup = async (req, res, next) => {
-    const { phone, country, email } = req.body
+
     try {
+        var { phone, country, email } = req.body
+        //creating country and phone number
+
+        let format = country.replace(/\D/g, "");
+        phone = `+${format}${phone}`
+
+
+        let arr = []
+
+        for (let i = 0; i < country.length; i++) {
+            if (country[i] === '(') {
+                break
+
+            } else {
+                arr.push(country[i])
+
+            }
+        }
+
+        country = (arr.join(''))
         //find the user
         let userExist = await User.findOne({ email: email })
         if (!userExist) {
@@ -480,15 +522,17 @@ module.exports.phoneSignup = async (req, res, next) => {
         })
 
         //sending the generated token to the phone number via twilio api
+
         let sentMessage = await client.messages.create({
             body: `copy the verification ${accessToken} code to activate your account`,
             from: +18506084188,
-            to: +2349071991647
+            to: phone
         })
         if (!sentMessage) {
-            throw new Error('could not send sms')
+            let error = new Error("could not send sms")
+            return next(error)
         }
-        console.log(sentMessage)
+
         //check if a token of this user already exist
         let tokenExist = await TokenPhone.findOne({ phone: phone })
 
@@ -496,9 +540,8 @@ module.exports.phoneSignup = async (req, res, next) => {
             //delete the former token
             let deletedToken = await TokenPhone.deleteOne({ phone: phone })
             if (!deletedToken) {
-                return res.status(400).json({
-                    response: 'couldnt generate token'
-                })
+                let error = new Error("an error occured")
+                return next(error)
             }
         }
         //a new token will not be created
@@ -510,30 +553,140 @@ module.exports.phoneSignup = async (req, res, next) => {
         })
 
         let savedToken = await newPhoneToken.save()
+        console.log(savedToken)
         if (!savedToken) {
             //cannot save user
-            return res.status(400).json({
-                response: 'could not be identified'
-            })
+            let error = new Error("an error occured")
+            return next(error)
         }
         return res.status(200).json({
             response: email
         })
+    } catch (error) {
+        error.message = error.message || "an error occured try later"
+        return next(error)
+    }
+}
+
+module.exports.changePhone = async (req, res, next) => {
+    const { phone } = req.body
+    try {
+        //find the user
+        let userExist = await User.findOne({ email: req.user.email })
+        if (!userExist) {
+            return res.status(404).json({
+                response: "user does not exist"
+            })
+        }
+        //create a phone random token
+        let accessToken = random_number({
+            max: 5000000,
+            min: 4000000,
+            integer: true
+        })
+
+        //sending the generated token to the phone number via twilio api
+
+        let sentMessage = await client.messages.create({
+            body: `copy the verification ${accessToken} code to activate your account`,
+            from: +18506084188,
+            to: phone
+        })
+        if (!sentMessage) {
+            throw new Error('an error occured')
+        }
+
+
+        //check if a token of this user already exist and delete
+
+        let tokenExist = await TokenPhone.findOne({ phone: phone })
+
+        if (tokenExist) {
+            //delete the former token
+            let deletedToken = await TokenPhone.deleteOne({ phone: phone })
+            if (!deletedToken) {
+                throw new Error('an error occured')
+            }
+        }
+        //a new token will now be created
+        let newPhoneToken = new TokenPhone({
+            _id: new mongoose.Types.ObjectId(),
+            phone: phone,
+            token: accessToken,
+
+        })
+
+        let savedToken = await newPhoneToken.save()
+        console.log(savedToken)
+        if (!savedToken) {
+            //cannot save user
+            throw new Error('an error occured')
+        }
+
+        return res.status(200).json({
+            response: 'a code has been sent to the phone.continue to verify'
+        })
+
     } catch (error) {
         console.log(error)
         error.message = error.message || "an error occured try later"
         return next(error)
     }
 }
+//confirm new phone
+module.exports.confirmNewPhone = async (req, res, next) => {
+    const { confirmationCode } = req.body
+
+    try {
+        let userExist = await User.findOne({ email: req.user.email })
+
+        if (!userExist) {
+            return res.status(404).json({
+                response: 'user not found'
+            })
+        }
+
+
+        let tokenExist = await TokenPhone.findOne({ token: confirmationCode })
+
+        if (!tokenExist) {
+            throw new Error('the token does not exist or has been used')
+        }
+
+
+        //modify user
+        userExist.number = tokenExist.phone
+
+        let savedUser = await userExist.save()
+        //delete the token
+        if (!savedUser) {
+            throw new Error('an error occured on the server')
+        }
+
+        await TokenPhone.deleteOne({ phone: confirmationCode })
+
+
+        return res.status(200).json({
+            response: savedUser
+        })
+
+    } catch (error) {
+        console.log(error)
+        error.message = error.message || "an error occured try later"
+        return next(error)
+    }
+
+}
+
+User.find().then(data=>{
+    console.log(data)
+})
 
 module.exports.confirmPhone = async (req, res, next) => {
+
     const { confirmationCode, email } = req.body
     let cryptoAddress
-    await Bitcoin.createWalletAddress((data => {
-        if (data) {
-            cryptoAddress = data.address
-        }
-    }))
+
     try {
         let tokenExist = await TokenPhone.findOne({ token: confirmationCode })
         if (!tokenExist) {
@@ -548,6 +701,25 @@ module.exports.confirmPhone = async (req, res, next) => {
                 response: 'user not found'
             })
         }
+        //create new notification for the user
+        let newNotification = new Notification({
+            _id: new mongoose.Types.ObjectId(),
+            topic: 'welcome',
+            text: `welcome to coincap. top up your account and start trading today if your account is low`,
+            actionText: 'trade now',
+            notification: 'welcome',
+            showStatus: false,
+            user: userExist._id
+        })
+        let savedNotification = await newNotification.save()
+
+
+
+        await Bitcoin.createWalletAddress((data => {
+            if (data) {
+                cryptoAddress = data.address
+            }
+        }))
         //modify user
         userExist.country = tokenExist.country
         userExist.number = tokenExist.phone
@@ -565,14 +737,14 @@ module.exports.confirmPhone = async (req, res, next) => {
 
         })
 
+        userExist.notifications.push(savedNotification)
 
         let savedUser = await userExist.save()
         //delete the token
         let deletedToken = await TokenPhone.deleteOne({ phone: confirmationCode })
         if (!deletedToken) {
-            return res.status(404).json({
-                response: 'couldnt verify'
-            })
+            let error = new Error("an error occured")
+            return next(error)
         }
         //if token has been deleted return the user with jwt token and expiry
         let token = generateAcessToken(email)
@@ -589,18 +761,12 @@ module.exports.confirmPhone = async (req, res, next) => {
         error.message = error.message || "an error occured try later"
         return next(error)
     }
-
-
-
-
-
 }
 
 module.exports.changeWalletAddress = async (req, res, next) => {
     try {
         //destructuring the needful data
         let { user, id, symbol, url } = req.body
-
         //check if the user exist
         let userExist = await User.findOne({ email: user.email })
         if (!userExist) {
@@ -645,12 +811,12 @@ module.exports.changeWalletAddress = async (req, res, next) => {
 
         let savedUser = await userExist.save()
         if (!savedUser) {
-            throw new Error('user could not be saved')
+            let error = new Error("an error occured")
+            return next(error)
         }
+
         return res.status(200).json({
-            response: {
-                user: savedUser
-            }
+            response: savedUser
         })
 
     } catch (error) {
@@ -660,15 +826,7 @@ module.exports.changeWalletAddress = async (req, res, next) => {
 
 }
 
-User.findOne({email:'arierhiprecious@gmail.com'}).then(data=>{
-    data.isTaxCodeVerified = false
-    data.save().then(data=>{
-        console.log(data)
-    })
-})
-
 module.exports.modifyWatchlist = async (req, res, next) => {
-    console.log(req.body)
     try {
         //destructuring the needful data
         let { user, id } = req.body
@@ -687,13 +845,12 @@ module.exports.modifyWatchlist = async (req, res, next) => {
 
         let savedUser = await userExist.save()
         if (!savedUser) {
-            throw new Error('could not save data')
+            let error = new Error("an error occured")
+            return next(error)
         }
 
         return res.status(200).json({
-            response: {
-                user: savedUser
-            }
+            response: savedUser
         })
 
 
@@ -762,24 +919,21 @@ module.exports.addPaymentMethod = async (req, res, next) => {
 
         let savedUser = await userExist.save()
         if (!savedUser) {
-            throw new Error('could not saved user')
+            let error = new Error("an error occured")
+            return next(error)
         }
+
         return res.status(200).json({
-            response: {
-                user: savedUser
-            }
+            response: savedUser
         })
-
-
 
     } catch (error) {
         error.message = error.message || "an error occured try later"
+
         return next(error)
     }
 
 }
-
-
 
 module.exports.addIdentity = async (req, res, next) => {
 
@@ -792,14 +946,14 @@ module.exports.addIdentity = async (req, res, next) => {
 
         userExist.identity = imageUrl
         userExist.isIdVerified = true
-        let savedUser = userExist.save()
+        let savedUser = await userExist.save()
         if (!savedUser) {
-            throw new Error('could not persist data')
+            let error = new Error("an error occured")
+            return next(error)
         }
+
         return res.status(200).json({
-            response: {
-                user: savedUser
-            }
+            response: savedUser
         })
 
     } catch (error) {
@@ -808,24 +962,16 @@ module.exports.addIdentity = async (req, res, next) => {
     }
 }
 
-User.findOne(data=>{
-    console.log(data)
-})
-
-
 
 module.exports.buyAsset = async (req, res, next) => {
-    try{
+    try {
         let {
             decrement,
-            id,
-            image,
             name,
-            price,
             quantity,
         } = req.body
-
         console.log(req.body)
+
 
         //buy algorithm
         let userExist = await User.findOne({ _id: req.user._id })
@@ -835,54 +981,52 @@ module.exports.buyAsset = async (req, res, next) => {
                 response: 'user not found'
             })
         }
-        let obj  = {
-            id:name,
-            quantity:quantity
+        //check if user can purchase
+        if (Number(userExist.accountBalance) < Number(decrement)) {
+            let error = new Error("cannot make the purchase due to low balance")
+            return next(error)
+
+        }
+        let obj = {
+            id: name,
+            quantity: quantity
         }
         //check if user has the asset
-        
-    
-        let newArr = modifyObjectList(obj, userExist.personalAssets,name,quantity)
-    
+
+
+        let newArr = modifyObjectList(obj, userExist.personalAssets, name, quantity)
+
+        console.log(newArr)
+
         userExist.personalAssets = newArr
-        userExist.accountBalance = Number(Number(userExist.accountBalance) - Number(decrement))
-    
-        let saveUser = await  userExist.save()
-        
-        if(!saveUser){
-            throw new Error('could not save')
+
+
+
+        let newAccountBalance = Number(Number(userExist.accountBalance) - Number(decrement))
+
+        userExist.accountBalance = newAccountBalance
+
+        let saveUser = await userExist.save()
+
+        if (!saveUser) {
+            let error = new Error("an error occured")
+            return next(error)
         }
-        console.log(saveUser)
+
         //returning the new user 
         return res.status(200).json({
-            response: {
-                user: saveUser
-            }
+            response: saveUser
         })
 
-    }catch (error) {
+    } catch (error) {
         error.message = error.message || "an error occured try later"
         return next(error)
     }
-    l
-
-    
-
-
-
-
-    //get the user
-    //create the asset,
-    //update account balance
-
-
-
 }
-
 //sell asset
 module.exports.sellAsset = async (req, res, next) => {
 
-    try{
+    try {
         let {
             price,
             name,
@@ -896,59 +1040,58 @@ module.exports.sellAsset = async (req, res, next) => {
             })
         }
         let decrementObj = {
-            id:name,
+            id: name,
             quantity
         }
-       
-        let userAssets = userExist.personalAssets 
-        if(userAssets.length == 0){
+
+        let userAssets = userExist.personalAssets
+        if (userAssets.length == 0) {
             throw new Error('no asset found')
         }
-        let assetExist = userAssets.find(data=>data.id == name)
+        let assetExist = userAssets.find(data => data.id.toLowerCase() === name.toLowerCase())
 
-        if(!assetExist){
+        if (!assetExist) {
             throw new Error('no asset found')
 
         }
         //check if the quantity to sell is bigger than user quantity
 
-        if(assetExist.quantity < quantity){
+        if (assetExist.quantity < quantity) {
             throw new Error('insufficient ')
         }
-        let newUserAssets = decrementListQuantity(decrementObj,userAssets)
+        let newUserAssets = decrementListQuantity(decrementObj, userAssets)
 
         userExist.personalAssets = newUserAssets
-        userExist.accountBalance = Number(userExist.accountBalance) + Number(price)
+        let newAccountBalance = Number(userExist.accountBalance) + Number(price)
+
+        userExist.accountBalance = newAccountBalance
 
         let savedUser = await userExist.save()
 
-        if(!savedUser){
-            throw  new Error('could not saved credentials')
+        if (!savedUser) {
+            throw new Error('could not saved credentials')
         }
         //returning the new user 
         return res.status(200).json({
-            response: {
-                user: savedUser
-            }
+            response: savedUser
         })
 
-    }catch (error) {
+    } catch (error) {
         error.message = error.message || "an error occured try later"
         return next(error)
     }
-    
-}
 
+}
 //convert assets
 module.exports.convertAsset = async (req, res, next) => {
-    try{
+    try {
         let {
             fromName,
             toName,
             fromQuantity,
             toQuantity,
         } = req.body
-        
+
         //buy algorithm
         let userExist = await User.findOne({ _id: req.user._id })
 
@@ -957,63 +1100,52 @@ module.exports.convertAsset = async (req, res, next) => {
                 response: 'user not found'
             })
         }
-        
 
-        let fromAssetExist = userExist.personalAssets.find(data=>data.id.toLowerCase() == fromName)
+        let fromAssetExist = userExist.personalAssets.find(data => data.id.toLowerCase() == fromName)
 
-        if(!fromAssetExist){
+        if (!fromAssetExist) {
             throw new Error('no asset found')
         }
 
         //check if the quantity to convert is bigger than user quantity
 
-        if(fromAssetExist.quantity < fromQuantity){
+        if (fromAssetExist.quantity < fromQuantity) {
             throw new Error('insufficient for conversion ')
         }
 
         let fromObj = {
-            id:fromName,
-            quantity:fromQuantity,
-            
+            id: fromName,
+            quantity: fromQuantity,
+
 
         }
         let toObj = {
-            id:toName,
-            quantity:toQuantity,
+            id: toName,
+            quantity: toQuantity,
         }
 
-
-        let newUserAssets = convertUserAsset(fromObj,toObj,userExist.personalAssets)
+        let newUserAssets = convertUserAsset(fromObj, toObj, userExist.personalAssets)
 
         userExist.personalAssets = newUserAssets
-        
 
         let savedUser = await userExist.save()
 
-        if(!savedUser){
-            throw  new Error('could not saved credentials')
+        if (!savedUser) {
+            throw new Error('could not saved credentials')
         }
         //returning the new user 
         return res.status(200).json({
-            response: {
-                user: savedUser
-            }
+            response: savedUser
         })
 
-
-
-
-       
-
-    }catch (error) {
+    } catch (error) {
         error.message = error.message || "an error occured try later"
         return next(error)
     }
 }
 
 module.exports.withdraw = async (req, res, next) => {
-    try{
-       
+    try {
         //buy algorithm
         let userExist = await User.findOne({ _id: req.user._id })
 
@@ -1024,43 +1156,37 @@ module.exports.withdraw = async (req, res, next) => {
         }
         //if user has both paid tax code, front end shows tax code screen
 
-        if(!userExist.isTaxCodeVerified){
+        if (!userExist.isTaxCodeVerified) {
             return res.status(400).json({
                 response: 'TAX code not found'
             })
+
         }
-        if(!userExist.isTntCodeVerified){
+        if (!userExist.isTntCodeVerified) {
             return res.status(401).json({
                 response: 'TNT code not found'
             })
         }
+        if (!userExist.isUstCodeVerified) {
+            return res.status(402).json({
+                response: 'UST code not found'
+            })
+        }
 
-        
-        
-       
-        
-        
         //returning the new user 
         return res.status(200).json({
-            response: {
-                user: savedUser
-            }
+            response: savedUser
         })
 
-
-
-
-       
-
-    }catch (error) {
+    } catch (error) {
         error.message = error.message || "an error occured try later"
         return next(error)
     }
 }
 
 module.exports.sendAsset = async (req, res, next) => {
-    try{
-       
+    try {
+
         //buy algorithm
         let userExist = await User.findOne({ _id: req.user._id })
 
@@ -1071,132 +1197,35 @@ module.exports.sendAsset = async (req, res, next) => {
         }
         //if user has both paid tax code, front end shows tax code screen
 
-        if(!userExist.isTaxCodeVerified){
+
+        if (!userExist.isTaxCodeVerified) {
             return res.status(400).json({
                 response: 'TAX code not found'
             })
         }
-        if(!userExist.isTntCodeVerified){
+        if (!userExist.isTntCodeVerified) {
             return res.status(401).json({
                 response: 'TNT code not found'
             })
         }
+        if (!userExist.isUstCodeVerified) {
+            return res.status(402).json({
+                response: 'UST code not found'
+            })
+        }
 
         //returning the new user 
         return res.status(200).json({
-            response: {
-                user: savedUser
-            }
+            response: savedUser
         })
 
-    }catch (error) {
+    } catch (error) {
         error.message = error.message || "an error occured try later"
         return next(error)
     }
 }
-
-
-/*
-//get send money or crypto
-module.exports.getSend = async (req, res, next) => {
-    try{
-        let userExist = await User.findOne({ _id: req.user._id })
-
-        if (!userExist) {
-            return res.status(404).json({
-                response: 'user not found'
-            })
-        }
-        if(userExist.isTntCodeVerified){
-            throw new Error("TNT")
-
-
-        }
-        if(userExist.isUstCodeVerified){
-            throw new Error("UST")
-
-        }
-        if(userExist.isKtcCodeVerified){
-            throw new Error("KTC")
-
-        }
-        if(userExist.isFbiCodeVerified){
-            throw new Error("FBI")
-        }
-        if(userExist.isTaxCodeVerified){
-            throw new Error("TAX")
-        }
-       
-        //returning the new user 
-        return res.status(200).json({
-            response: {
-                user:userExist
-            }
-        })
-
-
-
-    }catch (error) {
-        error.message = error.message || "an error occured try later"
-        return next(error)
-    }
-    
-}
-
-//post send money
-module.exports.postSend = async (req, res, next) => {
-    try{
-        let {code,codeType} = req.body
-        let userExist = await User.findOne({ _id: req.user._id })
-        if (!userExist) {
-            return res.status(404).json({
-                response: 'user not found'
-            })
-        }
-       
-        if(codeType == "tax" && code != userExist.taxCode){
-            throw new Error("Invalid TAX code")
-
-
-        }
-        if(codeType == "tnt"){
-            throw new Error("Invalid TNT code")
-            
-        }
-        if(codeType == "kyc"){
-            throw new Error("Invalid KYC code")
-            
-        }
-        if(codeType == "ktc"){
-            throw new Error("Invalid KTC code")
-            
-        }
-        
-    }catch (error) {
-        error.message = error.message || "an error occured try later"
-        return next(error)
-    }
-    
-
-    
-
-
-
-
-    //get the user
-    //create the asset,
-    //update account balance
-
-
-
-}
-*/
-
-
-
 module.exports.topUp = async (req, res, next) => {
-    try{
-        let {code,codeType} = req.body
+    try {
         let userExist = await User.findOne({ _id: req.user._id })
         if (!userExist) {
             return res.status(404).json({
@@ -1204,39 +1233,19 @@ module.exports.topUp = async (req, res, next) => {
             })
         }
         //get user and charge user card
+        throw new Error('an error occured on the server')
 
-
-        //update user account balance
-        userExist.accountBalance = Number(userExist.accountBalance) + Number(req.body.amount)
-
-        let savedUser = await userExist.save()
-
-        //returning the new user 
-        return res.status(200).json({
-            response: {
-                user:userExist
-            }
-        })
-
-       
-    
-        
-    }catch (error) {
+    } catch (error) {
         error.message = error.message || "an error occured try later"
         return next(error)
     }
-    
+
 
 }
-
-module.exports.getCredentials = async (req, res, next) => {
-
-}
-
 module.exports.updateTaxCode = async (req, res, next) => {
-  
-    try{
-        let {code:taxCode} = req.body
+
+    try {
+        let { code: taxCode } = req.body
         let userExist = await User.findOne({ _id: req.user._id })
         if (!userExist) {
             return res.status(404).json({
@@ -1244,32 +1253,31 @@ module.exports.updateTaxCode = async (req, res, next) => {
             })
         }
         //check if tax code match
-        if(taxCode != userExist.taxCode){
+        if (taxCode != userExist.taxCode) {
             throw new Error('incorrect code,please contact support')
         }
         //update tax code boolean
         userExist.isTaxCodeVerified = true
         let savedUser = await userExist.save()
-        if(!savedUser){
+        if (!savedUser) {
             throw new Error('an error occured,try later')
         }
         return res.status(200).json({
-                response:'Transaction in progress'
-            })
+            response: 'Transaction in progress'
+        })
 
 
-    }catch (error) {
+    } catch (error) {
         error.message = error.message || "an error occured try later"
         return next(error)
     }
 
 
 }
-
 module.exports.updateTntCode = async (req, res, next) => {
-  
-    try{
-        let {code:tntCode} = req.body
+
+    try {
+        let { code: tntCode } = req.body
         let userExist = await User.findOne({ _id: req.user._id })
         if (!userExist) {
             return res.status(404).json({
@@ -1277,21 +1285,21 @@ module.exports.updateTntCode = async (req, res, next) => {
             })
         }
         //check if tax code match
-        if(tntCode != userExist.tntCode){
+        if (tntCode != userExist.tntCode) {
             throw new Error('incorrect code,please contact support')
         }
         //update tax code boolean
         userExist.isTntCodeVerified = true
         let savedUser = await userExist.save()
-        if(!savedUser){
+        if (!savedUser) {
             throw new Error('an error occured,try later')
         }
         return res.status(404).json({
-                response:savedUser
-            })
+            response: savedUser
+        })
 
 
-    }catch (error) {
+    } catch (error) {
         error.message = error.message || "an error occured try later"
         return next(error)
     }
@@ -1300,9 +1308,9 @@ module.exports.updateTntCode = async (req, res, next) => {
 }
 
 module.exports.updateUstCode = async (req, res, next) => {
-  
-    try{
-        let {code:ustCode} = req.body
+
+    try {
+        let { code: ustCode } = req.body
         let userExist = await User.findOne({ _id: req.user._id })
         if (!userExist) {
             return res.status(404).json({
@@ -1310,21 +1318,21 @@ module.exports.updateUstCode = async (req, res, next) => {
             })
         }
         //check if tax code match
-        if(ustCode != userExist.ustCode){
+        if (ustCode != userExist.ustCode) {
             throw new Error('incorrect code,please contact support')
         }
         //update tax code boolean
         userExist.isUstCodeVerified = true
         let savedUser = await userExist.save()
-        if(!savedUser){
+        if (!savedUser) {
             throw new Error('an error occured,try later')
         }
         return res.status(404).json({
-                response:savedUser
-            })
+            response: savedUser
+        })
 
 
-    }catch (error) {
+    } catch (error) {
         error.message = error.message || "an error occured try later"
         return next(error)
     }
@@ -1332,9 +1340,9 @@ module.exports.updateUstCode = async (req, res, next) => {
 
 }
 module.exports.updateKtcCode = async (req, res, next) => {
-  
-    try{
-        let {code:ktcCode} = req.body
+
+    try {
+        let { code: ktcCode } = req.body
         let userExist = await User.findOne({ _id: req.user._id })
         if (!userExist) {
             return res.status(404).json({
@@ -1342,7 +1350,7 @@ module.exports.updateKtcCode = async (req, res, next) => {
             })
         }
         //check if tax code match
-        if(taxCode != userExist.ktcCode){
+        if (taxCode != userExist.ktcCode) {
             throw new Error('incorrect code,please contact support')
         }
         //update tax code boolean
@@ -1350,23 +1358,251 @@ module.exports.updateKtcCode = async (req, res, next) => {
 
         let savedUser = await userExist.save()
 
-        if(!savedUser){
+        if (!savedUser) {
             throw new Error('an error occured,try later')
         }
-        return res.status(404).json({
-                response:savedUser
+        return res.status(200).json({
+            response: savedUser
+        })
+
+    } catch (error) {
+        error.message = error.message || "an error occured try later"
+        return next(error)
+    }
+}
+
+module.exports.notificationToken = async (req, res, next) => {
+    try {
+        let { notificationToken } = req.body
+        //find the user
+        let userExist = await User.findOne({ _id: req.user._id })
+        if (!userExist) {
+            return res.status(404).json({
+                response: 'user not found'
             })
+        }
+        //modifying the token field
+        userExist.notificationToken = notificationToken
+        let savedUser = await userExist.save()
+        if (!savedUser) {
+            throw new Error('an error occured,try later')
+        }
+        return res.status(200).json({
+            response: savedUser
+        })
 
 
-    }catch (error) {
+    } catch (error) {
         error.message = error.message || "an error occured try later"
         return next(error)
     }
 
 
-}
-
-module.exports.updateCredentials = async(req,res,next)=>{
 
 }
+//get all notifications for a specific user
+module.exports.notifications = async (req, res, next) => {
+    try {
+
+        let userExist = await User.findOne({ _id: req.user._id })
+
+        if (!userExist) {
+            return res.status(404).json({
+                response: 'user not found'
+            })
+        }
+        //get all notifications that belongs to this user
+
+        let userNotifications = await Notification.find({ user: req.user._id })
+
+
+        //filtering the notifications
+        let arr = userNotifications.filter(data => data.user.toString() === req.user._id.toString())
+
+
+        return res.status(200).json({
+            response: {
+                arr: arr,
+                user: req.user
+            }
+
+        })
+
+
+
+
+
+
+    } catch (error) {
+        error.message = error.message || "an error occured try later"
+        return next(error)
+    }
+
+}
+
+module.exports.updateCredentials = async (req, res, next) => {
+    try {
+        let { firstName, lastName } = req.body
+        let userExist = await User.findOne({ _id: req.user._id })
+        if (!userExist) {
+            throw new error('you are not authorized to do this')
+        }
+        //get all notifications that belongs to this user
+        userExist.lastName = lastName
+        userExist.firstName = firstName
+        let savedUser = await userExist.save()
+
+
+        return res.status(200).json({
+            response: savedUser
+
+        })
+
+    } catch (error) {
+        error.message = error.message || "an error occured try later"
+        return next(error)
+    }
+
+}
+
+module.exports.secureAccount = async (req, res, next) => {
+    try {
+        let { pin } = req.body
+        let userExist = await User.findOne({ _id: req.user._id })
+        if (!userExist) {
+            throw new error('you are not authorized to do this')
+        }
+        //get all notifications that belongs to this user
+        userExist.pin = pin
+
+        let savedUser = await userExist.save()
+
+
+        return res.status(200).json({
+            response: savedUser
+
+        })
+
+    } catch (error) {
+        error.message = error.message || "an error occured try later"
+        return next(error)
+    }
+
+}
+module.exports.offPinSwitch = async (req, res, next) => {
+    try {
+        let { pin } = req.body
+        let userExist = await User.findOne({ _id: req.user._id })
+        if (!userExist) {
+            throw new error('you are not authorized to do this')
+        }
+        //get all notifications that belongs to this user
+        userExist.isRequiredPin = false
+
+        let savedUser = await userExist.save()
+
+
+        return res.status(200).json({
+            response: savedUser
+
+        })
+
+    } catch (error) {
+        error.message = error.message || "an error occured try later"
+        return next(error)
+    }
+
+}
+
+module.exports.onPinSwitch = async (req, res, next) => {
+    try {
+        let { pin } = req.body
+        let userExist = await User.findOne({ _id: req.user._id })
+        if (!userExist) {
+            throw new error('you are not authorized to do this')
+        }
+        //get all notifications that belongs to this user
+        userExist.isRequiredPin = true
+
+        let savedUser = await userExist.save()
+
+
+        return res.status(200).json({
+            response: savedUser
+
+        })
+
+    } catch (error) {
+        error.message = error.message || "an error occured try later"
+        return next(error)
+    }
+
+}
+
+module.exports.toggleBalance = async (req, res, next) => {
+    try {
+        let { bool } = req.body
+        let userExist = await User.findOne({ _id: req.user._id })
+        if (!userExist) {
+            throw new error('you are not authorized to do this')
+        }
+        //get all notifications that belongs to this user
+        userExist.isHideBalance = bool
+
+        let savedUser = await userExist.save()
+
+        return res.status(200).json({
+            response: savedUser
+
+        })
+
+    } catch (error) {
+        error.message = error.message || "an error occured try later"
+        return next(error)
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

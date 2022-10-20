@@ -54,7 +54,6 @@ function SignupScreen() {
     setIsLoading(true)
     //if forms are not valid,do nothing
     if(!isFormValid){
-      alert('credentials are not valid')
       return
     }
     let response = await dispatch( adminsignup({userEmail,userPassword,userSecretKey}))

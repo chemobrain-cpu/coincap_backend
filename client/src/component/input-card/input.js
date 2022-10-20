@@ -2,7 +2,7 @@ import React, {  useState } from "react"
 import styles from './input.module.css'
 
 //import validationfunctions from validation file
-import { validatePhoneNumber, validateEmail, validateText } from '../../utils/validation'
+import { validatePhoneNumber, validateEmail, validateText,validatePassword } from '../../utils/validation'
 
 const FormInput = React.memo((props) => {
     let [error, setError] = useState('')
@@ -30,7 +30,34 @@ const FormInput = React.memo((props) => {
                 })
     
             }
-        } else if (props.type === 'number') {
+        } 
+        else if(props.types === 'password'){
+          
+            validateFunction = validateText
+            if (!validatePassword(e.target.value)) {
+                setError(validatePassword(e.target.value))
+                
+                
+                props.setFormDetails({
+                    value: e.target.value,
+                    formName: props.formName,
+                    error:false
+                })
+               
+    
+            } else {
+                let error = validatePassword(e.target.value)
+    
+                setError(error)
+                props.setFormDetails({
+                    value: e.target.value,
+                    formName: props.formName,
+                    error:true
+                })
+            }
+        }
+        
+        else if (props.type === 'number' && !props.types) {
             validateFunction = validatePhoneNumber
             if (!validateFunction(e.target.value)) {
                 setError(validateFunction(e.target.value))
@@ -72,29 +99,7 @@ const FormInput = React.memo((props) => {
                 })
             }
         }
-        else if(props.type === 'password'){
-            validateFunction = validateText
-            if (!validateFunction(e.target.value)) {
-                setError(validateFunction(e.target.value))
-                
-                props.setFormDetails({
-                    value: e.target.value,
-                    formName: props.formName,
-                    error:false
-                })
-               
-    
-            } else {
-                let error = validateFunction(e.target.value)
-    
-                setError(error)
-                props.setFormDetails({
-                    value: e.target.value,
-                    formName: props.formName,
-                    error:true
-                })
-            }
-        }else if(props.type === 'file'){
+        else if(props.type === 'file'){
             validateFunction = validateText
            
                 props.setFormDetails({

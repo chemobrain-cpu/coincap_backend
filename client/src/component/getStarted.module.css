@@ -2,7 +2,9 @@
     display:flex;
     flex-direction:row;
     padding-top:100px;
-    padding-bottom:70px
+    padding-bottom:30px;
+    background: linear-gradient(rgb(240,240,240),white);
+    margin-bottom:30px
 
 }
 .getStartedSection_content{
@@ -66,11 +68,12 @@
 }
 
 .getStartedSection_imageCon{
-    width:50%;
+    width:49%;
     display:flex;
-    justify-content: center;
+    justify-content:center;
     align-items:center;
-    background:linear-gradient(#fff,rgb(240,240,240),#fff);
+    padding-right:100
+    
 
 }
 

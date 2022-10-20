@@ -56,7 +56,7 @@ body {
     height:100vh;
     width:100%;
     background: #fff;
-    grid-template-columns: 20% 45% ;
+    grid-template-columns: 20% 60% ;
     overflow: hidden;
 
 }
@@ -68,7 +68,7 @@ body {
 }
 @media screen and (max-width: 1200px) {
     .dashboardScreen{
-      grid-template-columns: 30% 45%;
+      grid-template-columns: 30% 60% ;
       overflow-y: scroll;
     } 
   }

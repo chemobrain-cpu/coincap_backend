@@ -86,7 +86,7 @@ function Blockchain() {
 
                 />
                 <BulletList
-                    text="One option for crypto-curious investors looking to minimize risk is USD Coin, which is pegged 1:1 to the value of the U.S. dollar. It offers the benefits of crypto, including the ability to transfer money internationally quickly and cheaply, with the stability of a traditional currency. Coinbase customers that hold USDC earn rewards, making it an appealing alternative to a traditional savings account."
+                    text="One option for crypto-curious investors looking to minimize risk is USD Coin, which is pegged 1:1 to the value of the U.S. dollar. It offers the benefits of crypto, including the ability to transfer money internationally quickly and cheaply, with the stability of a traditional currency. coincap customers that hold USDC earn rewards, making it an appealing alternative to a traditional savings account."
 
                 />
 
@@ -96,7 +96,7 @@ function Blockchain() {
 
                 <div className={styles.contentSection}>
                     <p>
-                        Online exchanges like Coinbase have made buying and selling cryptocurrencies easy, secure, and rewarding.
+                        Online exchanges like coincap have made buying and selling cryptocurrencies easy, secure, and rewarding.
                     </p>
                 </div>
 
@@ -117,11 +117,11 @@ function Blockchain() {
                 />
 
                 <BulletList
-                    text="On Coinbase, you can earn 1% APY on— that’s much higher than most traditional savings accounts."
+                    text="On coincap, you can earn 1% APY on— that’s much higher than most traditional savings accounts."
 
                 />
                 <BulletList
-                    text="You can also earn up to 5% APY when you stake Tezos on Coinbase. Learn more about Tezos staking rewards."
+                    text="You can also earn up to 5% APY when you stake Tezos on coincap. Learn more about Tezos staking rewards."
 
                 />
                 <BulletList
@@ -229,12 +229,12 @@ function Blockchain() {
                 </div>
 
                 <div className={styles.contentSection}>
-                    <p>The easiest way to acquire cryptocurrency is to purchase on an online exchange like Coinbase.</p>
+                    <p>The easiest way to acquire cryptocurrency is to purchase on an online exchange like coincap.</p>
                 </div>
 
                 <BulletList
-                    text="On Coinbase, you can buy major cryptocurrencies like
-                    Bitcoin (BTC), Litecoin (LTC), Ethereum (ETH), Bitcoin Cash (BCH), Ethereum Classic (ETC). Or you can explore emerging coins like Stellar Lumens or EOS. For some cryptocurrencies Coinbase offers opportunities to earn some for free.)"
+                    text="On coincap, you can buy major cryptocurrencies like
+                    Bitcoin (BTC), Litecoin (LTC), Ethereum (ETH), Bitcoin Cash (BCH), Ethereum Classic (ETC). Or you can explore emerging coins like Stellar Lumens or EOS. For some cryptocurrencies coincap offers opportunities to earn some for free.)"
 
                 />
 
@@ -243,7 +243,7 @@ function Blockchain() {
 
                 />
                 <BulletList
-                    text="Keep in mind that you do not need to buy a whole coin. On Coinbase, you can buy portions of coins in increments as little as 2 dollars, euros, pounds, or your local currency."
+                    text="Keep in mind that you do not need to buy a whole coin. On coincap, you can buy portions of coins in increments as little as 2 dollars, euros, pounds, or your local currency."
 
                 />
 
@@ -253,14 +253,14 @@ function Blockchain() {
                 </div>
 
                 <div className={styles.contentSection}>
-                    <p>Storing crypto is similar to storing cash, which means you need to protect it from theft and loss. There are many ways to store crypto both online and off, but the simplest solution is via a trusted, secure exchange like Coinbase.</p>
+                    <p>Storing crypto is similar to storing cash, which means you need to protect it from theft and loss. There are many ways to store crypto both online and off, but the simplest solution is via a trusted, secure exchange like coincap.</p>
                 </div>
 
                 <BulletList
-                    text="Coinbase customers can securely store, send, receive, and convert crypto by signing into their account on a computer, tablet, or phone."
+                    text="coincap customers can securely store, send, receive, and convert crypto by signing into their account on a computer, tablet, or phone."
                 />
                 <BulletList
-                    text="Want to transfer money from your wallet to a bank account? The Coinbase app makes it as easy as transferring funds from one bank to another. (Much like conventional bank transfers or ATM withdrawals, exchanges like Coinbase set a daily limit, and it might take from a few days to a week for the transaction to be completed."
+                    text="Want to transfer money from your wallet to a bank account? The coincap app makes it as easy as transferring funds from one bank to another. (Much like conventional bank transfers or ATM withdrawals, exchanges like coincap set a daily limit, and it might take from a few days to a week for the transaction to be completed."
 
                 />
 
@@ -273,7 +273,7 @@ function Blockchain() {
                 </div>
 
                 <BulletList
-                    text="Shop: Over 8,000 global merchants accept cryptocurrency via Coinbase Commerce."
+                    text="Shop: Over 8,000 global merchants accept cryptocurrency via coincap Commerce."
 
                 />
 

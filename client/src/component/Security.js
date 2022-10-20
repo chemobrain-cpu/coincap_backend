@@ -13,7 +13,7 @@ function Security() {
 
 
     return (<div className={styles.security_section}  >
-        <SectionHead title="The most trusted cryptocurrency platform" paragraph="Here are a few reasons why you should choose Coinbase" />
+        <SectionHead title="The most trusted cryptocurrency platform" paragraph="Here are a few reasons why you should choose Coincap" />
         <div className={styles.security_Con}>
             <div className={styles.security_card} data-aos="fade-up" >
                 <div className={styles.security_imageCon}  >
@@ -27,7 +27,7 @@ function Security() {
                 <div className={styles.security_content} >
                     <h1>Secure storage</h1>
                     <p> We store the vast majority of the digital assets in secure offline storage.</p>
-                    <a>Learn how Coinbase keeps your funds safe and secure <span className="material-icons">
+                    <a>Learn how Coincap keeps your funds safe and secure <span className="material-icons">
                         arrow_forward
                     </span></a>
 
@@ -42,7 +42,7 @@ function Security() {
                 </div>
                 <div className={styles.security_content}>
                     <h1>Protected by insurance</h1>
-                    <p> Coinbase maintains crypto insurance and all USD cash balances are covered by FDIC insurance, up to a maximum of $250,000.</p>
+                    <p> Coincap maintains crypto insurance and all USD cash balances are covered by FDIC insurance, up to a maximum of $250,000.</p>
                     <a>Learn how your crypto is covered by our insurance policy <span className="material-icons">
                         arrow_forward
                     </span></a>
@@ -63,7 +63,7 @@ function Security() {
                 </div>
                 <div className={styles.security_content}>
                     <h1>Industry best practices</h1>
-                    <p>Coinbase supports a variety of the most popular digital currencies.</p>
+                    <p>Coincap supports a variety of the most popular digital currencies.</p>
                     <a>
                         Learn how we implement industry best practices for account security <span className="material-icons">
                             arrow_forward

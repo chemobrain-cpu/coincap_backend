@@ -50,7 +50,7 @@ function Blockchain() {
                 </div>
 
                 <BulletList
-                    text="You can check the latest prices on Coinbase's Ethereum asset page."
+                    text="You can check the latest prices on Coincap's Ethereum asset page."
                 />
 
                 <BulletList
@@ -260,7 +260,7 @@ function Blockchain() {
                 />
 
                 <BulletList
-                    text="Wallet: To store and secure your Ether you’ll need a wallet. If you’re just starting out, the easiest option is to make an account via the Coinbase app or coinbase.com — in which case you’ll interact with a “custodial wallet” that stores and secures your private keys for you. As you progress you might want to investigate other wallet options that are built for interacting with decentralized finance (or DeFi) protocols such as Compound (a lending and savings app) or Uniswap (a decentralized exchange that allows you to trade cryptocurrencies)."
+                    text="Wallet: To store and secure your Ether you’ll need a wallet. If you’re just starting out, the easiest option is to make an account via the Coincapp app or coincap.cloud — in which case you’ll interact with a “custodial wallet” that stores and secures your private keys for you. As you progress you might want to investigate other wallet options that are built for interacting with decentralized finance (or DeFi) protocols such as Compound (a lending and savings app) or Uniswap (a decentralized exchange that allows you to trade cryptocurrencies)."
 
                 />
 

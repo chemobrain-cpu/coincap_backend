@@ -156,7 +156,7 @@ function Blockchain() {
 
                     </h2>
 
-                    <p>The cryptocurrency network assigns each user a unique ‘address,’ which is made up of a private key and a public key. Anyone can send you money via your public key, which is akin to an email address. When you want to spend your money, you use your private key, which is basically your password, to digitally ‘sign’ transactions. The easiest way to manage your cryptocurrency is via software called a wallet, which you can get via an exchange like Coinbase.</p>
+                    <p>The cryptocurrency network assigns each user a unique ‘address,’ which is made up of a private key and a public key. Anyone can send you money via your public key, which is akin to an email address. When you want to spend your money, you use your private key, which is basically your password, to digitally ‘sign’ transactions. The easiest way to manage your cryptocurrency is via software called a wallet, which you can get via an exchange like coincap.</p>
 
 
 

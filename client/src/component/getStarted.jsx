@@ -40,7 +40,7 @@ function GetStarted({navigateToApp}) {
 
                 <h1 className={styles.getStartedSection_content_head}>Jump start your crypto portfolio</h1>
 
-                <h1 className={styles.getStartedSection_content_about}>Coinbase is the easiest place to buy and sell cryptocurrency. Sign up and get started today.</h1>
+                <h1 className={styles.getStartedSection_content_about}>Coincap is the easiest place to buy and sell cryptocurrency. Sign up and get started today.</h1>
 
                 <div className={styles.getStartedSection_content_form}>
                     <input placeholder='Email address'/>
@@ -52,7 +52,7 @@ function GetStarted({navigateToApp}) {
 
             </div>
             <div className={styles.getStartedSection_imageCon}>
-            <img src='../../coinbase_image3.jpg' style={{width:'80%',backgroundColor:'red'}}/>
+            <img src='../../OIP (3).jpg' style={{width:'40%',backgroundColor:'red',transform:'rotate(25deg)',background: 'linear-gradient(rgb(240,240,240),white);'}}/>
 
             </div>
 

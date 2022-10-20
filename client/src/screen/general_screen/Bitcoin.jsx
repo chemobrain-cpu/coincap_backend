@@ -87,7 +87,7 @@ function Blockchain() {
 
                     <h1> What's the price of bitcoin?</h1>
 
-                    <p>The current price of Bitcoin can be found on Coinbase's website.</p>
+                    <p>The current price of Bitcoin can be found on Coincap's website.</p>
 
                     <h1>
                         Is Bitcoin an investment opportunity?
@@ -252,7 +252,7 @@ function Blockchain() {
 
                 <div className={styles.contentSection}>
                     <p>
-                        The easiest way to buy bitcoin is to purchase it through an online exchange like Coinbase. Coinbase makes it easy to buy, sell, send, receive, and store bitcoin without needing to hold it yourself using something called public and private keys.
+                        The easiest way to buy bitcoin is to purchase it through an online exchange like Coicap. Coincap makes it easy to buy, sell, send, receive, and store bitcoin without needing to hold it yourself using something called public and private keys.
                     </p>
 
                     <p>
@@ -273,7 +273,7 @@ function Blockchain() {
                     </p>
 
                     <p>5.
-                        If you want to transfer money from your wallet to a bank account after selling your bitcoin, the Coinbase app makes it as easy as transferring funds from one bank to another. Similar to conventional bank transfers or ATM withdrawals, exchanges like Coinbase set a daily limit, and it may take between a few days and a week for the transaction to be completed.
+                        If you want to transfer money from your wallet to a bank account after selling your bitcoin, the Coincap app makes it as easy as transferring funds from one bank to another. Similar to conventional bank transfers or ATM withdrawals, exchanges like Coincap set a daily limit, and it may take between a few days and a week for the transaction to be completed.
                     </p>
 
 

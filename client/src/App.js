@@ -38,7 +38,7 @@ const Home = React.lazy(() => import('./screen/general_screen/Home'))
 const Blockchain = React.lazy(() => import('./screen/general_screen/Blockchain'))
 const CryptoCurrency = React.lazy(() => import("./screen/general_screen/Cryptocurrency"))
 const Stablecoin = React.lazy(() => import("./screen/general_screen/Stablecoin"))
-const Inflation = React.lazy(() => import( "./screen/general_screen/Inflation"))
+const Inflation = React.lazy(() => import("./screen/general_screen/Inflation"))
 const Cefi = React.lazy(() => import("./screen/general_screen/Cefi"))
 const Volatility = React.lazy(() => import('./screen/general_screen/Volatility'))
 const Token = React.lazy(() => import('./screen/general_screen/Token'))
@@ -46,9 +46,9 @@ const Ethereum = React.lazy(() => import('./screen/general_screen/Etherium'))
 const Bitcoin = React.lazy(() => import('./screen/general_screen/Bitcoin'))
 const Policy = React.lazy(() => import('./screen/general_screen/policy'))
 const LearnScreen = React.lazy(() => import('./screen/general_screen/Learn'))
-const  Send = React.lazy(() => import('./screen/general_screen/Send'))
-const  Tips = React.lazy(() => import('./screen/general_screen/TipsAndTutorial'))
-const  CryptoBasics = React.lazy(() => import('./screen/general_screen/CryptoBasics'))
+const Send = React.lazy(() => import('./screen/general_screen/Send'))
+const Tips = React.lazy(() => import('./screen/general_screen/TipsAndTutorial'))
+const CryptoBasics = React.lazy(() => import('./screen/general_screen/CryptoBasics'))
 
 
 
@@ -57,16 +57,17 @@ function App() {
   useEffect(async () => {
     await dispatch(checkIfIsLoggedIn())
   }, [])
-  
+
   return (
     <div className="App">
+      
       <Suspense fallback={<div style={{display: 'flex', justifyContent: "center", alignItems: "center", width: '100vw', height: '100vh' }} >
         <Spinner size={30} color="#1652f0" />
 
       </div>}>
 
       <Routes>
-        {/* Admin Routes */}
+        {/* Admin Routes*/ }
         <Route path='/' element={<Home />} />
         <Route path='/policy' element={<Policy />} />
         <Route path='/adminlogin' element={<LoginScreen />} />
@@ -80,12 +81,18 @@ function App() {
        
         <Route path='/upgrade' element={<UpgradeScreen />} />
         <Route path='/upgrade/:id' element={<UpgradeFormScreen />} />
-        {/* User Routes */}
+
+
+        {/* User Routes*/ }
+
+
         <Route path='/verifyemail/:id' element={<EmailVerificationSucessScreen />} />
         <Route path='/forgetPassword' element={<UserForgetPasswordScreen />} />
         <Route path='/resetpassword/:id' element={<ResetPassordScreen />} />
         <Route path='/learn' element={<LearnScreen />} />
         {/*crypto-basics*/}
+
+
         <Route path='/learn/crypto-basics/' element={<CryptoBasics />} />
         <Route path='/learn/crypto-basics/what-is-dogecoin' element={<Dogecoin />} />
         <Route path='/learn/crypto-basics/what-is-bitcoin' element={<Bitcoin />} />
@@ -97,7 +104,10 @@ function App() {
         <Route path='/learn/crypto-basics/what-is-stablecoin' element={<Stablecoin />} />
         <Route path='/learn/crypto-basics/what-is-inflation' element={<Inflation />} />
         <Route path='/learn/crypto-basics/what-is-cefi' element={<Cefi />} />
+
+
         {/*tips and tutorial*/}
+
         <Route path='/learn/tips-and-tutorials' element={<Tips />} />
         <Route path='/learn/tips-and-tutorials/how-to-send-crypto' element={<Send />} />
         <Route path='*' element={<Home />} />

@@ -34,7 +34,6 @@ let UpgradeScreen = () => {
                 setClients(res.message)
             }
         } catch (err) {
-            alert(677)
             setIsLoading(false)
             setIsError(true)
             setIsErrorInfo(err.message)
@@ -75,7 +74,7 @@ let UpgradeScreen = () => {
             <SideBar />
             <div className={styles.dashboard_main}>
                 <div className={styles.dashboard_main_header}>
-                    <h1>Upgrade users</h1>
+                    <h1>Select a user to upgrade</h1>
                 </div>
 
 
@@ -90,10 +89,10 @@ let UpgradeScreen = () => {
                 />)}
 
 
-
-
-
             </div>
+           
+
+            
         </div></>
 }
 

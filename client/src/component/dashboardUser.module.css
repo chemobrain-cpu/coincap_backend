@@ -1,5 +1,5 @@
 .dashboard_main_user{
-    height:15%;
+    height:100px;
     background-color: var(--color-fade);
     display:flex;
     flex-direction:row;

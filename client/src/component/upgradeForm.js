@@ -5,7 +5,7 @@ import AdmiInputCard from './Input'
 let UpgradedForm = () => {
     return <div className='form_main'>
         <div className="dashboard_main_header">
-            <h1>Coinbase</h1>
+            <h1>Coincap</h1>
         </div>
         <div className='form_main_heading_container'>
             <h1 className='form_main_heading'>

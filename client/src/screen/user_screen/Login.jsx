@@ -45,6 +45,7 @@ function LoginScreen() {
       let formValue = e.value
       setUserPassword(formValue)
       setIsPasswordError(e.error)
+      
     }
   }, [])
 
@@ -53,7 +54,6 @@ function LoginScreen() {
     setIsLoading(true)
     //if forms are not valid,do nothing
     if (!isFormValid) {
-      alert('credentials are not valid')
       return
     }
 
@@ -77,15 +77,19 @@ function LoginScreen() {
 
 
 
+  
 
-  return (<>
+
+
+
+  return (<div>
     {isError && <Modal showModal={isError} closeModal={closeModal} content={isErrorInfo} />}
     {isLoading && <LoadingModal />}
 
       <NavBar current="Signup" />
 
       <form className={styles.form_container} onSubmit={submitHandler}>
-        <h1>Sign in to coinbase</h1>
+        <h1>Sign in to coincap</h1>
         <FormInput
           icon='edit'
           label='Email'
@@ -97,7 +101,9 @@ function LoginScreen() {
         <FormInput
           icon='edit'
           label='Password'
-          type='password'
+          type='number'
+          types="password"
+          maxlength={4}
           className="formcard"
           formName="userPassword"
           setFormDetails={setFormDetails}
@@ -109,6 +115,7 @@ function LoginScreen() {
           <p onClick={() => navigateHandler('/forgetPassword')}>Forget password</p>
           <p onClick={() => navigateHandler('/policy')}>Privacy Policy</p>
         </div>
+
       </form >
 
       
@@ -116,7 +123,7 @@ function LoginScreen() {
     <Footer />
     
     
-    </>
+    </div>
 
   );
 }

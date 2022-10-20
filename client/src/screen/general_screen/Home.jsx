@@ -1,6 +1,4 @@
 import React, { useState} from 'react';
-
-import styles from './Home.module.css'
 //import nav bar
 import NavBar from "../../component/UserNav"
 import GetStarted from "../../component/getStarted"
@@ -29,14 +27,12 @@ function Home() {
 
     }
 
-
-
+    
 
     return (<>
         {showModal && <Modal showModal={showModal} closeModal={closeModal} content={"continue on the mobile app"} />}
         <NavBar navigateToApp ={navigateToApp}/>
         <GetStarted navigateToApp ={navigateToApp}/>
-
         <CoinSection navigateToApp ={navigateToApp}/>
         <EarnSection navigateToApp ={navigateToApp}/>
         <PortfolioSection navigateToApp ={navigateToApp}/>
@@ -45,9 +41,6 @@ function Home() {
         <Action navigateToApp ={navigateToApp}/>
         <EarningSection navigateToApp ={navigateToApp}/>
         <Footer/>
-        
-        
-        
     </>
 
     );

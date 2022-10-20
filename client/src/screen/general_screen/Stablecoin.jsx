@@ -50,7 +50,7 @@ function Stablecoin() {
 
 
                 <BulletList
-                    text="You can check the latest prices on Coinbase's Ethereum asset page."
+                    text="You can check the latest prices on coincap's Ethereum asset page."
                 />
 
                 <div className={styles.headingSection}>

@@ -7,8 +7,11 @@
 .form_main_heading_container{
     display:flex;
     flex-direction: column;
-    padding:20px 0px 30px 0px;
-    width:100%
+    width:100%;
+    padding:30px 0px 40px 0px;
+    margin-right:auto;
+    margin-left:auto;
+    background-color:var(--color-blue)
 
 }
 
@@ -24,12 +27,12 @@
 .form_main_heading_container{
     display:flex;
     flex-direction: column;
-    padding:20px 0px 30px 0px;
+    padding:30px 0px 40px 0px;
     width:100%;
     margin-right:auto;
     margin-left:auto;
     background-color: var(--color-blue);
-    height:12vh
+ 
 
 }
 
@@ -39,7 +42,7 @@
     gap:40px;
     align-items:center;
     padding:20px 0px 50px 0px;
-    width:55%
+    width:90%
 
 }
 
@@ -72,7 +75,7 @@
         width:95%;
     }
     .form_input_card_container{
-        width:90%;
+        width:98%;
     
     }
 

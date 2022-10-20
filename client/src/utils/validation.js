@@ -22,10 +22,11 @@ export const validateText = (data)=>{
         error="field should not be empty"
         return error
     }
-    else if(data.length <=2 ){
-        error="characters size too small"
+    else if(data.length <= 2 ){
+        error="character too small"
         return error
     }
+     
     else if(!data.match(/[a-zA-Z]/g)){
         error="text is not valid"
         return error
@@ -51,5 +52,28 @@ export const validatePhoneNumber = (data)=>{
         error = ""
     }
     return error
+}
+
+export const validatePassword = (data)=>{
+    
+    let error = ""
+    if(data.length === 0 ){
+        error="field should not be empty"
+        return error
+    }
+    else if(data.length < 4 ){
+        error="password should be 4 digit"
+        return error
+    }
+     else if(data.length > 4 ){
+        error="password should be 4 digit"
+        return error
+    }
+   
+    else{
+        error = ""
+        return error
+    }
+    
 }
 

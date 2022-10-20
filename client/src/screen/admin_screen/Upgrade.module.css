@@ -5,7 +5,7 @@
 }
 
 .dashboard_main_header{
-    height:12vh;
+    height:100px;
     display:flex;
     flex-direction:row;
     align-items:flex-start;
@@ -25,7 +25,9 @@
 
 .dashboard_main_header h1{
     color:var(--color-background);
-    font-size:20px
+    font-size:20px;
+    padding-left:15px;
+    font-family:poppins;
 }
 .form_main_heading_container{
     display:flex;

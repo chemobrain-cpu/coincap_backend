@@ -57,7 +57,7 @@ function Send() {
                         text="Once your transaction is verified and confirmed, the crypto will show up in the recipient’s account. This can take anywhere from a few seconds to a few minutes." />
 
                     <BulletList
-                        text="If you’re a Coinbase customer, you can also send crypto to any email address in 100+ countries instantly and for free. Just open your Coinbase app, select the crypto and an amount, enter the recipient’s email address, and hit send." />
+                        text="If you’re a coincap customer, you can also send crypto to any email address in 100+ countries instantly and for free. Just open your coincap app, select the crypto and an amount, enter the recipient’s email address, and hit send." />
 
                     <BulletList
                         text="Sending crypto is easy and affordable – whether your funds are traveling from across the room or around the world."
