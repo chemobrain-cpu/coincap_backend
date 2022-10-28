@@ -165,11 +165,15 @@ function Nav({navigateToApp}) {
                 to='/learn'
                 className={styles.nav_link}
                 onClick={closeLearnDesktop}
+                style={{backgroundColor:'rgb(240,240,240)',padding:'12px',fontWeight:400,color:'#1652f0',}}
               >
                 Learn Basics
               </Link>
+
+
+
               <div className={styles.nav_link_small} onClick={showLearnLinkHandler}>
-                <button onClick={() => handleNavigate('/learn')}>
+                <button onClick={() => handleNavigate('/learn')} >
                   Learn Basics
 
                 </button>

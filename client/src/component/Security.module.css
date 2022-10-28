@@ -34,14 +34,13 @@
 .security_imageCon img{
     width:30%
 }
-.security_content{
 
-}
 .security_content h1{
     text-align:center;
     font-size:1.5rem;
     margin-bottom:16px;
     font-family: poppins;
+    color:rgb(120,120,120)
     
 }
 .security_content p{

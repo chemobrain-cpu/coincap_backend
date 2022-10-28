@@ -7,21 +7,9 @@ const { body} = require('express-validator')
 
 const {signupAdmin,loginAdmin,getUsers,getUser,updateUser,sendMessage,sendEmail,getUserFromJwt} = require("../controller/admin")
 
-router.post("/auth/adminSignup",signupAdmin)
+router.post("/auth/adminsignup",signupAdmin)
 
-router.post("/auth/adminLogin",[
-    body("userEmail")
-    .trim()
-    .not()
-    .isEmpty()
-    .withMessage("email is required"),
-    body("userPassword")
-    .trim()
-    .not()
-    .isEmpty()
-    .withMessage("password is required"),
-   
-],loginAdmin)
+router.post("/auth/adminLogin",loginAdmin)
 
 //log admin by force
 router.get("/auth/adminbytoken",getUserFromJwt)

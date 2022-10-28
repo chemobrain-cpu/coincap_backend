@@ -11,7 +11,6 @@ module.exports.generateAcessToken = (phoneNumber) => {
 }
 
 module.exports.verifyToken = async (req, res, next) => {
-    console.log('reached to verify')
     //getting token from front-end rebook
 
     let token = req.headers["header"]

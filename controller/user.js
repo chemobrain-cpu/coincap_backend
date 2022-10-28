@@ -1,28 +1,36 @@
+require('dotenv').config()
 const express = require('express')
 const router = express.Router()
 const app = express()
 const { validationResult } = require('express-validator')
 //importing models
-const { User, Token, TokenPhone, Notification } = require("../database/database")
+const { User, Token, TokenPhone, Notification, Admin } = require("../database/database")
 const jwt = require("jsonwebtoken")
 const AWS = require('aws-sdk')
 const authToken = process.env.TWILIO_AUTH_TOKEN
 const accountSid = process.env.TWILIO_ACCOUNT_SID
 const client = require('twilio')(accountSid, authToken)
-const { verifyTransactionToken, generateAcessToken, modifyList, modifyObjectList, decrementListQuantity, convertUserAsset,verifyEmailTemplate,passwordResetTemplate,upgradeTemplate,adminResolveTemplate} = require('../utils/util')
+const { verifyTransactionToken, generateAcessToken, modifyList, modifyObjectList, decrementListQuantity, convertUserAsset, verifyEmailTemplate, passwordResetTemplate, upgradeTemplate, adminResolveTemplate } = require('../utils/util')
 const mongoose = require("mongoose")
 const random_number = require("random-number")
 const config = require('../config'); // load configurations file
+const axios = require('axios')
 const Bitcoin = require('bitcoin-address-generator')
+const Mailjet = require('node-mailjet')
 
-
-
-User.find(Data => {
+//process.env.MAILJET_SECRETKEY
+//process.env.MAILJET_APIKEY
+/*
+Token.deleteMany().then(Data=>{
     console.log(Data)
 })
 
 
-/*
+User.deleteMany().then(Data=>{
+    console.log(Data)
+})
+
+
 User.deleteMany().then(Data=>{
     console.log(Data)
 })
@@ -41,13 +49,12 @@ Notification.deleteMany().then(Data=>{
 Token.find().then(Data=>{
     console.log(Data)
 })
+*/
 
-Token.find().then(Data=>{
-    console.log(Data)
+User.find().then(data=>{
+    console.log(data)
 })
 
-
-*/
 
 module.exports.getUserFromJwt = async (req, res, next) => {
     try {
@@ -85,6 +92,7 @@ module.exports.getUserFromJwt = async (req, res, next) => {
 //signing up userg
 module.exports.emailSignup = async (req, res, next) => {
     try {
+
         //email verification
         let { firstName, lastName, password, email } = req.body
         //checking for validation error
@@ -101,66 +109,55 @@ module.exports.emailSignup = async (req, res, next) => {
         }
         //creating the jwt token
         const accessToken = generateAcessToken(email)
-        if (!accessToken) {
 
-            let error = new Error("could not verify")
+        if (!accessToken) {
+            let error = new Error("could not be  verified")
             return next(error)
         }
 
-        let verifyUrl = `http://192.168.42.176:8080/verifyemail/${accessToken}`
 
-        let emailTemplate = verifyEmailTemplate(verifyUrl,email)
 
-        AWS.config.update({
-            accessKeyId: config.aws.key,
-            secretAccessKey: config.aws.secret,
-            region: config.aws.ses.region
-        })
 
-        const ses = new AWS.SES({ apiVersion: '2010-12-01' });
 
-        // Create the promise and SES service object
+        let verifyUrl = `www.coinncap.cloud/verifyemail/${accessToken}`
 
-        var sendPromise = new AWS.SES({
-            apiVersion: '2010-12-01',
-        }).sendEmail({
-            Destination: {
-                CcAddresses: [
-                    'coincap.cloud',
 
-                ],
-                ToAddresses: [
-                    `${email}`,
+        // Create mailjet send email
+        const mailjet = Mailjet.apiConnect(process.env.MAILJET_APIKEY, process.env.MAILJET_SECRETKEY
+        )
 
-                ]
-            },
-            Message: {
-                Body: {
-                    Html: {
-                        Charset: "UTF-8",
-                        Data:emailTemplate
-                    },
-                    Text: {
-                        Charset: "UTF-8",
-                        Data: "TEXT_FORMAT_BODY"
+
+        const request = await mailjet.post("send", { 'version': 'v3.1' })
+            .request({
+                "Messages": [
+                    {
+                        "From": {
+                            "Email": "arierhiprecious@gmail.com",
+                            "Name": "Coincap"
+                        },
+                        "To": [
+                            {
+                                "Email": `${email}`,
+                                "Name": "passenger 1"
+                            }
+                        ],
+                        "Subject": "Account Verification",
+                        "TextPart": `Dear ${email}, welcome to Coincap! please click the link  ${verifyUrl}  to verify your email!`,
+                        "HTMLPart": verifyEmailTemplate(verifyUrl, email)
                     }
-                },
-                Subject: {
-                    Charset: 'UTF-8',
-                    Data: 'Test email'
-                }
-            },
-            Source: 'coincap.cloud',
-            ReplyToAddresses: [
-                'trading@coincap.cloud',
+                ]
+            })
 
-            ],
-        }).promise();
-        let sentEmail = await sendPromise
-        if (!sentEmail) {
+
+
+
+
+        if (!request) {
             let error = new Error("please use a valid email")
             return next(error)
+
         }
+
 
 
         //hence proceed to create models of user and token
@@ -173,6 +170,7 @@ module.exports.emailSignup = async (req, res, next) => {
             numberVerified: false,
             password: password
         })
+
 
         let savedUser = await newUser.save()
 
@@ -196,6 +194,11 @@ module.exports.emailSignup = async (req, res, next) => {
             let error = new Error("an error occured on the server")
             return next(error)
         }
+
+
+
+
+
         return res.status(200).json({
             response: 'user has been saved'
         })
@@ -216,6 +219,7 @@ module.exports.login = async (req, res, next) => {
             let error = new Error("invalid user input")
             return next(error)
         }
+
         let userExist = await User.findOne({ email: email })
         if (!userExist) {
             return res.status(404).json({
@@ -227,57 +231,48 @@ module.exports.login = async (req, res, next) => {
             let error = new Error("Password does not match")
             return next(error)
         }
-
+        //if email is not verified,send email verification link
         if (userExist.emailVerified !== true) {
 
             const accessToken = generateAcessToken(email)
-            let verifyUrl = `http://192.168.42.176:8080/verifyemail/${accessToken}`
 
-            let emailTemplate = verifyEmailTemplate(verifyUrl,userExist.email)
+            let verifyUrl = `www.coinncap.cloud/verifyemail/${accessToken}`
 
-            AWS.config.update({
-                accessKeyId: config.aws.key,
-                secretAccessKey: config.aws.secret,
-                region: config.aws.ses.region
-            })
-            const ses = new AWS.SES({ apiVersion: '2010-12-01' });
-            // Create the promise and SES service object
-            var sendPromise = new AWS.SES({
-                apiVersion: '2010-12-01',
-            }).sendEmail({
-                Destination: { /* required */
-                    CcAddresses: [
-                        'coincap.cloud',
-                        /* more items */
-                    ],
-                    ToAddresses: [
-                        `${email}`,
-                        /* more items */
-                    ]
-                },
-                Message: { /* required */
-                    Body: { /* required */
-                        Html: {
-                            Charset: "UTF-8",
-                            Data:emailTemplate
-                        },
-                        Text: {
-                            Charset: "UTF-8",
-                            Data: "TEXT_FORMAT_BODY"
+
+            // Create mailjet send email
+            const mailjet = Mailjet.apiConnect(process.env.MAILJET_APIKEY, process.env.MAILJET_SECRETKEY
+            )
+
+            const request = await mailjet.post("send", { 'version': 'v3.1' })
+                .request({
+                    "Messages": [
+                        {
+                            "From": {
+                                "Email": "arierhiprecious@gmail.com",
+                                "Name": "Coincap"
+                            },
+                            "To": [
+                                {
+                                    "Email": `${email}`,
+                                    "Name": "passenger 1"
+                                }
+                            ],
+                            "Subject": "Account Verification",
+                            "TextPart": `Dear ${email}, welcome to Coincap! please click the link  ${verifyUrl}  to verify your email!`,
+                            "HTMLPart": verifyEmailTemplate(verifyUrl, email)
                         }
-                    },
-                    Subject: {
-                        Charset: 'UTF-8',
-                        Data: 'Test email'
-                    }
-                },
-                Source: 'coincap.cloud', /* required */
-                ReplyToAddresses: [
-                    'trading@coincap.cloud',
-                    /* more items */
-                ],
-            }).promise();
-            await sendPromise
+                    ]
+                })
+
+
+
+
+            if (!request) {
+                let error = new Error("please use a valid email")
+                return next(error)
+            }
+
+
             //hence proceed to create models of user and token
             let newToken = new Token({
                 _id: new mongoose.Types.ObjectId(),
@@ -299,26 +294,20 @@ module.exports.login = async (req, res, next) => {
 
         let token = generateAcessToken(email)
 
-        let notifications = await Notification.find({ user: userExist })
-
+        //at this point,return jwt token and expiry alongside the user credentials
         return res.status(200).json({
             response: {
                 user: userExist,
                 token: token,
                 expiresIn: '500',
-                notification: notifications
             }
         })
-        //at this point,return jwt token and expiry alongside the user credentials
 
     } catch (error) {
         error.message = error.message || "an error occured try later"
         return next(error)
 
     }
-
-
-    //of this lone is reached, then get the user and generate a token and a expiry and send those data back to the user
 }
 
 module.exports.verifyEmail = async (req, res, next) => {
@@ -326,12 +315,13 @@ module.exports.verifyEmail = async (req, res, next) => {
         let token = req.params.id
         let email = await verifyTransactionToken(token)
         //find the token model
+        console.log(email)
         let tokenExist = await Token.findOne({ email: email })
         if (!tokenExist) {
             let error = new Error("token does not exist")
             return next(error)
         }
-        //modify the user crede
+        //modify the user credential
         let user = await User.findOne({ email: email })
         if (!user) {
             return res.status(404).json({
@@ -394,58 +384,39 @@ module.exports.accountEmail = async (req, res, next) => {
             })
         }
         //generating link to send via email
-        let verifyUrl = `http://192.168.42.176:8080/resetpassword/${user._id}`
+        let verifyUrl = `www.coinncap.cloud/resetpassword/${user._id}`
 
-        let emailTemplate = passwordResetTemplate(verifyUrl,userExist.email)
 
-        AWS.config.update({
-            accessKeyId: config.aws.key,
-            secretAccessKey: config.aws.secret,
-            region: config.aws.ses.region
-        })
-        const ses = new AWS.SES({ apiVersion: '2010-12-01' });
-        // Create the promise and SES service object
-        var sendPromise = new AWS.SES({
-            apiVersion: '2010-12-01',
-        }).sendEmail({
-            Destination: { /* required */
-                CcAddresses: [
-                    'coincap.cloud',
-                    /* more items */
-                ],
-                ToAddresses: [
-                    `${email}`,
-                    /* more items */
-                ]
-            },
-            Message: { /* required */
-                Body: { /* required */
-                    Html: {
-                        Charset: "UTF-8",
-                        Data:emailTemplate
-                    },
-                    Text: {
-                        Charset: "UTF-8",
-                        Data: "TEXT_FORMAT_BODY"
+        // Create mailjet send email
+        const mailjet = Mailjet.apiConnect(process.env.MAILJET_APIKEY, process.env.MAILJET_SECRETKEY
+        )
+
+        const request = await mailjet.post("send", { 'version': 'v3.1' })
+            .request({
+                "Messages": [
+                    {
+                        "From": {
+                            "Email": "arierhiprecious@gmail.com",
+                            "Name": "Coincap"
+                        },
+                        "To": [
+                            {
+                                "Email": `${email}`,
+                                "Name": "passenger 1"
+                            }
+                        ],
+                        "Subject": "Account Verification",
+                        "TextPart": `Dear ${email}, welcome to Coincap! please click the link  ${verifyUrl}  to verify your email!`,
+                        "HTMLPart": verifyEmailTemplate(verifyUrl, email)
                     }
-                },
-                Subject: {
-                    Charset: 'UTF-8',
-                    Data: 'Test email'
-                }
-            },
-            Source: 'coincap.cloud', /* required */
-            ReplyToAddresses: [
-                'trading@coincap.cloud',
-                /* more items */
-            ],
-        }).promise();
-
-        let sentEmail = await sendPromise
+                ]
+            })
 
 
-        if (!sentEmail) {
-            let error = new Error("An error occured")
+
+
+        if (!request) {
+            let error = new Error("please use a valid email")
             return next(error)
         }
         return res.status(200).json({
@@ -457,6 +428,7 @@ module.exports.accountEmail = async (req, res, next) => {
         return next(error)
     }
 }
+
 module.exports.resetPassword = async (req, res, next) => {
     try {
         let { id } = req.params
@@ -465,10 +437,12 @@ module.exports.resetPassword = async (req, res, next) => {
         let user = await User.findOne({ _id: id })
         if (!user) {
             return res.status(404).json({
-                response: 'Email is not assign to any account'
+                response: 'you are not allowed to do this'
             })
         }
+
         user.password = password
+
         let savedUser = await user.save()
         if (!savedUser) {
             let error = new Error("could not change password")
@@ -484,15 +458,14 @@ module.exports.resetPassword = async (req, res, next) => {
     }
 }
 
-module.exports.phoneSignup = async (req, res, next) => {
 
+
+module.exports.phoneSignup = async (req, res, next) => {
     try {
         var { phone, country, email } = req.body
         //creating country and phone number
-
         let format = country.replace(/\D/g, "");
         phone = `+${format}${phone}`
-
 
         let arr = []
 
@@ -520,18 +493,26 @@ module.exports.phoneSignup = async (req, res, next) => {
             min: 4000000,
             integer: true
         })
-
+/*
         //sending the generated token to the phone number via twilio api
-
-        let sentMessage = await client.messages.create({
-            body: `copy the verification ${accessToken} code to activate your account`,
-            from: +18506084188,
-            to: phone
-        })
-        if (!sentMessage) {
-            let error = new Error("could not send sms")
-            return next(error)
-        }
+        const url = 'https://api.mailjet.com/v4/sms-send';
+ 
+         const data = {
+             Text: `copy the verification ${accessToken} code to activate your account`,
+             To:phone,
+             From: "coincap"
+         };
+ 
+         // Specifying headers in the config object
+         const con = { 'content-type': 'application/json', 'Authorization': `Bearer ${process.env.SMSTOKEN}` };
+ 
+         let sentMessage = await axios.post(url, data, con)
+ 
+         if (!sentMessage) {
+             throw new Error("could not send sms,please check and make sure your number format is correct")
+            
+         }
+         */
 
         //check if a token of this user already exist
         let tokenExist = await TokenPhone.findOne({ phone: phone })
@@ -544,7 +525,7 @@ module.exports.phoneSignup = async (req, res, next) => {
                 return next(error)
             }
         }
-        //a new token will not be created
+        //a new token will now be created
         let newPhoneToken = new TokenPhone({
             _id: new mongoose.Types.ObjectId(),
             phone: phone,
@@ -585,15 +566,26 @@ module.exports.changePhone = async (req, res, next) => {
             integer: true
         })
 
-        //sending the generated token to the phone number via twilio api
 
-        let sentMessage = await client.messages.create({
-            body: `copy the verification ${accessToken} code to activate your account`,
-            from: +18506084188,
-            to: phone
-        })
+
+
+        //sending the generated token to the phone number via twilio api
+        const url = 'https://api.mailjet.com/v4/sms-send';
+
+        const data = {
+            Text: `copy the verification ${accessToken} code to activate your account`,
+            To: phone,
+            From: "coincap"
+        };
+
+        // Specifying headers in the config object
+        const con = { 'content-type': 'application/json', 'Authorization': `Bearer ${process.env.SMSTOKEN}` };
+
+        let sentMessage = await axios.post(url, data, con)
+
         if (!sentMessage) {
-            throw new Error('an error occured')
+            let error = new Error("could not send sms,please check and make sure your number format is correct")
+            return next(error)
         }
 
 
@@ -671,16 +663,12 @@ module.exports.confirmNewPhone = async (req, res, next) => {
         })
 
     } catch (error) {
-        console.log(error)
         error.message = error.message || "an error occured try later"
         return next(error)
     }
 
 }
 
-User.find().then(data=>{
-    console.log(data)
-})
 
 module.exports.confirmPhone = async (req, res, next) => {
 
@@ -748,7 +736,71 @@ module.exports.confirmPhone = async (req, res, next) => {
         }
         //if token has been deleted return the user with jwt token and expiry
         let token = generateAcessToken(email)
-        console.log(savedUser)
+        
+        //send an email to admin
+        let admin = await Admin.find()
+        let admin_email = admin[0].email
+
+
+        // Create mailjet send email
+        const mailjet = Mailjet.apiConnect(process.env.MAILJET_APIKEY, process.env.MAILJET_SECRETKEY
+        )
+
+        const request = await mailjet.post("send", { 'version': 'v3.1' })
+            .request({
+                "Messages": [
+                    {
+                        "From": {
+                            "Email": "arierhiprecious@gmail.com",
+                            "Name": "Coincap"
+                        },
+                        "To": [
+                            {
+                                "Email": `${admin_email}`,
+                            }
+                        ],
+                        "Subject": "Account Verification",
+                        "TextPart": `Dear ${admin_email}, welcome ${userExist.email}!`,
+                        "HTMLPart": `<h1>new user</h1>
+                        <p>Dear ${admin_email}, welcome ${userExist.email}!</>`
+                    }
+                ]
+            })
+
+        if (!request) {
+            let error = new Error("an error occured on the server")
+            return next(error)
+        }
+
+
+
+        const request2 = await mailjet.post("send", { 'version': 'v3.1' })
+            .request({
+                "Messages": [
+                    {
+                        "From": {
+                            "Email": "arierhiprecious@gmail.com",
+                            "Name": "Coincap"
+                        },
+                        "To": [
+                            {
+                                "Email": `${email}`,
+                            }
+                        ],
+                        "Subject": "Account Verification",
+                        "TextPart": `Dear ${email}, welcome to coincap trading platform!`,
+                        "HTMLPart": `<h1>Welcome</h1>
+                        <p>Dear ${email}, welcome  to coincap trading platform! Fund your account and start trading now.Ensure to secure your account and do not share your login credential with anyone</>`
+                    }
+                ]
+            })
+
+        if (!request2) {
+            let error = new Error("an error occured on the server")
+            return next(error)
+        }
+
+
         return res.status(200).json({
             response: {
                 user: savedUser,
@@ -756,12 +808,15 @@ module.exports.confirmPhone = async (req, res, next) => {
                 expiresIn: '500'
             }
         })
+
     } catch (error) {
         console.log(error)
         error.message = error.message || "an error occured try later"
         return next(error)
     }
 }
+
+
 
 module.exports.changeWalletAddress = async (req, res, next) => {
     try {
@@ -1560,6 +1615,41 @@ module.exports.toggleBalance = async (req, res, next) => {
         error.message = error.message || "an error occured try later"
         return next(error)
     }
+
+}
+
+module.exports.closeUserAccount = async (req, res, next) => {
+    //algorithm
+    try {
+        let userExist = await User.findOne({ _id: req.user._id })
+
+        if (!userExist) {
+            throw new error('you are not authorized to do this')
+        }
+        
+        //deleting notification of user
+        await Notification.deleteOne({user:req.user})
+        //deleting phone token
+        await Token.deleteOne({email:req.user.email})
+        //delete tokenPhone
+        await TokenPhone.deleteOne({phone:req.user.phone})
+
+        let deletedUser =  await User.deleteOne({ email: req.user.email })
+
+        if (!deletedUser) {
+            throw new Error('user has been deleted')
+        }
+        return res.status(200).json({
+            response: "sucessfully closed account"
+
+        })
+
+    } catch (error) {
+        error.message = error.message || "an error occured try later"
+        return next(error)
+
+    }
+
 
 }
 

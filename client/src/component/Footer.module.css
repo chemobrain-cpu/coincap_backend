@@ -1,5 +1,5 @@
 .footer_section{
-  padding-top:50px;
+  padding-top:70px;
   display:flex;
   align-items: center;
   justify-content: center;
@@ -18,14 +18,14 @@
 
 }
 .footer_section_inner p,.footer_section_inner li{
-  font-size:.9rem;
+  font-size:1.1rem;
   color:rgb(100,100,100);
   font-family: poppins;
   margin-bottom: 5px;
 
 }
 .footer_section_inner h1,.footer_section_inner li{
-  font-size:1rem;
+  font-size:1.1rem;
   margin-bottom: 10px;
 }
 

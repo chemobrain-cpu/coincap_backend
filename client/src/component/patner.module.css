@@ -1,0 +1,64 @@
+.lineContainer{
+    display:flex;
+    flex-direction:row;
+    align-items:center;
+    justify-content:center;
+    margin-bottom:50px
+
+}
+
+.line{
+    width:30%;
+    height:5px;
+    border-radius:3px;
+    background-color:var(--color-blue)
+
+}
+
+.patnerSection {
+    background: linear-gradient(rgb(240, 240, 240), #fff);
+    padding-top: 1px;
+    padding-bottom: 40px
+}
+
+.imageBox {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+
+.innerBoxImage {
+    width: 95%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    justify-content: space-around;
+}
+
+.imageCard {
+    width: 25%;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+}
+
+@media screen and (max-width: 750px) {
+    .innerBoxImage {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+    }
+
+    .imageCard {
+        width: 60%;
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+        justify-content: center;
+        margin-bottom: 80px
+    }
+
+}

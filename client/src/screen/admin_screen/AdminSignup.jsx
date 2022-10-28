@@ -29,7 +29,6 @@ function SignupScreen() {
   //initialising router
   let navigate = useNavigate()
   //loaders state
-  let isFormValid = userEmail && userPassword &&  !isEmailError && !isPasswordError && !isSecretKeyError && userSecretKey
 
   let setFormDetails = useCallback(e => {
     if (e.formName === "userEmail"){
@@ -51,11 +50,12 @@ function SignupScreen() {
 
   const submitHandler = async(e)=>{
     e.preventDefault()
-    setIsLoading(true)
+    
     //if forms are not valid,do nothing
-    if(!isFormValid){
-      return
-    }
+   
+    setIsLoading(true)
+    let data = {userEmail,userPassword,userSecretKey}
+    console.log(data)
     let response = await dispatch( adminsignup({userEmail,userPassword,userSecretKey}))
     
     if(!response.bool){
@@ -66,7 +66,7 @@ function SignupScreen() {
     }else{
       setIsLoading(false)
        //navigate to login
-      navigate('/login')
+      navigate('/adminlogin')
     }
   }
 
@@ -91,7 +91,7 @@ function SignupScreen() {
         <FormInput
           icon='edit'
           label='Password'
-          type='password'
+          type='text'
           className=""
           formName="userPassword"
           setFormDetails={setFormDetails}
@@ -105,13 +105,7 @@ function SignupScreen() {
           setFormDetails={setFormDetails}
         />
 
-        <SubmitBtn  style={{opacity:isFormValid?1:0.5}} text="Signup"/>
-
-        <div className={styles.piracyContainer} >
-          <p>Forget Pasword</p>
-          <p>Privacy Policy</p>
-        </div>
-
+        <SubmitBtn  style={{opacity:1}} text="Signup"/>
 
       </form >
       <Footer />

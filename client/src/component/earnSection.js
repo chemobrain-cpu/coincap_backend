@@ -13,10 +13,6 @@ import AOS from 'aos'
 import "aos/dist/aos.css";
 
 function EarnSection({navigateToApp}) {
-    let [userEmail, setUserEmail] = useState("")
-    let [userPassword, setUserPassword] = useState("")
-    let [isEmailError, setIsEmailError] = useState("")
-    let [isPasswordError, setIsPasswordError] = useState("")
     let [isError, setIsError] = useState(false)
     let [isErrorInfo, setIsErrorInfo] = useState('')
     let [isLoading, setIsLoading] = useState(false)
@@ -59,6 +55,8 @@ function EarnSection({navigateToApp}) {
                 <p>Discover how specific cryptocurrencies work — and get a bit of each crypto to try out for yourself.</p>
                 <button onClick={navigateToApp}>start earning</button>
             </div>
+
+            
             <div className={styles.earn_tech}>
                 <div className={styles.earn_tech_content}>
                     <div className={styles.earn_tech_symbol}>
@@ -74,6 +72,7 @@ function EarnSection({navigateToApp}) {
 
 
                 </div>
+
                 <div className={styles.earn_tech_content}>
                     <div className={styles.earn_tech_symbol}>
                         <div className={styles.earn_techimg_con}>
@@ -88,6 +87,7 @@ function EarnSection({navigateToApp}) {
 
 
                 </div>
+
                 <div className={styles.earn_tech_content}>
                     <div className={styles.earn_tech_symbol}>
                         <div className={styles.earn_techimg_con}>
@@ -102,6 +102,7 @@ function EarnSection({navigateToApp}) {
 
 
                 </div>
+
                 <p className={styles.earn_tech_paragraph}>View more<i className="material-icons">arrow_forward</i></p>
 
 

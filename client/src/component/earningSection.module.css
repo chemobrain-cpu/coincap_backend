@@ -6,10 +6,9 @@
     align-items: flex-start;
     position: relative;
     background-color:black;
-    margin-top: 50px;
     margin-bottom:50px;
-    padding-top:20px;
-    padding-bottom:20px;
+    padding-bottom:40px;
+    padding-top:40px
 
 
 }
@@ -104,7 +103,7 @@
         margin-bottom: 30px
     }
     .earning_section {
-        height: 40vh;
+        height: 45vh;
     }
   
 

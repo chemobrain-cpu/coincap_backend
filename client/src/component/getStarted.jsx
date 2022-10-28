@@ -52,7 +52,7 @@ function GetStarted({navigateToApp}) {
 
             </div>
             <div className={styles.getStartedSection_imageCon}>
-            <img src='../../OIP (3).jpg' style={{width:'40%',backgroundColor:'red',transform:'rotate(25deg)',background: 'linear-gradient(rgb(240,240,240),white);'}}/>
+            <img src='../../OIP (3).jpg' style={{width:'40%',backgroundColor:'red',transform:'rotate(25deg)',background: 'rgb(240,240,240)'}}/>
 
             </div>
 

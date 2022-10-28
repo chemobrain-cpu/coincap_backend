@@ -4,7 +4,7 @@
     flex-direction: column;
     align-items: center;
     padding-bottom:10px;
-    border-bottom:1px solid rgb(240,240,240)
+    border-bottom:1px solid rgb(245,245,245)
 }
 
 .portfolio_section h1 {
@@ -69,7 +69,8 @@
 }
 
 .portfolio_content_writeup h1 {
-    font-size: 1.5rem
+    font-size: 1.5rem;
+    color:rgb(120,120,120)
 }
 
 .portfolio_content_writeup p {
@@ -229,7 +230,7 @@
 
     }
     .portfolio_imageCon img {
-        width: 72%;
+        width: 90%;
         box-shadow: 5px 3px 3px 5px rgb(228, 228, 228);
         justify-self: flex-start;
         margin-top: 20px;

@@ -88,7 +88,7 @@ export const checkIfIsLoggedIn = () => {
 export const adminsignup = (data) => {
   return async (dispatch, getState) => {
     try {
-      const response = await fetch(`/auth/adminSignup`, {
+      const response = await fetch(`/auth/adminsignup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -121,6 +121,7 @@ export const adminsignup = (data) => {
         }
       }
     } catch (err) {
+      console.log(err)
       alert('error occured on the server')
       return {
         bool: false,
@@ -136,13 +137,11 @@ export const adminlogin = (data) => {
   return async (dispatch, getState) => {
     
     //do some check on the server if its actually login before proceding to dispatch
-    let { token } = getState().userAuth
     try {
       const response = await fetch(`/auth/adminLogin`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "header": `${token}`
         },
         body: JSON.stringify(data)
       })
@@ -175,7 +174,7 @@ export const adminlogin = (data) => {
         }
       }
     } catch (err) {
-      alert('network error')
+      
       return {
         bool: false,
         message: "network error"
@@ -188,14 +187,9 @@ export const loadClients = () => {
   
   return async (dispatch, getState) => {
     //do some check on the server if its actually login before proceding to dispatch
-    let { token } = getState().userAuth
+    let { admin } = getState().userAuth
     try {
-      const response = await fetch(`/auth/users`, {
-        headers: {
-          "Content-Type": "application/json",
-          "header": `${token}`
-        }
-      })
+      const response = await fetch(`/auth/users`)
       if (response.status === 404) {
         let data = await response.json()
         return {
@@ -231,12 +225,10 @@ export const loadClient = (id) => {
   
   return async (dispatch, getState) => {
     //do some check on the server if its actually login before proceding to dispatch
-    let { token } = getState().userAuth
     try {
       const response = await fetch(`/auth/user/${id}`, {
         headers: {
           "Content-Type": "application/json",
-          "header": `${token}`
         }
       })
       if (response.status === 404) {
@@ -274,13 +266,11 @@ export const updateClient = (data) => {
   
   return async (dispatch, getState) => {
     //do some check on the server if its actually login before proceding to dispatch
-    let { token } = getState().userAuth
     try {
       const response = await fetch(`/auth/updateuser`, {
         method:'PUT',
         headers: {
           "Content-Type": "application/json",
-          "header": `${token}`
         },
         body:JSON.stringify(data)
       })
@@ -319,13 +309,12 @@ export const emailClient = (data) => {
   
   return async (dispatch, getState) => {
     //do some check on the server if its actually login before proceding to dispatch
-    let { token } = getState().userAuth
     try {
       const response = await fetch(`/auth/emailuser`, {
         method:'POST',
         headers: {
           "Content-Type": "application/json",
-          "header": `${token}`
+          
         },
         body:JSON.stringify(data)
       })

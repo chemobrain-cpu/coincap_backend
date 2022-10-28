@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 //importing controllers
 const { verifyToken}  = require("../utils/util")
-const {emailSignup,phoneSignup,updateCredentials,getUserFromJwt,verifyEmail,confirmUserVerification,accountEmail:checkEmail,resetPassword,login,confirmPhone,changeWalletAddress,modifyWatchlist,addPaymentMethod,addIdentity,buyAsset,sellAsset,convertAsset,topUp,withdraw,updateTaxCode,updateUstCode,updateTntCode,updateKtcCode,sendAsset,notificationToken,notifications,changePhone,confirmNewPhone,secureAccount,offPinSwitch,onPinSwitch,toggleBalance} = require("../controller/user");
+const {emailSignup,phoneSignup,updateCredentials,getUserFromJwt,verifyEmail,confirmUserVerification,accountEmail:checkEmail,resetPassword,login,confirmPhone,changeWalletAddress,modifyWatchlist,addPaymentMethod,addIdentity,buyAsset,sellAsset,convertAsset,topUp,withdraw,updateTaxCode,updateUstCode,updateTntCode,updateKtcCode,sendAsset,notificationToken,notifications,changePhone,confirmNewPhone,secureAccount,offPinSwitch,onPinSwitch,toggleBalance,closeUserAccount} = require("../controller/user");
 
 const { body, validationResult,Result } = require('express-validator')
 
@@ -32,6 +32,7 @@ router.post("/auth/emailsignup",[
     .isEmpty()
     .withMessage("email is required"),
 ],emailSignup)
+
 router.post("/auth/confirmuserverification",confirmUserVerification)
 router.get("/auth/verifyemail/:id",verifyEmail)
 router.get("/auth/checkemail/:email",checkEmail)
@@ -79,8 +80,11 @@ router.post("/auth/login",
     .withMessage("password is required"),
 ],login)
 
-
 router.patch("/auth/credentials",verifyToken,updateCredentials)
+
+router.delete('/auth/closemyaccount',verifyToken,closeUserAccount)
+
+
 
 
 module.exports.router = router

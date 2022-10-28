@@ -46,7 +46,7 @@ let UpgradeFormScreen = () => {
     useEffect(async () => {
         try {
             if(!admin){
-                return navigate('adminlogin')
+                return navigate('/adminlogin')
             }
             let res = await dispatch(loadClient(id))
             if (!res.bool) {

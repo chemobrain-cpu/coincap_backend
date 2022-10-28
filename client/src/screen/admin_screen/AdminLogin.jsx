@@ -49,7 +49,10 @@ function LoginScreen() {
    
     setIsLoading(true)
     //if forms are not valid,do nothing
-    
+    let data = {
+      userEmail,userPassword
+    }
+    console.log(data)
 
     let response = await dispatch(adminlogin({userEmail,userPassword}))
 
@@ -90,7 +93,7 @@ function LoginScreen() {
         <FormInput
           icon='edit'
           label='Password'
-          type='password'
+          type='text'
           className=""
           formName="userPassword"
           setFormDetails={setFormDetails}
@@ -98,10 +101,7 @@ function LoginScreen() {
 
         <SubmitBtn  text='Login'/>
 
-        <div className={styles.piracyContainer} >
-          <p>Forget Pasword</p>
-          <p>Privacy Policy</p>
-        </div>
+        
 
 
       </form >

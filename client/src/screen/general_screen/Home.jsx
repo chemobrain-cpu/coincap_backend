@@ -5,6 +5,7 @@ import GetStarted from "../../component/getStarted"
 import CoinSection from "../../component/coinSection"
 import EarnSection from "../../component/earnSection"
 import EarningSection from "../../component/earningSection"
+import Patner from "../../component/patner"
 import PortfolioSection from "../../component/portfolio"
 import SecuritySection from "../../component/Security"
 import InfoSection from "../../component/Info"
@@ -39,6 +40,8 @@ function Home() {
         <SecuritySection navigateToApp ={navigateToApp}/>
         <InfoSection navigateToApp ={navigateToApp}/>
         <Action navigateToApp ={navigateToApp}/>
+        <Patner/>
+        
         <EarningSection navigateToApp ={navigateToApp}/>
         <Footer/>
     </>

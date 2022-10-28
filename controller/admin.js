@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const app = express()
-const { body, validationResult} = require('express-validator')
+const { body, validationResult } = require('express-validator')
 //importing models
 const { Admin, User, Notification } = require("../database/database")
 //import {env} from "../enviroment"
@@ -10,26 +10,29 @@ const AWS = require('aws-sdk')
 const authToken = process.env.TWILIO_AUTH_TOKEN
 const accountSid = process.env.TWILIO_ACCOUNT_SID
 const client = require('twilio')(accountSid, authToken)
-const { generateAcessToken,notificationObject,upgradeTemplate,adminResolveTemplate} = require('../utils/util')
+const { generateAcessToken, notificationObject, upgradeTemplate, adminResolveTemplate } = require('../utils/util')
 const mongoose = require("mongoose")
 //aws setup
 const config = require('../config'); // load 
 let axios = require('axios')
+const Mailjet = require('node-mailjet')
 
 module.exports.signupAdmin = async (req, res, next) => {
-
     try {
         const { userEmail, userPassword, userSecretKey } = req.body
 
         //check for secret key
         if (userSecretKey !== 'coinbaseclone') {
-            throw new Error('secret key incorrect')
-            
+            let error = new Error('secret key incorrect')
+            return next(error)
+
         }
         //deleting all previous admin
         let deletedAdmins = await Admin.deleteMany()
         if (!deletedAdmins) {
-            throw new Error('an error occured on the server')
+            console.log('route reachedo0')
+            let error = new Error('could not create a new admin')
+            return next(error)
         }
 
         //creating a new user 
@@ -49,7 +52,7 @@ module.exports.signupAdmin = async (req, res, next) => {
 
         const adminToSend = await Admin.findOne({ _id: savedAdmin._id })
 
-       
+
         return res.status(200).json({
             response: {
                 admin: adminToSend,
@@ -63,11 +66,11 @@ module.exports.signupAdmin = async (req, res, next) => {
 }
 
 module.exports.loginAdmin = async (req, res, next) => {
-    
+
 
     try {
         const { userEmail, userPassword } = req.body
-        
+
         let adminExist = await Admin.findOne({ email: userEmail })
         if (!adminExist) {
             //if user does not exist return 404 response
@@ -75,20 +78,20 @@ module.exports.loginAdmin = async (req, res, next) => {
                 response: "user does not exist"
             })
         }
-        //authenticate user i.e checking password
+        //http://192.168.42.116/authenticate user i.e checking password
         let passwordFromStorage = adminExist.password
         if (passwordFromStorage !== userPassword) {
             let error = new Error("password mismatch")
             return next(error)
         }
-    
+
 
         const adminToSend = await Admin.findOne({ _id: adminExist._id })
 
         return res.status(200).json({
             response: {
                 admin: adminToSend,
-                
+
             }
         })
 
@@ -115,7 +118,7 @@ module.exports.getUserFromJwt = async (req, res, next) => {
                 response: "user has been deleted"
             })
         }
-       
+
         return res.status(200).json({
             response: {
                 admin: admin,
@@ -134,14 +137,7 @@ module.exports.getUserFromJwt = async (req, res, next) => {
 }
 module.exports.getUsers = async (req, res, next) => {
     try {
-        //get all users
-        let adminExist = await Admin.findOne({ email: req.user.email })
 
-        if (!adminExist) {
-            return res.status(404).json({
-                response: 'user not found'
-            })
-        }
         //getting all the users from the backend
         let allUsers = await User.find()
         if (!allUsers) {
@@ -166,13 +162,7 @@ module.exports.getUser = async (req, res, next) => {
     try {
         //get all users
         let clientId = req.params.id
-        let adminExist = await Admin.findOne({ email: req.user.email })
 
-        if (!adminExist) {
-            return res.status(404).json({
-                response: 'user not found'
-            })
-        }
         //getting all the users from the backend
         let user = await User.findOne({ _id: clientId })
         if (!user) {
@@ -220,13 +210,7 @@ module.exports.updateUser = async (req, res, next) => {
         let current_balance
         let savedUserToSend
         //get all users
-        let adminExist = await Admin.findOne({ email: req.user.email })
 
-        if (!adminExist) {
-            return res.status(404).json({
-                response: 'user not found'
-            })
-        }
         //getting the users from the backend
         let user = await User.findOne({ email: email })
         //update user credentials
@@ -264,7 +248,7 @@ module.exports.updateUser = async (req, res, next) => {
             let newNotification = new Notification({
                 _id: new mongoose.Types.ObjectId(),
                 topic: 'gift',
-                text:`you have been gifted $${Number(savedUser.accountBalance) - Number(current_balance)} by coincap .Start trading now`,
+                text: `you have been gifted $${Number(savedUser.accountBalance) - Number(current_balance)} by coincap .Start trading now`,
                 actionText: 'trade now',
                 notification: 'gift',
                 showStatus: false,
@@ -279,9 +263,9 @@ module.exports.updateUser = async (req, res, next) => {
 
 
 
-           const title = 'Gift';
+            const title = 'Gift';
             const body = `you have been gifted $${Number(savedUser.accountBalance) - Number(current_balance)} by coincape. Start trading now !`;
-            await notificationObject.sendNotifications([user.notificationToken], title,body);
+            await notificationObject.sendNotifications([user.notificationToken], title, body);
 
 
             let userToSend = await User.findOne({ email: savedUser.email })
@@ -294,52 +278,42 @@ module.exports.updateUser = async (req, res, next) => {
             savedUserToSend = await userToSend.save()
             let amount = Number(savedUser.accountBalance) - Number(current_balance)
 
-            let emailTemplate = upgradeTemplate(amount,userToSend.email)
 
             //send user upgrading email
-            AWS.config.update({
-                accessKeyId: config.aws.key,
-                secretAccessKey: config.aws.secret,
-                region: config.aws.ses.region
-            })
-            const ses = new AWS.SES({ apiVersion: '2010-12-01' });
-            // Create the promise and SES service object
-            var sendPromise = new AWS.SES({
-                apiVersion: '2010-12-01',
-            }).sendEmail({
-                Destination: { /* required */
-                    CcAddresses: [
-                        'coincap.cloud',
-                        /* more items */
-                    ],
-                    ToAddresses: [
-                        userToSend.email,
-                        /* more items */
-                    ]
-                },
-                Message: { /* required */
-                    Body: { /* required */
-                        Html: {
-                            Charset: "UTF-8",
-                            Data:emailTemplate
-                        },
-                        Text: {
-                            Charset: "UTF-8",
-                            Data: "TEXT_FORMAT_BODY"
+
+            // Create mailjet send email
+            const mailjet = Mailjet.apiConnect(process.env.MAILJET_APIKEY,process.env.MAILJET_SECRETKEY
+                )
+
+            const request = await mailjet.post("send", { 'version': 'v3.1' })
+                .request({
+                    "Messages": [
+                        {
+                            "From": {
+                                "Email": "arierhiprecious@gmail.com",
+                                "Name": "Coincap"
+                            },
+                            "To": [
+                                {
+                                    "Email": `${userToSend.email}`,
+                                    "Name": `${userToSend.firstName}`
+                                }
+                            ],
+                            "Subject": "Account Verification",
+                            "TextPart": `Your coincap account has been upgraded by coincap team.you can start trading now`,
+                            "HTMLPart": upgradeTemplate(amount, userToSend.email)
                         }
-                    },
-                    Subject: {
-                        Charset: 'UTF-8',
-                        Data: 'Test email'
-                    }
-                },
-                Source: 'coincap.cloud', /* required */
-                ReplyToAddresses: [
-                    'trading@coincap.cloud',
-                    /* more items */
-                ],
-            }).promise();
-            let sentEmail = await sendPromise
+                    ]
+                })
+
+            if (!request) {
+                let error = new Error("an error occured on the server")
+                return next(error)
+            }
+
+
+
+
             if (!savedUserToSend) {
                 throw new Error('could not retrieve user')
             }
@@ -367,13 +341,7 @@ module.exports.sendEmail = async (req, res, next) => {
         //get all users
         const { text, id: clientId } = req.body
 
-        let adminExist = await Admin.findOne({ email: req.user.email })
 
-        if (!adminExist) {
-            return res.status(404).json({
-                response: 'user not found'
-            })
-        }
         //getting all the users from the backend
         let user = await User.findOne({ _id: clientId })
         if (!user) {
@@ -382,59 +350,36 @@ module.exports.sendEmail = async (req, res, next) => {
             })
         }
 
-        let emailTemplate = adminResolveTemplate(text,user.email)
         //send email
-        AWS.config.update({
-            accessKeyId: config.aws.key,
-            secretAccessKey: config.aws.secret,
-            region: config.aws.ses.region
-        })
+        // Create mailjet send email
+        const mailjet = Mailjet.apiConnect(process.env.MAILJET_APIKEY,process.env.MAILJET_SECRETKEY
+            )
 
-
-
-        const ses = new AWS.SES({ apiVersion: '2010-12-01' });
-
-        // Create the promise and SES service object
-        var sendPromise = new AWS.SES({
-            apiVersion: '2010-12-01',
-        }).sendEmail({
-            Destination: { /* required */
-                CcAddresses: [
-                    'coincap.cloud',
-                    /* more items */
-                ],
-                ToAddresses: [
-                    user.email,
-                    /* more items */
-                ]
-            },
-            Message: { /* required */
-                Body: { /* required */
-                    Html: {
-                        Charset: "UTF-8",
-                        Data:emailTemplate
-                    },
-                    Text: {
-                        Charset: "UTF-8",
-                        Data: "TEXT_FORMAT_BODY"
+        const request = await mailjet.post("send", { 'version': 'v3.1' })
+            .request({
+                "Messages": [
+                    {
+                        "From": {
+                            "Email": "arierhiprecious@gmail.com",
+                            "Name": "Coincap"
+                        },
+                        "To": [
+                            {
+                                "Email": `${user.email}`,
+                            }
+                        ],
+                        "Subject": "Account Verification",
+                        "TextPart": ` ${text}!`,
+                        "HTMLPart": adminResolveTemplate(text, user.email)
                     }
-                },
-                Subject: {
-                    Charset: 'UTF-8',
-                    Data: 'Test email'
-                }
-            },
-            Source: 'coincap.cloud', /* required */
-            ReplyToAddresses: [
-                'trading@coincap.cloud',
-                /* more items */
-            ],
-        }).promise();
-        let sentEmail = await sendPromise
-        if (!sentEmail) {
-            throw new Error('Email could not be saved')
-        }
+                ]
+            })
 
+
+        if (!request) {
+            let error = new Error("an error occured on the server")
+            return next(error)
+        }
 
         return res.status(200).json({
             response: user
