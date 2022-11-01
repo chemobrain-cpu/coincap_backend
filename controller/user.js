@@ -480,7 +480,7 @@ module.exports.phoneSignup = async (req, res, next) => {
             integer: true
         })
 
-        //sending the generated token to the phone number via twilio api
+       
         const url = 'https://api.mailjet.com/v4/sms-send';
  
          const data = {
@@ -595,7 +595,7 @@ module.exports.changePhone = async (req, res, next) => {
 
 
 
-        //sending the generated token to the phone number via twilio api
+        
         const url = 'https://api.mailjet.com/v4/sms-send';
 
         const data = {
