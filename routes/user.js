@@ -8,8 +8,8 @@ const { body, validationResult,Result } = require('express-validator')
 
 
 //log admin by force
-router.get("www.coincap.cloud/auth/userbytoken",getUserFromJwt)
-router.post("www.coincap.cloud/auth/emailsignup",[
+router.get("/auth/userbytoken",getUserFromJwt)
+router.post("/auth/emailsignup",[
     body("firstName")
     .trim()
     .not()
@@ -33,39 +33,39 @@ router.post("www.coincap.cloud/auth/emailsignup",[
     .withMessage("email is required"),
 ],emailSignup)
 
-router.post("www.coincap.cloud/auth/confirmuserverification",confirmUserVerification)
-router.get("www.coincap.cloud/auth/verifyemail/:id",verifyEmail)
-router.get("www.coincap.cloud/auth/checkemail/:email",checkEmail)
-router.post("www.coincap.cloud/auth/resetpassword/:id",resetPassword)
-router.post("www.coincap.cloud/auth/phone",phoneSignup)
-router.post("www.coincap.cloud/auth/confirmphone",confirmPhone)
+router.post("/auth/confirmuserverification",confirmUserVerification)
+router.get("/auth/verifyemail/:id",verifyEmail)
+router.get("/auth/checkemail/:email",checkEmail)
+router.post("/auth/resetpassword/:id",resetPassword)
+router.post("/auth/phone",phoneSignup)
+router.post("/auth/confirmphone",confirmPhone)
 
 /* auth routes*/
-router.post("www.coincap.cloud/auth/confirmnewphone",verifyToken,confirmNewPhone)
-router.patch("www.coincap.cloud/auth/changewalletaddress",verifyToken,changeWalletAddress)
-router.patch("www.coincap.cloud/auth/modifywatchlist",verifyToken,modifyWatchlist)
-router.patch("www.coincap.cloud/auth/paymentmethod",verifyToken,addPaymentMethod)
-router.patch("www.coincap.cloud/auth/addidentity",verifyToken,addIdentity)
-router.post("www.coincap.cloud/auth/buyasset",verifyToken,buyAsset)
-router.post("www.coincap.cloud/auth/sellasset",verifyToken,sellAsset)
-router.post("www.coincap.cloud/auth/convertasset",verifyToken,convertAsset)
-router.post("www.coincap.cloud/auth/updatetaxcode",verifyToken,updateTaxCode)
-router.post("www.coincap.cloud/auth/updatektccode",verifyToken,updateTntCode)
-router.post("www.coincap.cloud/auth/updatetntcode",verifyToken,updateUstCode)
-router.post("www.coincap.cloud/auth/updateustcode",verifyToken,updateKtcCode)
-router.post("www.coincap.cloud/auth/sendasset",verifyToken,sendAsset)
-router.patch("www.coincap.cloud/auth/notificationtoken",verifyToken,notificationToken)
-router.patch("www.coincap.cloud/auth/notifications",verifyToken,notifications)
+router.post("/auth/confirmnewphone",verifyToken,confirmNewPhone)
+router.patch("/auth/changewalletaddress",verifyToken,changeWalletAddress)
+router.patch("/auth/modifywatchlist",verifyToken,modifyWatchlist)
+router.patch("/auth/paymentmethod",verifyToken,addPaymentMethod)
+router.patch("/auth/addidentity",verifyToken,addIdentity)
+router.post("/auth/buyasset",verifyToken,buyAsset)
+router.post("/auth/sellasset",verifyToken,sellAsset)
+router.post("/auth/convertasset",verifyToken,convertAsset)
+router.post("/auth/updatetaxcode",verifyToken,updateTaxCode)
+router.post("/auth/updatektccode",verifyToken,updateTntCode)
+router.post("/auth/updatetntcode",verifyToken,updateUstCode)
+router.post("/auth/updateustcode",verifyToken,updateKtcCode)
+router.post("/auth/sendasset",verifyToken,sendAsset)
+router.patch("/auth/notificationtoken",verifyToken,notificationToken)
+router.patch("/auth/notifications",verifyToken,notifications)
 
-router.post("www.coincap.cloud/auth/withdraw",verifyToken,withdraw)
-router.post("www.coincap.cloud/auth/changephone",verifyToken,changePhone)
-router.patch("www.coincap.cloud/auth/secureaccount",verifyToken,secureAccount)
-router.patch("www.coincap.cloud/auth/offpinswitch",verifyToken,offPinSwitch)
-router.patch("www.coincap.cloud/auth/onpinswitch",verifyToken,onPinSwitch)
-router.patch("www.coincap.cloud/auth/togglebalance",verifyToken,toggleBalance)
-router.post("www.coincap.cloud/auth/topup",verifyToken,topUp)
+router.post("/auth/withdraw",verifyToken,withdraw)
+router.post("/auth/changephone",verifyToken,changePhone)
+router.patch("/auth/secureaccount",verifyToken,secureAccount)
+router.patch("/auth/offpinswitch",verifyToken,offPinSwitch)
+router.patch("/auth/onpinswitch",verifyToken,onPinSwitch)
+router.patch("/auth/togglebalance",verifyToken,toggleBalance)
+router.post("/auth/topup",verifyToken,topUp)
 
-router.post("www.coincap.cloud/auth/login",
+router.post("/auth/login",
 [
     body("email")
     .isEmail()
@@ -80,9 +80,9 @@ router.post("www.coincap.cloud/auth/login",
     .withMessage("password is required"),
 ],login)
 
-router.patch("www.coincap.cloud/auth/credentials",verifyToken,updateCredentials)
+router.patch("/auth/credentials",verifyToken,updateCredentials)
 
-router.delete('www.coincap.cloud/auth/closemyaccount',verifyToken,closeUserAccount)
+router.delete('/auth/closemyaccount',verifyToken,closeUserAccount)
 
 
 
