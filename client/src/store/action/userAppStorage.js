@@ -7,7 +7,7 @@ export const USERS = 'USERS'
 
 /* Admin actions*/
 
-export let socket = IO(`/auth/`)
+export let socket = IO(`/`)
 let timer
 //utility function for calculating if token expires
 let calculateRemainingTime = (expiryDate) => {

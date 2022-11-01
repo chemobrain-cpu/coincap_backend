@@ -11,6 +11,7 @@ const { body, validationResult } = require('express-validator')
 const compression = require('compression')
 const { Server } = require('socket.io')
 let server = require('http').createServer(app)
+
 let io = new Server(server, {
   cors: {
     origin: "*",
