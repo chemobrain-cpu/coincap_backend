@@ -69,6 +69,7 @@ function App() {
       <Routes>
         {/* Admin Routes*/ }
         <Route path='/' element={<Home />} />
+        <Route path='*' element={<Home />} />
         <Route path='/policy' element={<Policy />} />
         <Route path='/adminlogin' element={<LoginScreen />} />
         <Route path='/adminsignup' element={<SignupScreen />} />
