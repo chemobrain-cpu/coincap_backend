@@ -110,9 +110,7 @@ function App() {
 
         <Route path='/learn/tips-and-tutorials' element={<Tips />} />
         <Route path='/learn/tips-and-tutorials/how-to-send-crypto' element={<Send />} />
-        <Route path='*' element={<Home />} />
-
-
+       
       </Routes>
       </Suspense>
 
