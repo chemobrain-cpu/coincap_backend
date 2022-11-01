@@ -5,7 +5,6 @@ import styles from './getStarted.module.css'
 import LoadingModal from "./Modal/LoadingModal"
 import Modal from "./Modal/Modal"
 //import routers
-import { useNavigate } from 'react-router-dom'
 import AOS from 'aos'
 import "aos/dist/aos.css";
 

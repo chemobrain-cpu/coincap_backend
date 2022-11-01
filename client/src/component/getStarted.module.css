@@ -104,14 +104,29 @@
 
 
 @media screen and (max-width: 750px) {
+    .getStartedSection{
+        display:flex;
+        flex-direction:column;
+        padding-top:100px;
+        padding-bottom:30px;
+        background: #fff;
+        margin-bottom:30px;
+        align-items:center;
+        justify-content:center
+    
+    }
+
     .getStartedSection_content{
         width:100%;
         display:flex;
         flex-direction: column;
+        margin-bottom:70px
     
     }
     .getStartedSection_imageCon{
-        display:none
+        width:100%;
+        display:flex;
+        flex-direction: column;
     
     }
     
@@ -121,6 +136,18 @@
 
   }
   @media screen and (max-width: 550px) {
+    .getStartedSection{
+        display:flex;
+        flex-direction:column;
+        padding-top:100px;
+        padding-bottom:30px;
+        background: #fff;
+        margin-bottom:30px;
+        align-items:center;
+        justify-content:center
+    
+    }
+
     .getStartedSection_content_head{
         font-size:2.2rem;
         font-family:poppins;

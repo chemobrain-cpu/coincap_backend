@@ -20,7 +20,7 @@ function Portfolio() {
     return (<>
         <div className={styles.portfolio_section} >
 
-            <SectionHead title="Create your crypto portfolio today" paragraph="Coincap has a variety of features that make it the best place to start trading" />
+            <SectionHead title="Create your portfolio today" paragraph="Coincap has a variety of features that make it the best place to start trading" />
 
             <div className={styles.portfolio_container}>
                 <div className={styles.portfolio_contentCon}>

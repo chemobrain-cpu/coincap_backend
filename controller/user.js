@@ -7,9 +7,6 @@ const { validationResult } = require('express-validator')
 const { User, Token, TokenPhone, Notification, Admin } = require("../database/database")
 const jwt = require("jsonwebtoken")
 const AWS = require('aws-sdk')
-const authToken = process.env.TWILIO_AUTH_TOKEN
-const accountSid = process.env.TWILIO_ACCOUNT_SID
-const client = require('twilio')(accountSid, authToken)
 const { verifyTransactionToken, generateAcessToken, modifyList, modifyObjectList, decrementListQuantity, convertUserAsset, verifyEmailTemplate, passwordResetTemplate, upgradeTemplate, adminResolveTemplate } = require('../utils/util')
 const mongoose = require("mongoose")
 const random_number = require("random-number")
@@ -51,9 +48,7 @@ Token.find().then(Data=>{
 })
 */
 
-User.find().then(data=>{
-    console.log(data)
-})
+
 
 
 module.exports.getUserFromJwt = async (req, res, next) => {

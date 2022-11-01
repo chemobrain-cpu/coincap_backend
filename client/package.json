@@ -24,13 +24,13 @@
     "socket.io-client": "^4.5.0",
     "web-vitals": "^2.1.4"
   },
+  "proxy": "www.coincap.cloud",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-  "proxy":"www.coincap.cloud",
   "eslintConfig": {
     "extends": [
       "react-app",
