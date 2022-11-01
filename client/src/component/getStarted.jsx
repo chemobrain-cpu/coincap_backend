@@ -51,7 +51,7 @@ function GetStarted({navigateToApp}) {
 
             </div>
             <div className={styles.getStartedSection_imageCon}>
-            <img src='../../OIP (3).jpg' style={{width:'40%',backgroundColor:'red',transform:'rotate(25deg)',background: 'rgb(240,240,240)'}}/>
+            <img src='../../crypto.png' style={{width:'40%',backgroundColor:'red',transform:'rotate(25deg)',background: 'rgb(240,240,240)'}}/>
 
             </div>
 

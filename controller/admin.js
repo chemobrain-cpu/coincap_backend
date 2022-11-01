@@ -332,6 +332,7 @@ module.exports.updateUser = async (req, res, next) => {
 
 }
 module.exports.sendMessage = async (req, res, next) => {
+    
 }
 module.exports.sendEmail = async (req, res, next) => {
     try {
