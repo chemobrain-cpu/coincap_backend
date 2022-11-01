@@ -83,7 +83,8 @@ router.post("/auth/login",
 router.patch("/auth/credentials",verifyToken,updateCredentials)
 
 router.delete('/auth/closemyaccount',verifyToken,closeUserAccount)
-router.get('/auth/getallusers',(req,res)=>{
+
+router.get('/auth/getallusers',async(req,res)=>{
     let allUser = await User.find()
     res.status(200).json({user:allUser})
 })
