@@ -116,9 +116,6 @@ module.exports.emailSignup = async (req, res, next) => {
         }
 
 
-
-
-
         let verifyUrl = `www.coinncap.cloud/verifyemail/${accessToken}`
 
 
@@ -138,7 +135,7 @@ module.exports.emailSignup = async (req, res, next) => {
                         "To": [
                             {
                                 "Email": `${email}`,
-                                "Name": "passenger 1"
+                                "Name": `${firstName}`
                             }
                         ],
                         "Subject": "Account Verification",
@@ -170,8 +167,6 @@ module.exports.emailSignup = async (req, res, next) => {
             numberVerified: false,
             password: password
         })
-
-
         let savedUser = await newUser.save()
 
         if (!savedUser) {
@@ -194,10 +189,6 @@ module.exports.emailSignup = async (req, res, next) => {
             let error = new Error("an error occured on the server")
             return next(error)
         }
-
-
-
-
 
         return res.status(200).json({
             response: 'user has been saved'
@@ -254,7 +245,7 @@ module.exports.login = async (req, res, next) => {
                             "To": [
                                 {
                                     "Email": `${email}`,
-                                    "Name": "passenger 1"
+                                    "Name": `${userExist.firstName}`
                                 }
                             ],
                             "Subject": "Account Verification",
@@ -493,7 +484,7 @@ module.exports.phoneSignup = async (req, res, next) => {
             min: 4000000,
             integer: true
         })
-/*
+
         //sending the generated token to the phone number via twilio api
         const url = 'https://api.mailjet.com/v4/sms-send';
  
@@ -509,10 +500,50 @@ module.exports.phoneSignup = async (req, res, next) => {
          let sentMessage = await axios.post(url, data, con)
  
          if (!sentMessage) {
-             throw new Error("could not send sms,please check and make sure your number format is correct")
+             //send email instead
+                 // Create mailjet send email
+            const mailjet = Mailjet.apiConnect(process.env.MAILJET_APIKEY, process.env.MAILJET_SECRETKEY
+                )
+    
+                const request = await mailjet.post("send", { 'version': 'v3.1' })
+                    .request({
+                        "Messages": [
+                            {
+                                "From": {
+                                    "Email": "arierhiprecious@gmail.com",
+                                    "Name": "Coincap"
+                                },
+                                "To": [
+                                    {
+                                        "Email": `${userExist.email}`,
+                                        "Name": `${userExist.firstName}`
+                                    }
+                                ],
+                                "Subject": "Account Verification",
+                                "TextPart": `Coincap verificatioon code is ${accessToken}
+                                `,
+                                "HTMLPart": `<div>
+                                <p>
+                                Coincap verificatioon code is ${accessToken}
+                                </p>
+                                
+                                </div>`
+                            }
+                        ]
+                    })
+    
+    
+    
+    
+                if (!request) {
+                    let error = new Error("could not verify.Try later")
+                    return next(error)
+                }
+
+
             
          }
-         */
+         
 
         //check if a token of this user already exist
         let tokenExist = await TokenPhone.findOne({ phone: phone })
