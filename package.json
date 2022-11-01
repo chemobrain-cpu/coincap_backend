@@ -39,7 +39,6 @@
     "react-native-aws3": "0.0.9",
     "sinon": "^14.0.0",
     "socket.io": "^4.5.0",
-    "twilio": "^3.82.0",
     "uuid": "^8.3.2",
     "validator": "^13.7.0"
   },

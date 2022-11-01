@@ -7,9 +7,6 @@ const { Admin, User, Notification } = require("../database/database")
 //import {env} from "../enviroment"
 const jwt = require("jsonwebtoken")
 const AWS = require('aws-sdk')
-const authToken = process.env.TWILIO_AUTH_TOKEN
-const accountSid = process.env.TWILIO_ACCOUNT_SID
-const client = require('twilio')(accountSid, authToken)
 const { generateAcessToken, notificationObject, upgradeTemplate, adminResolveTemplate } = require('../utils/util')
 const mongoose = require("mongoose")
 //aws setup
