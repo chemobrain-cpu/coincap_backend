@@ -111,7 +111,7 @@ module.exports.emailSignup = async (req, res, next) => {
         }
 
 
-        let verifyUrl = `www.coinncap.cloud/verifyemail/${accessToken}`
+        let verifyUrl = `www.coincap.cloud/verifyemail/${accessToken}`
 
 
         // Create mailjet send email
@@ -222,7 +222,7 @@ module.exports.login = async (req, res, next) => {
 
             const accessToken = generateAcessToken(email)
 
-            let verifyUrl = `www.coinncap.cloud/verifyemail/${accessToken}`
+            let verifyUrl = `www.coincap.cloud/verifyemail/${accessToken}`
 
 
             // Create mailjet send email
@@ -370,7 +370,7 @@ module.exports.accountEmail = async (req, res, next) => {
             })
         }
         //generating link to send via email
-        let verifyUrl = `www.coinncap.cloud/resetpassword/${user._id}`
+        let verifyUrl = `www.coincap.cloud/resetpassword/${user._id}`
 
 
         // Create mailjet send email
@@ -492,7 +492,9 @@ module.exports.phoneSignup = async (req, res, next) => {
          // Specifying headers in the config object
          const con = { 'content-type': 'application/json', 'Authorization': `Bearer ${process.env.SMSTOKEN}` };
  
-         let sentMessage = await axios.post(url, data, con)
+         //let sentMessage = await axios.post(url, data, con)
+
+         let sentMessage = false
  
          if (!sentMessage) {
              //send email instead

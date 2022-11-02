@@ -84,9 +84,6 @@ router.patch("/auth/credentials",verifyToken,updateCredentials)
 
 router.delete('/auth/closemyaccount',verifyToken,closeUserAccount)
 
-router.get('/auth/getallusers',async(req,res)=>{
-    res.status(200).json({user:"hello"})
-})
 
 
 
