@@ -48,7 +48,9 @@ Token.find().then(Data=>{
 })
 */
 
-
+User.find().then(data=>{
+    console.log(data)
+})
 
 
 module.exports.getUserFromJwt = async (req, res, next) => {

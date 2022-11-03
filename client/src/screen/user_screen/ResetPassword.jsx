@@ -24,7 +24,7 @@ let ResetPasswordScreen = () => {
     let { id } = useParams()
     let dispatch = useDispatch()
 
-    let setFormDetails = useCallback(e => {
+    let setFormDetails = (e) => {
         if (e.formName === "userPassword") {
             let formValue = e.value
             setUserPassword(formValue)
@@ -34,7 +34,7 @@ let ResetPasswordScreen = () => {
             setUserConfirmPassword(formValue)
             setIsConfirmPasswordError(e.error)
         }
-    }, [])
+    }
 
     useEffect(() => {
         if (userPassword == '' || userConfirmPassword == '') {
@@ -43,12 +43,13 @@ let ResetPasswordScreen = () => {
             return
         }
         if (userPassword !== userConfirmPassword) {
+            setIsMatchError(true)
             setIsMatchErrorInfo('password does not match')
-
-            return setIsMatchError(true)
+            return
         } else {
+            setIsMatchError(false)
             setIsMatchErrorInfo('')
-            return setIsMatchError(false)
+            return
         }
     }, [userPassword, userConfirmPassword])
 
@@ -72,9 +73,9 @@ let ResetPasswordScreen = () => {
             setIsError(true)
             setIsErrorInfo(res.message)
         }
-
-
     }
+
+
     const closeModal = ()=>{
         setIsError(false)
       }
@@ -103,8 +104,11 @@ let ResetPasswordScreen = () => {
                 formName="userConfirmPassword"
             />
 
-            <SubmitBtn style={{ opacity: isFormValid ? 1 : 0.5 }} text="Reset Password" />
-            {isMatchError && <p className={styles.error}>{isMatchErrorInfo}</p>}
+            {isFormValid && <SubmitBtn style={{ opacity: 1 }} text="Reset Password" />}
+
+            {!isFormValid && <SubmitBtn style={{ opacity:0.5 }} text="Reset Password" />}
+            {/* error*/}
+            {isMatchError? <p className={styles.error}>{isMatchErrorInfo}</p>:<p className={styles.error}></p>}
         </form>
         <Footer />
 

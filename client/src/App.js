@@ -93,7 +93,7 @@ function App() {
         <Route path='/learn' element={<LearnScreen />} />
         {/*crypto-basics*/}
 
-
+www.coincap.cloud/learn/crypto-basics/what-is-volatility
         <Route path='/learn/crypto-basics/' element={<CryptoBasics />} />
         <Route path='/learn/crypto-basics/what-is-dogecoin' element={<Dogecoin />} />
         <Route path='/learn/crypto-basics/what-is-bitcoin' element={<Bitcoin />} />
