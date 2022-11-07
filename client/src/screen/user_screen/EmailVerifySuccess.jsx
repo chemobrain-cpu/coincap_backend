@@ -75,14 +75,7 @@ function EmailVerificationSucessScreen() {
             <div className={styles.contentContainer}>
                 <div className={styles.imageOuterContainer}>
                     <h1 className={styles.greetings}>Congratulations</h1>
-
-
-
                 </div>
-
-
-
-
 
                 <div className={styles.statementSection}>
                     <div className={styles.statementCon}>

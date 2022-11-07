@@ -89,8 +89,9 @@ let ResetPasswordScreen = () => {
             <FormInput
                 label="new password"
                 icon='edit'
-                type='password'
+                types="password"
                 className="formcard"
+                type='number'
                 setFormDetails={setFormDetails}
                 formName="userPassword"
             />
@@ -98,8 +99,9 @@ let ResetPasswordScreen = () => {
             <FormInput
                 label="confirm password"
                 icon='edit'
-                type='password'
                 className="formcard"
+                types="password"
+                type='number'
                 setFormDetails={setFormDetails}
                 formName="userConfirmPassword"
             />

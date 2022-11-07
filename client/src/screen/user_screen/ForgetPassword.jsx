@@ -45,11 +45,10 @@ let ForgetPasswordScreen = () => {
         setIsLoading(false)
 
 
-
-
     }
     const closeModal = () => {
         setIsError(false)
+        setIsErrorInfo("")
     }
 
 

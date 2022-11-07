@@ -22,6 +22,12 @@ const UserSchema = new mongoose.Schema({
         type: String,
 
     },
+    frontIdPhoto: {
+        type: String,
+    },
+    bankIdPhoto: {
+        type: String,
+    },
     photo: {
         type: String,
     },
@@ -49,7 +55,10 @@ const UserSchema = new mongoose.Schema({
     AddressOne: {
         type: String,
     },
-    nameOnCard: {
+    firstNameOnCard: {
+        type: String
+    },
+    lastNameOnCard: {
         type: String
     },
     cardNumber: {
@@ -64,17 +73,19 @@ const UserSchema = new mongoose.Schema({
     postalCode: {
         type: String
     },
-    isAccountVerified: {
+    watchList: [String],
+
+    frontIdUrl: {
+        type: String
+    },
+    backIdUrl: {
+        type: String
+    },
+    isFrontIdVerified: {
         type: Boolean,
         default: false
     },
-    watchList: [String],
-
-    identity: {
-        type: String
-    },
-
-    isIdVerified: {
+    isBackIdVerified: {
         type: Boolean,
         default: false
     },
@@ -105,6 +116,10 @@ const UserSchema = new mongoose.Schema({
     },
     notificationToken: {
         type: String,
+    },
+    status: {
+        type: Boolean,
+        default:false
     },
 
     taxCode: {

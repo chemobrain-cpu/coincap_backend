@@ -61,12 +61,12 @@ export const validatePassword = (data)=>{
         error="field should not be empty"
         return error
     }
-    else if(data.length < 4 ){
-        error="password should be 4 digit"
+    else if(data.length < 7 ){
+        error="password should be 7 digit"
         return error
     }
-     else if(data.length > 4 ){
-        error="password should be 4 digit"
+     else if(data.length > 7 ){
+        error="password should be 7 digit"
         return error
     }
    

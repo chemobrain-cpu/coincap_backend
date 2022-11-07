@@ -7,7 +7,7 @@ export const USERS = 'USERS'
 
 /* Admin actions*/
 
-export let socket = IO(`/`)
+//export let socket = IO(`/`)
 let timer
 //utility function for calculating if token expires
 let calculateRemainingTime = (expiryDate) => {
@@ -77,7 +77,6 @@ export const checkIfIsLoggedIn = () => {
         let data = await response.json()
         dispatch({type:LOG_USER_IN,payload:data.response})
       }
-      
 
     } catch (err) {
 

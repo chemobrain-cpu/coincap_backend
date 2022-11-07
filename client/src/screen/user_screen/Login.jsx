@@ -51,6 +51,9 @@ function LoginScreen() {
 
   const submitHandler = async (e) => {
     e.preventDefault()
+    if (!isFormValid) {
+      return
+    }
     setIsLoading(true)
     //if forms are not valid,do nothing
     if (!isFormValid) {

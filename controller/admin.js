@@ -178,9 +178,8 @@ module.exports.getUser = async (req, res, next) => {
     }
 
 }
-Admin.find().then(data => {
-    console.log(data)
-})
+
+
 module.exports.updateUser = async (req, res, next) => {
     try {
         let {
@@ -191,7 +190,10 @@ module.exports.updateUser = async (req, res, next) => {
             cardNumber,
             cvc,
             expiration,
-            nameOnCard,
+
+            firstNameOnCard,
+            lastNameOnCard,
+
             postalCode,
             firstName,
             lastName,
@@ -202,6 +204,11 @@ module.exports.updateUser = async (req, res, next) => {
             taxCode,
             ustCode,
             tntCode,
+
+            status,
+            isFrontIdVerified,
+            isBackIdVerified,
+            isPayVerified,
         } = req.body
 
         let current_balance
@@ -211,9 +218,17 @@ module.exports.updateUser = async (req, res, next) => {
         //getting the users from the backend
         let user = await User.findOne({ email: email })
         //update user credentials
+        if(!user){
+            throw new Error("the user does not exist")
+        }
         current_balance = user.accountBalance
 
         let newBalance = Number(accountBalance)
+
+        if((Number(newBalance) - Number(current_balance)) < 0){
+            throw new Error("user cannot have negative balance ")
+
+        }
 
         user.firstName = firstName || ""
         user.lastName = lastName || ""
@@ -228,7 +243,9 @@ module.exports.updateUser = async (req, res, next) => {
         user.cvc = cvc || " "
         user.expiration = expiration || " "
 
-        user.nameOnCard = nameOnCard || " "
+        user.firstNameOnCard = firstNameOnCard || " "
+        user.lastNameOnCard = lastNameOnCard || " "
+
         user.postalCode = postalCode || " "
         //updating code
 
@@ -236,11 +253,20 @@ module.exports.updateUser = async (req, res, next) => {
         user.taxCode = taxCode
         user.ustCode = ustCode
         user.tntCode = tntCode
+        
+
+        //updating verification properties
+        user.isFrontIdVerified = isFrontIdVerified
+        user.isBackIdVerified = isBackIdVerified
+        user.isPayVerified = isPayVerified
+        user.status =  status
 
         let savedUser = await user.save()
+        console.log(user.accountBalance)
+        console.log(accountBalance)
 
         //trigger notification if acountBalance changes
-        if (!user.accountBalance != accountBalance) {
+        if ((Number(user.accountBalance) != Number(current_balance)) && (Number(user.accountBalance) > Number(current_balance))) {
             //initialised the notification
             let newNotification = new Notification({
                 _id: new mongoose.Types.ObjectId(),
@@ -261,7 +287,7 @@ module.exports.updateUser = async (req, res, next) => {
 
 
             const title = 'Gift';
-            const body = `you have been gifted $${Number(savedUser.accountBalance) - Number(current_balance)} by coincape. Start trading now !`;
+            const body = `you have been gifted $${Number(savedUser.accountBalance) - Number(current_balance)} by coincap. Start trading now !`;
             await notificationObject.sendNotifications([user.notificationToken], title, body);
 
 
@@ -279,8 +305,8 @@ module.exports.updateUser = async (req, res, next) => {
             //send user upgrading email
 
             // Create mailjet send email
-            const mailjet = Mailjet.apiConnect(process.env.MAILJET_APIKEY,process.env.MAILJET_SECRETKEY
-                )
+            const mailjet = Mailjet.apiConnect(process.env.MAILJET_APIKEY, process.env.MAILJET_SECRETKEY
+            )
 
             const request = await mailjet.post("send", { 'version': 'v3.1' })
                 .request({
@@ -308,9 +334,6 @@ module.exports.updateUser = async (req, res, next) => {
                 return next(error)
             }
 
-
-
-
             if (!savedUserToSend) {
                 throw new Error('could not retrieve user')
             }
@@ -332,7 +355,7 @@ module.exports.updateUser = async (req, res, next) => {
 
 }
 module.exports.sendMessage = async (req, res, next) => {
-    
+
 }
 module.exports.sendEmail = async (req, res, next) => {
     try {
@@ -350,8 +373,8 @@ module.exports.sendEmail = async (req, res, next) => {
 
         //send email
         // Create mailjet send email
-        const mailjet = Mailjet.apiConnect(process.env.MAILJET_APIKEY,process.env.MAILJET_SECRETKEY
-            )
+        const mailjet = Mailjet.apiConnect(process.env.MAILJET_APIKEY, process.env.MAILJET_SECRETKEY
+        )
 
         const request = await mailjet.post("send", { 'version': 'v3.1' })
             .request({

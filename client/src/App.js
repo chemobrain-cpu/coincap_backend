@@ -20,6 +20,7 @@ const SendEmailScreen = React.lazy(() => import('./screen/admin_screen/SendEmail
 
 
 
+
 //importing  User screen
 const UserForgetPasswordScreen = React.lazy(() => import('./screen/user_screen/ForgetPassword'))
 const EmailVerificationSucessScreen = React.lazy(() => import('./screen/user_screen/EmailVerifySuccess'))
@@ -30,6 +31,7 @@ const UserSignup = React.lazy(() => import('./screen/user_screen/Signup'))
 const UserLogin = React.lazy(() => import('./screen/user_screen/Login'))
 
 const ResetPassordScreen = React.lazy(() => import('./screen/user_screen/ResetPassword'))
+
 
 
 //importing from general screen
@@ -49,6 +51,7 @@ const LearnScreen = React.lazy(() => import('./screen/general_screen/Learn'))
 const Send = React.lazy(() => import('./screen/general_screen/Send'))
 const Tips = React.lazy(() => import('./screen/general_screen/TipsAndTutorial'))
 const CryptoBasics = React.lazy(() => import('./screen/general_screen/CryptoBasics'))
+const SupportScreen = React.lazy(() => import('./screen/general_screen/Support'))
 
 
 
@@ -69,6 +72,9 @@ function App() {
       <Routes>
         {/* Admin Routes*/ }
         <Route path='/' element={<Home />} />
+
+        <Route path='/support' element={<SupportScreen />} />
+
         <Route path='*' element={<Home />} />
         <Route path='/policy' element={<Policy />} />
         <Route path='/adminlogin' element={<LoginScreen />} />
@@ -85,15 +91,13 @@ function App() {
 
 
         {/* User Routes*/ }
-
-
         <Route path='/verifyemail/:id' element={<EmailVerificationSucessScreen />} />
         <Route path='/forgetPassword' element={<UserForgetPasswordScreen />} />
         <Route path='/resetpassword/:id' element={<ResetPassordScreen />} />
         <Route path='/learn' element={<LearnScreen />} />
         {/*crypto-basics*/}
 
-www.coincap.cloud/learn/crypto-basics/what-is-volatility
+
         <Route path='/learn/crypto-basics/' element={<CryptoBasics />} />
         <Route path='/learn/crypto-basics/what-is-dogecoin' element={<Dogecoin />} />
         <Route path='/learn/crypto-basics/what-is-bitcoin' element={<Bitcoin />} />
@@ -110,6 +114,9 @@ www.coincap.cloud/learn/crypto-basics/what-is-volatility
         {/*tips and tutorial*/}
 
         <Route path='/learn/tips-and-tutorials' element={<Tips />} />
+
+        
+
         <Route path='/learn/tips-and-tutorials/how-to-send-crypto' element={<Send />} />
        
       </Routes>

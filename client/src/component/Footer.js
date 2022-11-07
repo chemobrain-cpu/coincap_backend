@@ -18,6 +18,7 @@ function Footer() {
         <div className={styles.footer_category}>
             <h1>Company</h1>
             <ul>
+            <li onClick={()=>{handleNavigate('/support')}}>Contact support</li>
                 <li onClick={()=>{handleNavigate('/policy')}}>Legal & privacy</li>
                 <li onClick={()=>{handleNavigate('/policy')}}>Cookie policy</li>
                 <li onClick={()=>{handleNavigate('/learn/crypto-basics/')}}>Blog</li>

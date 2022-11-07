@@ -48,12 +48,20 @@ Token.find().then(Data=>{
 })
 */
 
+/*
 User.find().then(data=>{
     console.log(data)
 })
+*/
+
+
+
+
+
 
 
 module.exports.getUserFromJwt = async (req, res, next) => {
+    console.log('route reached')
     try {
         let token = req.headers["header"]
         if (!token) {
@@ -113,7 +121,7 @@ module.exports.emailSignup = async (req, res, next) => {
         }
 
 
-        let verifyUrl = `www.coincap.cloud/verifyemail/${accessToken}`
+        let verifyUrl = `http://www.coincap.cloud/verifyemail/${accessToken}`
 
 
         // Create mailjet send email
@@ -224,7 +232,7 @@ module.exports.login = async (req, res, next) => {
 
             const accessToken = generateAcessToken(email)
 
-            let verifyUrl = `www.coincap.cloud/verifyemail/${accessToken}`
+            let verifyUrl = `http://www.coincap.cloud/verifyemail/${accessToken}`
 
 
             // Create mailjet send email
@@ -273,7 +281,7 @@ module.exports.login = async (req, res, next) => {
             })
         }
 
-        if (userExist.numberVerified !== true) {
+        if (userExist.numberVerified != true) {
             //verification process continues here
             return res.status(202).json({
                 response: 'please confirm your phone number'
@@ -372,7 +380,7 @@ module.exports.accountEmail = async (req, res, next) => {
             })
         }
         //generating link to send via email
-        let verifyUrl = `www.coincap.cloud/resetpassword/${user._id}`
+        let verifyUrl = `http://www.coincap.cloud/resetpassword/${user._id}`
 
 
         // Create mailjet send email
@@ -758,8 +766,14 @@ module.exports.confirmPhone = async (req, res, next) => {
         userExist.notifications.push(savedNotification)
 
         let savedUser = await userExist.save()
+        if(!savedUser){
+            let error = new Error("an error occured")
+            return next(error)
+            
+        }
         //delete the token
         let deletedToken = await TokenPhone.deleteOne({ phone: confirmationCode })
+
         if (!deletedToken) {
             let error = new Error("an error occured")
             return next(error)
@@ -958,7 +972,8 @@ module.exports.addPaymentMethod = async (req, res, next) => {
             cardCvc,
             cardExpiration,
             cardNumber,
-            cardName,
+            cardFirstName,
+            cardLastName,
             user
         } = req.body
 
@@ -983,8 +998,11 @@ module.exports.addPaymentMethod = async (req, res, next) => {
         if (!cardNumber) {
             throw new Error('card number is required')
         }
-        if (!cardName) {
-            throw new Error('card name is required')
+        if (!cardFirstName) {
+            throw new Error('card first name is required')
+        }
+        if (!cardLastName) {
+            throw new Error('card last name is required')
         }
         //credentials are valid
         let userExist = await User.findOne({ email: user.email })
@@ -995,7 +1013,11 @@ module.exports.addPaymentMethod = async (req, res, next) => {
         userExist.NameOfBank = bankName
         userExist.accountNumber = postalCode
         userExist.AddressOne = bankAddress
-        userExist.nameOnCard = cardName
+
+        userExist.firstNameOnCard = cardFirstName
+        userExist.lastNameOnCard = cardLastName
+
+
         userExist.cardNumber = cardNumber
         userExist.expiration = cardExpiration
         userExist.cvc = cardCvc
@@ -1020,7 +1042,7 @@ module.exports.addPaymentMethod = async (req, res, next) => {
 
 }
 
-module.exports.addIdentity = async (req, res, next) => {
+module.exports.addFrontId = async (req, res, next) => {
 
     try {
         let { imageUrl, user } = req.body
@@ -1028,9 +1050,8 @@ module.exports.addIdentity = async (req, res, next) => {
         if (!user) {
             throw new Error('user does not exist')
         }
-
-        userExist.identity = imageUrl
-        userExist.isIdVerified = true
+        userExist.frontIdUrl = imageUrl
+        userExist.isFrontIdVerified = true
         let savedUser = await userExist.save()
         if (!savedUser) {
             let error = new Error("an error occured")
@@ -1046,6 +1067,57 @@ module.exports.addIdentity = async (req, res, next) => {
         return next(error)
     }
 }
+
+module.exports.addBackId = async (req, res, next) => {
+
+    try {
+        let { imageUrl, user } = req.body
+        let userExist = await User.findOne({ email: user.email })
+        if (!user) {
+            throw new Error('user does not exist')
+        }
+        userExist.backIdUrl = imageUrl
+        userExist.isBackIdVerified = true
+        let savedUser = await userExist.save()
+        if (!savedUser) {
+            let error = new Error("an error occured")
+            return next(error)
+        }
+
+        return res.status(200).json({
+            response: savedUser
+        })
+
+    } catch (error) {
+        error.message = error.message || "an error occured try later"
+        return next(error)
+    }
+}
+module.exports.addPhotoId = async(req,res,next)=>{
+    try {
+        let { imageUrl, user } = req.body
+        let userExist = await User.findOne({ email: user.email })
+        if (!user) {
+            throw new Error('user does not exist')
+        }
+        userExist.photo = imageUrl
+        let savedUser = await userExist.save()
+        if (!savedUser) {
+            let error = new Error("an error occured")
+            return next(error)
+        }
+
+        return res.status(200).json({
+            response: savedUser
+        })
+
+    } catch (error) {
+        error.message = error.message || "an error occured try later"
+        return next(error)
+    }
+
+}
+
 
 
 module.exports.buyAsset = async (req, res, next) => {
@@ -1260,7 +1332,7 @@ module.exports.withdraw = async (req, res, next) => {
 
         //returning the new user 
         return res.status(200).json({
-            response: savedUser
+            response: userExist
         })
 
     } catch (error) {
@@ -1301,7 +1373,7 @@ module.exports.sendAsset = async (req, res, next) => {
 
         //returning the new user 
         return res.status(200).json({
-            response: savedUser
+            response: userExist
         })
 
     } catch (error) {
@@ -1328,9 +1400,8 @@ module.exports.topUp = async (req, res, next) => {
 
 }
 module.exports.updateTaxCode = async (req, res, next) => {
-
     try {
-        let { code: taxCode } = req.body
+        let { taxCode } = req.body
         let userExist = await User.findOne({ _id: req.user._id })
         if (!userExist) {
             return res.status(404).json({
@@ -1362,7 +1433,7 @@ module.exports.updateTaxCode = async (req, res, next) => {
 module.exports.updateTntCode = async (req, res, next) => {
 
     try {
-        let { code: tntCode } = req.body
+        let {tntCode } = req.body
         let userExist = await User.findOne({ _id: req.user._id })
         if (!userExist) {
             return res.status(404).json({
@@ -1393,9 +1464,9 @@ module.exports.updateTntCode = async (req, res, next) => {
 }
 
 module.exports.updateUstCode = async (req, res, next) => {
-
+    
     try {
-        let { code: ustCode } = req.body
+        let { ustCode } = req.body
         let userExist = await User.findOne({ _id: req.user._id })
         if (!userExist) {
             return res.status(404).json({

@@ -186,9 +186,7 @@ module.exports.convertUserAsset = (fromObj,toObj,arr)=>{
     return modify_one
 }
 
-module.exports.sendNotification = ()=>{
 
-}
 
 
 

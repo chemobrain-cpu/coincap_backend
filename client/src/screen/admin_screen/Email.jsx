@@ -81,7 +81,7 @@ let EmailScreen = () => {
                 {!isLoading && clients.map(data => <User
                     username={`${data.firstName} ${data.lastName}`}
                     email={data.email}
-                    imageUrl={data.identity}
+                    imageUrl={data.photo}
                     navigateHandler = {navigateHandler}
                     key = {data._id}
                     id={data._id}

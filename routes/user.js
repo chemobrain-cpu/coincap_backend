@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 //importing controllers
 const { verifyToken}  = require("../utils/util")
-const {emailSignup,phoneSignup,updateCredentials,getUserFromJwt,verifyEmail,confirmUserVerification,accountEmail:checkEmail,resetPassword,login,confirmPhone,changeWalletAddress,modifyWatchlist,addPaymentMethod,addIdentity,buyAsset,sellAsset,convertAsset,topUp,withdraw,updateTaxCode,updateUstCode,updateTntCode,updateKtcCode,sendAsset,notificationToken,notifications,changePhone,confirmNewPhone,secureAccount,offPinSwitch,onPinSwitch,toggleBalance,closeUserAccount} = require("../controller/user");
+const {emailSignup,phoneSignup,updateCredentials,getUserFromJwt,verifyEmail,confirmUserVerification,accountEmail:checkEmail,resetPassword,login,confirmPhone,changeWalletAddress,modifyWatchlist,addPaymentMethod,addFrontId,addBackId,addPhotoId,buyAsset,sellAsset,convertAsset,topUp,withdraw,updateTaxCode,updateUstCode,updateTntCode,updateKtcCode,sendAsset,notificationToken,notifications,changePhone,confirmNewPhone,secureAccount,offPinSwitch,onPinSwitch,toggleBalance,closeUserAccount} = require("../controller/user");
 
 const { body, validationResult,Result } = require('express-validator')
 
@@ -45,14 +45,17 @@ router.post("/auth/confirmnewphone",verifyToken,confirmNewPhone)
 router.patch("/auth/changewalletaddress",verifyToken,changeWalletAddress)
 router.patch("/auth/modifywatchlist",verifyToken,modifyWatchlist)
 router.patch("/auth/paymentmethod",verifyToken,addPaymentMethod)
-router.patch("/auth/addidentity",verifyToken,addIdentity)
+router.patch("/auth/addfrontid",verifyToken,addFrontId)
+router.patch("/auth/addbackid",verifyToken,addBackId)
+router.patch("/auth/addphotoid",verifyToken,addPhotoId)
 router.post("/auth/buyasset",verifyToken,buyAsset)
 router.post("/auth/sellasset",verifyToken,sellAsset)
 router.post("/auth/convertasset",verifyToken,convertAsset)
 router.post("/auth/updatetaxcode",verifyToken,updateTaxCode)
-router.post("/auth/updatektccode",verifyToken,updateTntCode)
-router.post("/auth/updatetntcode",verifyToken,updateUstCode)
-router.post("/auth/updateustcode",verifyToken,updateKtcCode)
+router.post("/auth/updatektccode",verifyToken,updateKtcCode)
+router.post("/auth/updatetntcode",verifyToken,updateTntCode)
+
+router.post("/auth/updateustcode",verifyToken,updateUstCode)
 router.post("/auth/sendasset",verifyToken,sendAsset)
 router.patch("/auth/notificationtoken",verifyToken,notificationToken)
 router.patch("/auth/notifications",verifyToken,notifications)

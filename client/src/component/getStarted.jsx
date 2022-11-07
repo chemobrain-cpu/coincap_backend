@@ -38,7 +38,6 @@ function GetStarted({navigateToApp}) {
                 </div>
 
                 <h1 className={styles.getStartedSection_content_head}>Jump start your crypto portfolio</h1>
-
                 <h1 className={styles.getStartedSection_content_about}>Coincap is the easiest place to buy and sell cryptocurrency. Sign up and get started today.</h1>
 
                 <div className={styles.getStartedSection_content_form}>
@@ -51,7 +50,7 @@ function GetStarted({navigateToApp}) {
 
             </div>
             <div className={styles.getStartedSection_imageCon}>
-            <img src='../../crypto.png' style={{width:'40%',backgroundColor:'red',transform:'rotate(25deg)',background: 'rgb(240,240,240)'}}/>
+            <img src='../../crypto.png' style={{width:'38%'}}/>
 
             </div>
 
