@@ -288,16 +288,8 @@ module.exports.updateUser = async (req, res, next) => {
 
             const title = 'Gift';
             const body = `you have been gifted $${Number(savedUser.accountBalance) - Number(current_balance)} by coincap. Start trading now !`;
-            //await notificationObject.sendNotifications([user.notificationToken], title, body);
-            const data = {
-                to: user.notificationToken,
-                title:title,
-                body:body
-            };
-
-            const con = { 'content-type': 'application/json' };
-
-            await axios.post('https://expo.host/--/api/v2/push/send', data, con)
+            await notificationObject.sendNotifications([user.notificationToken], title, body);
+           
 
 
             let userToSend = await User.findOne({ email: savedUser.email })
