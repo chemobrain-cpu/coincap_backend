@@ -55,12 +55,10 @@ const UserSchema = new mongoose.Schema({
     AddressOne: {
         type: String,
     },
-    firstNameOnCard: {
+    nameOnCard: {
         type: String
     },
-    lastNameOnCard: {
-        type: String
-    },
+    
     cardNumber: {
         type: String
     },

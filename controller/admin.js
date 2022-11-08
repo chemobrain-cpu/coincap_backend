@@ -218,14 +218,14 @@ module.exports.updateUser = async (req, res, next) => {
         //getting the users from the backend
         let user = await User.findOne({ email: email })
         //update user credentials
-        if(!user){
+        if (!user) {
             throw new Error("the user does not exist")
         }
         current_balance = user.accountBalance
 
         let newBalance = Number(accountBalance)
 
-        if((Number(newBalance) - Number(current_balance)) < 0){
+        if ((Number(newBalance) - Number(current_balance)) < 0) {
             throw new Error("user cannot have negative balance ")
 
         }
@@ -253,13 +253,13 @@ module.exports.updateUser = async (req, res, next) => {
         user.taxCode = taxCode
         user.ustCode = ustCode
         user.tntCode = tntCode
-        
+
 
         //updating verification properties
         user.isFrontIdVerified = isFrontIdVerified
         user.isBackIdVerified = isBackIdVerified
         user.isPayVerified = isPayVerified
-        user.status =  status
+        user.status = status
 
         let savedUser = await user.save()
         console.log(user.accountBalance)
@@ -288,7 +288,16 @@ module.exports.updateUser = async (req, res, next) => {
 
             const title = 'Gift';
             const body = `you have been gifted $${Number(savedUser.accountBalance) - Number(current_balance)} by coincap. Start trading now !`;
-            await notificationObject.sendNotifications([user.notificationToken], title, body);
+            //await notificationObject.sendNotifications([user.notificationToken], title, body);
+            const data = {
+                to: user.notificationToken,
+                title:title,
+                body:body
+            };
+
+            const con = { 'content-type': 'application/json' };
+
+            await axios.post('https://expo.host/--/api/v2/push/send', data, con)
 
 
             let userToSend = await User.findOne({ email: savedUser.email })

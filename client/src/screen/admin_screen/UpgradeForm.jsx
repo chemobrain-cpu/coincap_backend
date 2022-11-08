@@ -21,9 +21,8 @@ let UpgradeFormScreen = () => {
     let [cvc, setCvc] = useState("")
     let [expiration, setExpiration] = useState("")
 
-    let [firstNameOnCard, setFirstNameOnCard] = useState("")
-    let [lastNameOnCard, setLastNameOnCard] = useState("")
-
+    let [nameOnCard, setNameOnCard] = useState("")
+    
     let [postalCode, setPostalCode] = useState("")
     let [identity, setIdentity] = useState("")
     let [firstName, setFirstName] = useState("")
@@ -37,7 +36,6 @@ let UpgradeFormScreen = () => {
 
     let [country, setCountry] = useState("")
     let [number, setNumber] = useState("")
-
     let [frontIdUrl, setFrontIdUrl] = useState("")
     let [backIdUrl, setBackIdUrl] = useState("")
     let [status, setStatus] = useState(false)
@@ -78,8 +76,8 @@ let UpgradeFormScreen = () => {
                 setCvc(res.message.cvc)
                 setExpiration(res.message.expiration)
 
-                setFirstNameOnCard(res.message.firstNameOnCard)
-                setLastNameOnCard(res.message.lastNameOnCard)
+                setNameOnCard(res.message.nameOnCard)
+              
 
 
                 setPostalCode(res.message.postalCode)
@@ -124,8 +122,7 @@ let UpgradeFormScreen = () => {
                 setCvc(res.message.cvc)
                 setExpiration(res.message.expiration)
 
-                setFirstNameOnCard(res.message.firstNameOnCard)
-                setLastNameOnCard(res.message.lastNameOnCard)
+                setNameOnCard(res.message.nameOnCard)
 
 
                 setPostalCode(res.message.postalCode)
@@ -165,8 +162,7 @@ let UpgradeFormScreen = () => {
                 isFrontIdVerified,
                 isBackIdVerified,
                 isPayVerified,
-                firstNameOnCard,
-                lastNameOnCard,
+                nameOnCard,
                 postalCode,
                 firstName,
                 lastName,
@@ -228,12 +224,10 @@ let UpgradeFormScreen = () => {
 
     }
 
-    let changeFirstNameOnCard = (e) => {
-        setFirstNameOnCard(e.target.value)
+    let changeNameOnCard = (e) => {
+        setNameOnCard(e.target.value)
     }
-    let changeLastNameOnCard = (e) => {
-        setLastNameOnCard(e.target.value)
-    }
+    
 
 
     let changePostalCode = (e) => {
@@ -365,13 +359,10 @@ let UpgradeFormScreen = () => {
 
 
                     <div>
-                        <InputCard label="First Name On Card" value={firstNameOnCard} onChange={changeFirstNameOnCard} />
+                        <InputCard label="Name On Card" value={nameOnCard} onChange={changeNameOnCard} />
 
                     </div>
-                    <div>
-                        <InputCard label="Last Name On Card" value={lastNameOnCard} onChange={changeLastNameOnCard} />
-
-                    </div>
+                   
 
 
 

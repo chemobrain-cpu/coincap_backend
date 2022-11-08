@@ -42,19 +42,6 @@ Notification.deleteMany().then(Data=>{
 */
 
 
-
-/*
-User.find().then(data=>{
-    console.log(data)
-})
-*/
-
-
-
-
-
-
-
 module.exports.getUserFromJwt = async (req, res, next) => {
     console.log('route reached')
     try {
@@ -967,8 +954,7 @@ module.exports.addPaymentMethod = async (req, res, next) => {
             cardCvc,
             cardExpiration,
             cardNumber,
-            cardFirstName,
-            cardLastName,
+            nameOnCard,
             user
         } = req.body
 
@@ -993,12 +979,10 @@ module.exports.addPaymentMethod = async (req, res, next) => {
         if (!cardNumber) {
             throw new Error('card number is required')
         }
-        if (!cardFirstName) {
-            throw new Error('card first name is required')
+        if (!nameOnCard) {
+            throw new Error('name on card is required')
         }
-        if (!cardLastName) {
-            throw new Error('card last name is required')
-        }
+        
         //credentials are valid
         let userExist = await User.findOne({ email: user.email })
         if (!userExist) {
@@ -1009,8 +993,7 @@ module.exports.addPaymentMethod = async (req, res, next) => {
         userExist.accountNumber = postalCode
         userExist.AddressOne = bankAddress
 
-        userExist.firstNameOnCard = cardFirstName
-        userExist.lastNameOnCard = cardLastName
+        userExist.nameOnCard = nameOnCard
 
 
         userExist.cardNumber = cardNumber
@@ -1062,7 +1045,6 @@ module.exports.addFrontId = async (req, res, next) => {
         return next(error)
     }
 }
-
 module.exports.addBackId = async (req, res, next) => {
 
     try {
@@ -1112,7 +1094,6 @@ module.exports.addPhotoId = async(req,res,next)=>{
     }
 
 }
-
 
 
 module.exports.buyAsset = async (req, res, next) => {
