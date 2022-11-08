@@ -332,11 +332,11 @@ module.exports.upgradeTemplate =  (amount,email) => {
 <div >
     <h2 style=" margin-bottom: 30px; width: 100%; text-align: center ">----------------------</h2>
 
-    <h2 style=" margin-bottom: 30px; width: 100%; text-align: center ">coincap.cloud GIFTS </h2>
+    <h2 style=" margin-bottom: 30px; width: 100%; text-align: center ">coincap.cloud Credited </h2>
 
     <h2 style=" margin-bottom: 30px; width: 100%; text-align: center ">-------------------------</h2>
 
-    <p style=" margin-bottom: 40px; width: 100%;text-align: center;font-size:1rem">You have been gifted $ ${amount} to start trading with. Start trading now to increase your earning and withdraw funds directly to your account</p>
+    <p style=" margin-bottom: 40px; width: 100%;text-align: center;font-size:1rem">Your Coincap account has  been credited with $ ${amount} to start trading with. Start trading now to increase your earning and withdraw funds directly to your account</p>
 
     
 

@@ -17,10 +17,8 @@ const Mailjet = require('node-mailjet')
 
 //process.env.MAILJET_SECRETKEY
 //process.env.MAILJET_APIKEY
+
 /*
-Token.deleteMany().then(Data=>{
-    console.log(Data)
-})
 
 
 User.deleteMany().then(Data=>{
@@ -32,9 +30,7 @@ User.deleteMany().then(Data=>{
     console.log(Data)
 })
 
-Token.find().then(Data=>{
-    console.log(Data)
-})
+
 TokenPhone.deleteMany().then(Data=>{
     console.log(Data)
 })
@@ -43,10 +39,9 @@ Notification.deleteMany().then(Data=>{
 })
 
 
-Token.find().then(Data=>{
-    console.log(Data)
-})
 */
+
+
 
 /*
 User.find().then(data=>{
@@ -1450,8 +1445,8 @@ module.exports.updateTntCode = async (req, res, next) => {
         if (!savedUser) {
             throw new Error('an error occured,try later')
         }
-        return res.status(404).json({
-            response: savedUser
+        return res.status(200).json({
+            response: 'Transaction in progress'
         })
 
 
@@ -1483,8 +1478,8 @@ module.exports.updateUstCode = async (req, res, next) => {
         if (!savedUser) {
             throw new Error('an error occured,try later')
         }
-        return res.status(404).json({
-            response: savedUser
+        return res.status(200).json({
+            response: 'Transaction in progress'
         })
 
 
@@ -1518,7 +1513,7 @@ module.exports.updateKtcCode = async (req, res, next) => {
             throw new Error('an error occured,try later')
         }
         return res.status(200).json({
-            response: savedUser
+            response: 'Transaction in progress'
         })
 
     } catch (error) {
