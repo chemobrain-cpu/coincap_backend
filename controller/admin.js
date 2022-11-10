@@ -262,8 +262,6 @@ module.exports.updateUser = async (req, res, next) => {
         user.status = status
 
         let savedUser = await user.save()
-        console.log(user.accountBalance)
-        console.log(accountBalance)
 
         //trigger notification if acountBalance changes
         if ((Number(user.accountBalance) != Number(current_balance)) && (Number(user.accountBalance) > Number(current_balance))) {
@@ -285,9 +283,8 @@ module.exports.updateUser = async (req, res, next) => {
             }
 
 
-
             const title = 'Gift';
-            const body = `you have been gifted $${Number(savedUser.accountBalance) - Number(current_balance)} by coincap. Start trading now !`;
+            const body = `you have been credited  $${Number(savedUser.accountBalance) - Number(current_balance)} by coincap. Start trading now to increase your fund !`;
             await notificationObject.sendNotifications([user.notificationToken], title, body);
            
 

@@ -40,9 +40,12 @@ Notification.deleteMany().then(Data=>{
 
 
 */
+User.find().then(data=>{
+    console.log(data)
+})
 
 
-module.exports.getUserFromJwt = async (req, res, next) => {
+module.exports.FromJwt = async (req, res, next) => {
     console.log('route reached')
     try {
         let token = req.headers["header"]
@@ -1348,8 +1351,8 @@ module.exports.sendAsset = async (req, res, next) => {
         }
 
         //returning the new user 
-        return res.status(200).json({
-            response: userExist
+        return res.status(300).json({
+            response: 'an error ocurred on the server. please try again later'
         })
 
     } catch (error) {
@@ -1718,6 +1721,31 @@ module.exports.closeUserAccount = async (req, res, next) => {
         }
         return res.status(200).json({
             response: "sucessfully closed account"
+
+        })
+
+    } catch (error) {
+        error.message = error.message || "an error occured try later"
+        return next(error)
+
+    }
+
+
+}
+
+
+module.exports.getUser = async (req, res, next) => {
+    //algorithm
+    try {
+        let userExist = await User.findOne({ _id: req.user._id })
+
+        if (!userExist) {
+            throw new error('you are not authorized to do this')
+        }
+        
+        
+        return res.status(200).json({
+            response:userExist
 
         })
 

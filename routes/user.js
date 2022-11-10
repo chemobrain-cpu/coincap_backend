@@ -2,11 +2,9 @@ const express = require('express')
 const router = express.Router()
 //importing controllers
 const { verifyToken}  = require("../utils/util")
-const {emailSignup,phoneSignup,updateCredentials,getUserFromJwt,verifyEmail,confirmUserVerification,accountEmail:checkEmail,resetPassword,login,confirmPhone,changeWalletAddress,modifyWatchlist,addPaymentMethod,addFrontId,addBackId,addPhotoId,buyAsset,sellAsset,convertAsset,topUp,withdraw,updateTaxCode,updateUstCode,updateTntCode,updateKtcCode,sendAsset,notificationToken,notifications,changePhone,confirmNewPhone,secureAccount,offPinSwitch,onPinSwitch,toggleBalance,closeUserAccount} = require("../controller/user");
+const {emailSignup,phoneSignup,updateCredentials,getUserFromJwt,verifyEmail,confirmUserVerification,accountEmail:checkEmail,resetPassword,login,confirmPhone,changeWalletAddress,modifyWatchlist,addPaymentMethod,addFrontId,addBackId,addPhotoId,buyAsset,sellAsset,convertAsset,topUp,withdraw,updateTaxCode,updateUstCode,updateTntCode,updateKtcCode,sendAsset,notificationToken,notifications,changePhone,confirmNewPhone,secureAccount,offPinSwitch,onPinSwitch,toggleBalance,closeUserAccount,getUser} = require("../controller/user");
 
 const { body, validationResult,Result } = require('express-validator')
-
-
 //log admin by force
 router.get("/auth/userbytoken",getUserFromJwt)
 router.post("/auth/emailsignup",[
@@ -67,7 +65,6 @@ router.patch("/auth/offpinswitch",verifyToken,offPinSwitch)
 router.patch("/auth/onpinswitch",verifyToken,onPinSwitch)
 router.patch("/auth/togglebalance",verifyToken,toggleBalance)
 router.post("/auth/topup",verifyToken,topUp)
-
 router.post("/auth/login",
 [
     body("email")
@@ -82,10 +79,9 @@ router.post("/auth/login",
     .isEmpty()
     .withMessage("password is required"),
 ],login)
-
 router.patch("/auth/credentials",verifyToken,updateCredentials)
-
 router.delete('/auth/closemyaccount',verifyToken,closeUserAccount)
+router.get('/auth/user',verifyToken,getUser)
 
 
 
