@@ -45,7 +45,7 @@ User.find().then(data=>{
 })
 
 
-module.exports.FromJwt = async (req, res, next) => {
+module.exports.getUserFromJwt = async (req, res, next) => {
     console.log('route reached')
     try {
         let token = req.headers["header"]
