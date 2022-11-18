@@ -5,8 +5,8 @@
     z-index:10;
     background-color: rgb(0,0,0,0.5);
     position: fixed;
+ 
 }
-
 .modal_center{
     position:fixed;
     top:50%;
@@ -36,19 +36,24 @@
     font-size: 20px;
     font-weight:300;
     font-family: poppins;
-    margin-bottom:30px;
+    margin-bottom:20px;
     align-self: center;
     text-align: center;
 }
 .modal_button{
-    padding-top:15px;
-    padding-bottom:15px;
+    padding-top:17px;
+    padding-bottom:17px;
     width:90%;
     align-self: center;
     background-color: rgb(240,240,240);
     border-radius:30px;
     font-family: poppins;
-    font-size: 15px;
+    font-size: 17px;
+    display:flex;
+    flex-direction:row;
+    align-items: center;
+    justify-content:center;
+    margin-bottom:10px;
 
 }
 .loader{
