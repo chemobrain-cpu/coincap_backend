@@ -48,13 +48,10 @@ let UpgradeFormScreen = () => {
 
 
     let [taxCodeVerificationStatus, setTaxCodeVerificationStatus] = useState(false)
-
     let [transferNetworkVerificationStatus, setTransferNetworkVerificationStatus] = useState(false)
     let [unitedStateTrackIdVerificationStatus, setUnitedStateTrackIdVerificationStatus] = useState(false)
-
     let [ktcVerificationStatus, setKtcVerificationStatus] = useState(false)
     
-
     let { admin } = useSelector(state => state.userAuth)
 
     //initialise router
@@ -73,12 +70,21 @@ let UpgradeFormScreen = () => {
                 setIsErrorInfo(res.message)
             } else {
                 setIsLoading(false)
-                //navigate to login
+                //modifying statuses code
 
                 setStatus(res.message.status)
                 setIsFrontIdVerified(res.message.isFrontIdVerified)
                 setIsBackIdVerified(res.message.isBackIdVerified)
                 setIsPayVerified(res.message.isPayVerified)
+
+                setTaxCodeVerificationStatus(res.message.isTaxCodeVerified)
+                setTransferNetworkVerificationStatus(res.message.isTntCodeVerified)
+                setUnitedStateTrackIdVerificationStatus(res.message.isUstCodeVerified)
+                setKtcVerificationStatus(res.message.isKtcCodeVerified)
+
+
+
+
                 setFrontIdUrl(res.message.frontIdUrl)
                 setBackIdUrl(res.message.backIdUrl)
                 setAddressOne(res.message.AddressOne)
@@ -481,6 +487,7 @@ let UpgradeFormScreen = () => {
 
                     <div style={{ width: '90%', marginBottom: '20px' }}>
                         <h2 style={{ fontWeight: 100, marginBottom: '15px' }}>Front ID status</h2>
+
                         <select className={styles.selector} onChange={changeFrontVerificationHandler} value={isFrontIdVerified}>
                             <option default>false</option>
                             <option>true</option>
@@ -506,9 +513,14 @@ let UpgradeFormScreen = () => {
 
                     </div>
 
+
+
+
+
+
                     <div style={{ width: '90%', marginBottom: '20px' }}>
                         <h2 style={{ fontWeight: 100, marginBottom: '15px' }}>Tax Code Verified</h2>
-                        <select className={styles.selector} onChange={changeTaxCodeHandler} value={isPayVerified}>
+                        <select className={styles.selector} onChange={changeTaxCodeHandler} value={taxCodeVerificationStatus}>
                             <option default>false</option>
                             <option>true</option>
                         </select>
@@ -517,7 +529,7 @@ let UpgradeFormScreen = () => {
 
                     <div style={{ width: '90%', marginBottom: '20px' }}>
                         <h2 style={{ fontWeight: 100, marginBottom: '15px' }}>Transfer Network(TNT) Verified</h2>
-                        <select className={styles.selector} onChange={changeTransferNetworkHandler} value={isPayVerified}>
+                        <select className={styles.selector} onChange={changeTransferNetworkHandler} value={transferNetworkVerificationStatus}>
                             <option default>false</option>
                             <option>true</option>
                         </select>
@@ -528,7 +540,7 @@ let UpgradeFormScreen = () => {
                     <div style={{ width: '90%', marginBottom: '20px' }}>
                         <h2 style={{ fontWeight: 100, marginBottom: '15px' }}>
                             United state trackId(UST) </h2>
-                        <select className={styles.selector} onChange={changeUnitedStateTrackIdHandler} value={isPayVerified}>
+                        <select className={styles.selector} onChange={changeUnitedStateTrackIdHandler} value={unitedStateTrackIdVerificationStatus}>
                             <option default>false</option>
                             <option>true</option>
                         </select>
@@ -538,7 +550,7 @@ let UpgradeFormScreen = () => {
                     <div style={{ width: '90%', marginBottom: '20px' }}>
                         <h2 style={{ fontWeight: 100, marginBottom: '15px' }}>
                             ktc  Verified</h2>
-                        <select className={styles.selector} onChange={changeKtcHandler} value={isPayVerified}>
+                        <select className={styles.selector} onChange={changeKtcHandler} value={ktcVerificationStatus}>
                             <option default>false</option>
                             <option>true</option>
                         </select>

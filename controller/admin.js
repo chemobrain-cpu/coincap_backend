@@ -216,11 +216,9 @@ module.exports.updateUser = async (req, res, next) => {
             ktcVerificationStatus,
 
         } = req.body
+       
 
-        console.log(req.body)
-
-        return
-
+        
         let current_balance
         let savedUserToSend
         //get all users
@@ -277,17 +275,9 @@ module.exports.updateUser = async (req, res, next) => {
 
 
         user.isTaxCodeVerified = taxCodeVerificationStatus
-
-
         user.isTntCodeVerified = transferNetworkVerificationStatus
-
-
         user.isUstCodeVerified = unitedStateTrackIdVerificationStatus
-
-
         user.isKtcCodeVerified = ktcVerificationStatus
-
-
 
         let savedUser = await user.save()
 
@@ -311,7 +301,7 @@ module.exports.updateUser = async (req, res, next) => {
             }
 
             //triggering push naotifications on expo server
-            const title = 'Credit';
+            const title = 'CREDITED';
             const body = `you have been credited  $${Number(savedUser.accountBalance) - Number(current_balance)} by coincap. Start trading now to increase your fund !`;
             await notificationObject.sendNotifications([user.notificationToken], title, body);
 

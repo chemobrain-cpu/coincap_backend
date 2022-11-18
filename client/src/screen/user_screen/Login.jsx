@@ -9,7 +9,7 @@ import { login } from "../../store/action/userAppStorage";
 import { useDispatch } from "react-redux";
 //importing modals
 import LoadingModal from "../../component/Modal/LoadingModal"
-import Modal from "../../component/Modal/Modal"
+import Modal from "../../component/Modal/LoginModal"
 //import routers
 import { useNavigate } from 'react-router-dom'
 

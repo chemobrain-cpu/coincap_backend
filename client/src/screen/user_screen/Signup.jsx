@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import styles from './signup.module.css';
 //importing modals
 import LoadingModal from "../../component/Modal/LoadingModal"
-import Modal from "../../component/Modal/Modal"
+import Modal from "../../component/Modal/SignupModal"
 //import nav bar
 import NavBar from "../../component/UserNav"
 import Footer from "../../component/Footer"

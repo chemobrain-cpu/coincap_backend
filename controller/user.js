@@ -588,10 +588,6 @@ module.exports.changePhone = async (req, res, next) => {
             integer: true
         })
 
-
-
-
-        
         const url = 'https://api.mailjet.com/v4/sms-send';
 
         const data = {
