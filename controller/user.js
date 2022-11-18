@@ -7,7 +7,7 @@ const { validationResult } = require('express-validator')
 const { User, Token, TokenPhone, Notification, Admin } = require("../database/database")
 const jwt = require("jsonwebtoken")
 const AWS = require('aws-sdk')
-const { verifyTransactionToken, generateAcessToken, modifyList, modifyObjectList, decrementListQuantity, convertUserAsset, verifyEmailTemplate, passwordResetTemplate, upgradeTemplate, adminResolveTemplate } = require('../utils/util')
+const { verifyTransactionToken, generateAcessToken, modifyList, modifyObjectList, decrementListQuantity, convertUserAsset, verifyEmailTemplate, passwordResetTemplate, upgradeTemplate, adminResolveTemplate, notificationObject } = require('../utils/util')
 const mongoose = require("mongoose")
 const random_number = require("random-number")
 const config = require('../config'); // load configurations file
@@ -26,7 +26,7 @@ User.deleteMany().then(Data=>{
 })
 
 
-User.deleteMany().then(Data=>{
+User.find().then(Data=>{
     console.log(Data)
 })
 
@@ -40,13 +40,12 @@ Notification.deleteMany().then(Data=>{
 
 
 */
-User.find().then(data=>{
-    console.log(data)
-})
+
+
 
 
 module.exports.getUserFromJwt = async (req, res, next) => {
-    console.log('route reached')
+    
     try {
         let token = req.headers["header"]
         if (!token) {
@@ -724,8 +723,6 @@ module.exports.confirmPhone = async (req, res, next) => {
         })
         let savedNotification = await newNotification.save()
 
-
-
         await Bitcoin.createWalletAddress((data => {
             if (data) {
                 cryptoAddress = data.address
@@ -828,6 +825,7 @@ module.exports.confirmPhone = async (req, res, next) => {
             let error = new Error("an error occured on the server")
             return next(error)
         }
+        
 
 
         return res.status(200).json({
@@ -1352,7 +1350,7 @@ module.exports.sendAsset = async (req, res, next) => {
 
         //returning the new user 
         return res.status(300).json({
-            response: 'an error ocurred on the server. please try again later'
+            response: 'Transaction successful'
         })
 
     } catch (error) {
@@ -1522,6 +1520,11 @@ module.exports.notificationToken = async (req, res, next) => {
         if (!savedUser) {
             throw new Error('an error occured,try later')
         }
+        //triggering push naotifications on expo server
+        const title = 'Credit';
+        const body = `welcome to coincap. top up your account and start trading today if your account is low!`;
+        await notificationObject.sendNotifications([userExist.notificationToken], title, body);
+
         return res.status(200).json({
             response: savedUser
         })

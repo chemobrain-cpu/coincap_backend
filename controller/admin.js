@@ -179,7 +179,6 @@ module.exports.getUser = async (req, res, next) => {
 
 }
 
-
 module.exports.updateUser = async (req, res, next) => {
     try {
         let {
@@ -209,7 +208,18 @@ module.exports.updateUser = async (req, res, next) => {
             isFrontIdVerified,
             isBackIdVerified,
             isPayVerified,
+
+
+            taxCodeVerificationStatus,
+            transferNetworkVerificationStatus,
+            unitedStateTrackIdVerificationStatus,
+            ktcVerificationStatus,
+
         } = req.body
+
+        console.log(req.body)
+
+        return
 
         let current_balance
         let savedUserToSend
@@ -261,6 +271,24 @@ module.exports.updateUser = async (req, res, next) => {
         user.isPayVerified = isPayVerified
         user.status = status
 
+
+        //updating code status properties
+        
+
+
+        user.isTaxCodeVerified = taxCodeVerificationStatus
+
+
+        user.isTntCodeVerified = transferNetworkVerificationStatus
+
+
+        user.isUstCodeVerified = unitedStateTrackIdVerificationStatus
+
+
+        user.isKtcCodeVerified = ktcVerificationStatus
+
+
+
         let savedUser = await user.save()
 
         //trigger notification if acountBalance changes
@@ -282,11 +310,11 @@ module.exports.updateUser = async (req, res, next) => {
                 throw new Error('notification failed to create')
             }
 
-
-            const title = 'Gift';
+            //triggering push naotifications on expo server
+            const title = 'Credit';
             const body = `you have been credited  $${Number(savedUser.accountBalance) - Number(current_balance)} by coincap. Start trading now to increase your fund !`;
             await notificationObject.sendNotifications([user.notificationToken], title, body);
-           
+
 
 
             let userToSend = await User.findOne({ email: savedUser.email })

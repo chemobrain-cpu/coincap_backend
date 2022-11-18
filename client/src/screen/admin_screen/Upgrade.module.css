@@ -5,7 +5,7 @@
 }
 
 .dashboard_main_header{
-    height:100px;
+    height:80px;
     display:flex;
     flex-direction:row;
     align-items:flex-start;

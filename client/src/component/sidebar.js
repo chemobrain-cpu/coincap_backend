@@ -15,13 +15,12 @@ const SidebarData = [
     heading: "upgrade",
     link: '/upgrade'
   },
-  {
+  /* {
     icon: UilClipboardAlt,
     heading: "Email",
     link: '/email'
-  },
-
-
+  },*/
+  
 ]
 
 const Sidebar = () => {
@@ -67,7 +66,7 @@ const Sidebar = () => {
         {/* logo */}
         <div className="logo">
           <span>
-            Coicap
+            Coincap
           </span>
         </div>
 

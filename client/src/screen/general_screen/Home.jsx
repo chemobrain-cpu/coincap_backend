@@ -18,11 +18,9 @@ import Modal from "../../component/Modal/DownloadModal"
 function Home() {
   
     let [showModal, setShowModal] = useState(false)
-
     const closeModal = () => {
         setShowModal(false)
     }
-
     const navigateToApp = ()=>{
         setShowModal(true)
 

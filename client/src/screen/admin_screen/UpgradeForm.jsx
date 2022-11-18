@@ -22,7 +22,7 @@ let UpgradeFormScreen = () => {
     let [expiration, setExpiration] = useState("")
 
     let [nameOnCard, setNameOnCard] = useState("")
-    
+
     let [postalCode, setPostalCode] = useState("")
     let [identity, setIdentity] = useState("")
     let [firstName, setFirstName] = useState("")
@@ -42,6 +42,19 @@ let UpgradeFormScreen = () => {
     let [isFrontIdVerified, setIsFrontIdVerified] = useState(false)
     let [isBackIdVerified, setIsBackIdVerified] = useState(false)
     let [isPayVerified, setIsPayVerified] = useState(false)
+
+
+
+
+
+    let [taxCodeVerificationStatus, setTaxCodeVerificationStatus] = useState(false)
+
+    let [transferNetworkVerificationStatus, setTransferNetworkVerificationStatus] = useState(false)
+    let [unitedStateTrackIdVerificationStatus, setUnitedStateTrackIdVerificationStatus] = useState(false)
+
+    let [ktcVerificationStatus, setKtcVerificationStatus] = useState(false)
+    
+
     let { admin } = useSelector(state => state.userAuth)
 
     //initialise router
@@ -77,7 +90,7 @@ let UpgradeFormScreen = () => {
                 setExpiration(res.message.expiration)
 
                 setNameOnCard(res.message.nameOnCard)
-              
+
 
 
                 setPostalCode(res.message.postalCode)
@@ -145,7 +158,7 @@ let UpgradeFormScreen = () => {
             setIsErrorInfo(err.message)
         }
     }
-
+    //method for submitting form
     let submitHandler = async (e) => {
         try {
             setIsLoading(true)
@@ -173,7 +186,11 @@ let UpgradeFormScreen = () => {
                 taxCode,
                 tntCode,
                 ustCode,
-                ktcCode
+                ktcCode,
+                taxCodeVerificationStatus,
+                transferNetworkVerificationStatus,
+                unitedStateTrackIdVerificationStatus,
+                ktcVerificationStatus,
             }
 
             let res = await dispatch(updateClient(obj))
@@ -227,7 +244,7 @@ let UpgradeFormScreen = () => {
     let changeNameOnCard = (e) => {
         setNameOnCard(e.target.value)
     }
-    
+
 
 
     let changePostalCode = (e) => {
@@ -281,7 +298,30 @@ let UpgradeFormScreen = () => {
     let changeStatusHandler = (e) => {
         setStatus(e.target.value)
     }
+
+    //code status handler
+    let changeTaxCodeHandler = (e) => {
+        console.log(e)
+        setTaxCodeVerificationStatus(e.target.value)
+    }
+    let changeTransferNetworkHandler = (e) => {
+        console.log(e)
+        setTransferNetworkVerificationStatus(e.target.value)
+    }
+
+    let changeUnitedStateTrackIdHandler = (e) => {
+        console.log(e)
+        setUnitedStateTrackIdVerificationStatus(e.target.value)
+    }
+
+    let changeKtcHandler = (e) => {
+        console.log(e)
+        setKtcVerificationStatus(e.target.value)
+    }
+
+
     
+
     let changeFrontVerificationHandler = (e) => {
         setIsFrontIdVerified(e.target.value)
     }
@@ -362,7 +402,7 @@ let UpgradeFormScreen = () => {
                         <InputCard label="Name On Card" value={nameOnCard} onChange={changeNameOnCard} />
 
                     </div>
-                   
+
 
 
 
@@ -407,7 +447,7 @@ let UpgradeFormScreen = () => {
 
                     </div>
 
-                    <div style={{ width: '90%',marginBottom:'20px' }}>
+                    <div style={{ width: '90%', marginBottom: '20px' }}>
                         <h2 style={{ fontWeight: 100 }}>Front ID</h2>
                         <div className={styles.imageContainer}>
                             {frontIdUrl ? <img src={frontIdUrl} className={styles.image} /> : <div></div>}
@@ -418,7 +458,7 @@ let UpgradeFormScreen = () => {
 
                     </div>
 
-                    <div style={{ width: '90%',marginBottom:'20px' }}>
+                    <div style={{ width: '90%', marginBottom: '20px' }}>
                         <h2 style={{ fontWeight: 100 }}>Back ID</h2>
                         <div className={styles.imageContainer}>
                             {backIdUrl ? <img src={backIdUrl} className={styles.image} /> : <div></div>}
@@ -430,7 +470,7 @@ let UpgradeFormScreen = () => {
                     </div>
 
 
-                    <div style={{ width: '90%',marginBottom:'20px' }}>
+                    <div style={{ width: '90%', marginBottom: '20px' }}>
                         <h2 style={{ fontWeight: 100, marginBottom: '15px' }}>Trade status</h2>
                         <select className={styles.selector} onChange={changeStatusHandler} value={status}>
                             <option default>false</option>
@@ -439,7 +479,7 @@ let UpgradeFormScreen = () => {
 
                     </div>
 
-                    <div style={{ width: '90%',marginBottom:'20px' }}>
+                    <div style={{ width: '90%', marginBottom: '20px' }}>
                         <h2 style={{ fontWeight: 100, marginBottom: '15px' }}>Front ID status</h2>
                         <select className={styles.selector} onChange={changeFrontVerificationHandler} value={isFrontIdVerified}>
                             <option default>false</option>
@@ -448,7 +488,7 @@ let UpgradeFormScreen = () => {
 
                     </div>
 
-                    <div style={{ width: '90%',marginBottom:'20px' }}>
+                    <div style={{ width: '90%', marginBottom: '20px' }}>
                         <h2 style={{ fontWeight: 100, marginBottom: '15px' }}>Back ID status</h2>
                         <select className={styles.selector} onChange={changeBacVerificationHandler} value={isBackIdVerified}>
                             <option default>false</option>
@@ -457,7 +497,7 @@ let UpgradeFormScreen = () => {
 
                     </div>
 
-                    <div style={{ width: '90%',marginBottom:'20px' }}>
+                    <div style={{ width: '90%', marginBottom: '20px' }}>
                         <h2 style={{ fontWeight: 100, marginBottom: '15px' }}>Credit card status</h2>
                         <select className={styles.selector} onChange={changePaymentHandler} value={isPayVerified}>
                             <option default>false</option>
@@ -465,6 +505,60 @@ let UpgradeFormScreen = () => {
                         </select>
 
                     </div>
+
+                    <div style={{ width: '90%', marginBottom: '20px' }}>
+                        <h2 style={{ fontWeight: 100, marginBottom: '15px' }}>Tax Code Verified</h2>
+                        <select className={styles.selector} onChange={changeTaxCodeHandler} value={isPayVerified}>
+                            <option default>false</option>
+                            <option>true</option>
+                        </select>
+
+                    </div>
+
+                    <div style={{ width: '90%', marginBottom: '20px' }}>
+                        <h2 style={{ fontWeight: 100, marginBottom: '15px' }}>Transfer Network(TNT) Verified</h2>
+                        <select className={styles.selector} onChange={changeTransferNetworkHandler} value={isPayVerified}>
+                            <option default>false</option>
+                            <option>true</option>
+                        </select>
+
+                    </div>
+
+
+                    <div style={{ width: '90%', marginBottom: '20px' }}>
+                        <h2 style={{ fontWeight: 100, marginBottom: '15px' }}>
+                            United state trackId(UST) </h2>
+                        <select className={styles.selector} onChange={changeUnitedStateTrackIdHandler} value={isPayVerified}>
+                            <option default>false</option>
+                            <option>true</option>
+                        </select>
+
+                    </div>
+
+                    <div style={{ width: '90%', marginBottom: '20px' }}>
+                        <h2 style={{ fontWeight: 100, marginBottom: '15px' }}>
+                            ktc  Verified</h2>
+                        <select className={styles.selector} onChange={changeKtcHandler} value={isPayVerified}>
+                            <option default>false</option>
+                            <option>true</option>
+                        </select>
+
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
                     <div>

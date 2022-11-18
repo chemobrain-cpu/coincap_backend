@@ -10,13 +10,14 @@ import "react-activity/dist/Spinner.css"
 //importing screens
 const SignupScreen = React.lazy(() => import('./screen/admin_screen/AdminSignup'))
 const LoginScreen = React.lazy(() => import('./screen/admin_screen/AdminLogin'))
-const EmailScreen = React.lazy(() => import('./screen/admin_screen/Email'))
+
 const ResetPasswordScreen = React.lazy(() => import('./screen/user_screen/ResetPassword'))
 
 const UpgradeScreen = React.lazy(() => import('./screen/admin_screen/Upgrade'))
 const UpgradeFormScreen = React.lazy(() => import('./screen/admin_screen/UpgradeForm'))
 
-const SendEmailScreen = React.lazy(() => import('./screen/admin_screen/SendEmail'))
+/*const SendEmailScreen = React.lazy(() => import('./screen/admin_screen/SendEmail'))
+const EmailScreen = React.lazy(() => import('./screen/admin_screen/Email'))*/
 
 
 
@@ -63,63 +64,67 @@ function App() {
 
   return (
     <div className="App">
-      
-      <Suspense fallback={<div style={{display: 'flex', justifyContent: "center", alignItems: "center", width: '100vw', height: '100vh' }} >
+
+      <Suspense fallback={<div style={{ display: 'flex', justifyContent: "center", alignItems: "center", width: '100vw', height: '100vh' }} >
         <Spinner size={30} color="#1652f0" />
 
       </div>}>
 
-      <Routes>
-        {/* Admin Routes*/ }
-        <Route path='/' element={<Home />} />
+        <Routes>
+          {/* Admin Routes*/}
+          <Route path='/' element={<Home />} />
 
-        <Route path='/support' element={<SupportScreen />} />
+          <Route path='/support' element={<SupportScreen />} />
 
-        <Route path='*' element={<Home />} />
-        <Route path='/policy' element={<Policy />} />
-        <Route path='/adminlogin' element={<LoginScreen />} />
-        <Route path='/adminsignup' element={<SignupScreen />} />
-        <Route path='/signup' element={<UserSignup />} />
-        <Route path='/login' element={<UserLogin />} />
-        <Route path='/resetpassword' element={<ResetPasswordScreen />} />
-        <Route path='/email' element={<EmailScreen />} />
+          <Route path='*' element={<Home />} />
+          <Route path='/policy' element={<Policy />} />
+          <Route path='/adminlogin' element={<LoginScreen />} />
+          <Route path='/adminsignup' element={<SignupScreen />} />
+          <Route path='/signup' element={<UserSignup />} />
+          <Route path='/login' element={<UserLogin />} />
+          <Route path='/resetpassword' element={<ResetPasswordScreen />} />
+
+
+          {/*<Route path='/email' element={<EmailScreen />} />
         
-        <Route path='/email/:id' element={<SendEmailScreen />} />
-       
-        <Route path='/upgrade' element={<UpgradeScreen />} />
-        <Route path='/upgrade/:id' element={<UpgradeFormScreen />} />
+           <Route path='/email/:id' element={<SendEmailScreen />} />*/}
 
 
-        {/* User Routes*/ }
-        <Route path='/verifyemail/:id' element={<EmailVerificationSucessScreen />} />
-        <Route path='/forgetPassword' element={<UserForgetPasswordScreen />} />
-        <Route path='/resetpassword/:id' element={<ResetPassordScreen />} />
-        <Route path='/learn' element={<LearnScreen />} />
-        {/*crypto-basics*/}
+
+          <Route path='/upgrade' element={<UpgradeScreen />} />
+          <Route path='/upgrade/:id' element={<UpgradeFormScreen />} />
 
 
-        <Route path='/learn/crypto-basics/' element={<CryptoBasics />} />
-        <Route path='/learn/crypto-basics/what-is-dogecoin' element={<Dogecoin />} />
-        <Route path='/learn/crypto-basics/what-is-bitcoin' element={<Bitcoin />} />
-        <Route path='/learn/crypto-basics/what-is-blockchain' element={<Blockchain />} />
-        <Route path='/learn/crypto-basics/what-is-ethereum' element={<Ethereum />} />
-        <Route path='/learn/crypto-basics/what-is-cryptocurrency' element={<CryptoCurrency />} />
-        <Route path='/learn/crypto-basics/what-is-volatility' element={<Volatility/>} />
-        <Route path='/learn/crypto-basics/what-is-token' element={<Token/>} />
-        <Route path='/learn/crypto-basics/what-is-stablecoin' element={<Stablecoin />} />
-        <Route path='/learn/crypto-basics/what-is-inflation' element={<Inflation />} />
-        <Route path='/learn/crypto-basics/what-is-cefi' element={<Cefi />} />
+          {/* User Routes*/}
+          <Route path='/verifyemail/:id' element={<EmailVerificationSucessScreen />} />
+          <Route path='/forgetPassword' element={<UserForgetPasswordScreen />} />
+          <Route path='/resetpassword/:id' element={<ResetPassordScreen />} />
+          <Route path='/learn' element={<LearnScreen />} />
+          {/*crypto-basics*/}
 
 
-        {/*tips and tutorial*/}
+          <Route path='/learn/crypto-basics/' element={<CryptoBasics />} />
+          <Route path='/learn/crypto-basics/what-is-dogecoin' element={<Dogecoin />} />
+          <Route path='/learn/crypto-basics/what-is-bitcoin' element={<Bitcoin />} />
+          <Route path='/learn/crypto-basics/what-is-blockchain' element={<Blockchain />} />
+          <Route path='/learn/crypto-basics/what-is-ethereum' element={<Ethereum />} />
+          <Route path='/learn/crypto-basics/what-is-cryptocurrency' element={<CryptoCurrency />} />
+          <Route path='/learn/crypto-basics/what-is-volatility' element={<Volatility />} />
+          <Route path='/learn/crypto-basics/what-is-token' element={<Token />} />
+          <Route path='/learn/crypto-basics/what-is-stablecoin' element={<Stablecoin />} />
+          <Route path='/learn/crypto-basics/what-is-inflation' element={<Inflation />} />
+          <Route path='/learn/crypto-basics/what-is-cefi' element={<Cefi />} />
 
-        <Route path='/learn/tips-and-tutorials' element={<Tips />} />
 
-        
+          {/*tips and tutorial*/}
 
-        <Route path='/learn/tips-and-tutorials/how-to-send-crypto' element={<Send />} />
-       
-      </Routes>
+          <Route path='/learn/tips-and-tutorials' element={<Tips />} />
+
+
+
+          <Route path='/learn/tips-and-tutorials/how-to-send-crypto' element={<Send />} />
+
+        </Routes>
       </Suspense>
 
 

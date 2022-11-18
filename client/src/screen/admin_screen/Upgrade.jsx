@@ -90,8 +90,6 @@ let UpgradeScreen = () => {
 
             </div>
            
-
-            
         </div></>
 }
 

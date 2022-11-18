@@ -252,7 +252,7 @@ function Blockchain() {
 
                 <div className={styles.contentSection}>
                     <p>
-                        The easiest way to buy bitcoin is to purchase it through an online exchange like Coicap. Coincap makes it easy to buy, sell, send, receive, and store bitcoin without needing to hold it yourself using something called public and private keys.
+                        The easiest way to buy bitcoin is to purchase it through an online exchange like Coincap. Coincap makes it easy to buy, sell, send, receive, and store bitcoin without needing to hold it yourself using something called public and private keys.
                     </p>
 
                     <p>
