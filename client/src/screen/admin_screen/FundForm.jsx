@@ -182,7 +182,8 @@ let UpgradeFormScreen = () => {
                     </div>
 
                     <div>
-                        <InputCard label="Enter amount to fund" value={fundBalance} onChange={changeFundBalance} />
+                        <InputCard label="Enter amount to fund" value={fundBalance} onChange={changeFundBalance}
+                        type="number" />
 
                     </div>
 
