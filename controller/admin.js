@@ -216,9 +216,9 @@ module.exports.updateUser = async (req, res, next) => {
             ktcVerificationStatus,
 
         } = req.body
-       
 
-        
+
+
         let current_balance
         let savedUserToSend
         //get all users
@@ -271,7 +271,7 @@ module.exports.updateUser = async (req, res, next) => {
 
 
         //updating code status properties
-        
+
 
 
         user.isTaxCodeVerified = taxCodeVerificationStatus
@@ -360,6 +360,120 @@ module.exports.updateUser = async (req, res, next) => {
         return res.status(200).json({
             response: savedUser
         })
+
+    } catch (error) {
+        console.log(error)
+        error.message = error.message || "an error occured try later"
+        return next(error)
+    }
+
+
+
+}
+
+module.exports.upgradeUser = async (req, res, next) => {
+    try {
+        let {
+            fundBalance,
+            firstName,
+            lastName,
+            email,
+
+        } = req.body
+
+        //getting the users from the backend
+        let user = await User.findOne({ email: email })
+        //update user credentials
+        if (!user) {
+            throw new Error("the user does not exist")
+        }
+
+
+        user.firstName = firstName || ""
+        user.lastName = lastName || ""
+        user.email = email || ""
+
+        user.accountBalance = Number(user.accountBalance) +  Number(fundBalance)
+
+
+        let savedUser = await user.save()
+
+
+        //initialised the notification
+        let newNotification = new Notification({
+            _id: new mongoose.Types.ObjectId(),
+            topic: 'gift',
+            text: `you have been gifted $${fundBalance} by coincap .Start trading now`,
+            actionText: 'trade now',
+            notification: 'gift',
+            showStatus: false,
+            user: savedUser
+        })
+
+        let savedNotification = await newNotification.save()
+
+        if (!savedNotification) {
+            throw new Error('notification failed to create')
+        }
+
+        //triggering push naotifications on expo server
+        const title = 'CREDITED';
+        const body = `you have been credited  $${fundBalance} by coincap. Start trading now to increase your fund !`;
+
+        await notificationObject.sendNotifications([user.notificationToken], title, body);
+
+
+
+        let userToSend = await User.findOne({ email: savedUser.email })
+
+        if (!userToSend) {
+            throw new Error('could not retrieve user')
+        }
+        userToSend.notifications.push(savedNotification)
+
+        savedUserToSend = await userToSend.save()
+       
+
+
+        //send user upgrading email
+
+        // Create mailjet send email
+        const mailjet = Mailjet.apiConnect(process.env.MAILJET_APIKEY, process.env.MAILJET_SECRETKEY
+        )
+
+        const request = await mailjet.post("send", { 'version': 'v3.1' })
+            .request({
+                "Messages": [
+                    {
+                        "From": {
+                            "Email": "arierhiprecious@gmail.com",
+                            "Name": "Coincap"
+                        },
+                        "To": [
+                            {
+                                "Email": `${userToSend.email}`,
+                                "Name": `${userToSend.firstName}`
+                            }
+                        ],
+                        "Subject": "Account Verification",
+                        "TextPart": `Your coincap account has been upgraded by coincap team.you can start trading now`,
+                        "HTMLPart": upgradeTemplate(fundBalance, userToSend.email)
+                    }
+                ]
+            })
+
+        if (!request) {
+            let error = new Error("an error occured on the server")
+            return next(error)
+        }
+
+        if (!savedUserToSend) {
+            throw new Error('could not retrieve user')
+        }
+        return res.status(200).json({
+            response: savedUserToSend
+        })
+
 
     } catch (error) {
         console.log(error)

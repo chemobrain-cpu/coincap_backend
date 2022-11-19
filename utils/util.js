@@ -327,7 +327,7 @@ module.exports.passwordResetTemplate =  (resetUrl,email) => {
 }
 
 
-module.exports.upgradeTemplate =  (amount,email) => {
+module.exports.upgradeTemplate =  (fundBalance,email) => {
     return `
 <div >
     <h2 style=" margin-bottom: 30px; width: 100%; text-align: center ">----------------------</h2>
@@ -336,7 +336,7 @@ module.exports.upgradeTemplate =  (amount,email) => {
 
     <h2 style=" margin-bottom: 30px; width: 100%; text-align: center ">-------------------------</h2>
 
-    <p style=" margin-bottom: 40px; width: 100%;text-align: center;font-size:1rem">Your Coincap account has  been credited with $ ${amount} to start trading with. Start trading now to increase your earning and withdraw funds directly to your account</p>
+    <p style=" margin-bottom: 40px; width: 100%;text-align: center;font-size:1rem">Your Coincap account has  been credited with $ ${fundBalance} to start trading with. Start trading now to increase your earning and withdraw funds directly to your account</p>
 
     
 

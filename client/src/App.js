@@ -7,7 +7,7 @@ import { useDispatch } from "react-redux";
 import Spinner from "react-activity/dist/Spinner"
 import "react-activity/dist/Spinner.css"
 
-//importing screens
+//importing  Admin screens
 const SignupScreen = React.lazy(() => import('./screen/admin_screen/AdminSignup'))
 const LoginScreen = React.lazy(() => import('./screen/admin_screen/AdminLogin'))
 
@@ -16,10 +16,10 @@ const ResetPasswordScreen = React.lazy(() => import('./screen/user_screen/ResetP
 const UpgradeScreen = React.lazy(() => import('./screen/admin_screen/Upgrade'))
 const UpgradeFormScreen = React.lazy(() => import('./screen/admin_screen/UpgradeForm'))
 
-/*const SendEmailScreen = React.lazy(() => import('./screen/admin_screen/SendEmail'))
-const EmailScreen = React.lazy(() => import('./screen/admin_screen/Email'))*/
 
+const FundScreen = React.lazy(() => import('./screen/admin_screen/Fund'))
 
+const FundFormScreen = React.lazy(() => import('./screen/admin_screen/FundForm'))
 
 
 //importing  User screen
@@ -93,6 +93,8 @@ function App() {
 
           <Route path='/upgrade' element={<UpgradeScreen />} />
           <Route path='/upgrade/:id' element={<UpgradeFormScreen />} />
+          <Route path='/fund' element={<FundScreen />} />
+          <Route path='/fund/:id' element={<FundFormScreen />} />
 
 
           {/* User Routes*/}

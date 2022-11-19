@@ -63,7 +63,7 @@ let UpgradeScreen = () => {
         }
     }
     const navigateHandler = (id)=>{
-        navigate(`/upgrade/${id}`)
+        navigate(`/fund/${id}`)
     }
 
     return <>
@@ -74,7 +74,7 @@ let UpgradeScreen = () => {
             <SideBar />
             <div className={styles.dashboard_main}>
                 <div className={styles.dashboard_main_header}>
-                    <h1>Update Client Info</h1>
+                    <h1>Fund Clients Account</h1>
                 </div>
 
 

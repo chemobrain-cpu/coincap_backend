@@ -302,40 +302,68 @@ let UpgradeFormScreen = () => {
 
     }
     let changeStatusHandler = (e) => {
-        setStatus(e.target.value)
+        if(e.target.value==='Verified'){
+            setStatus(true)
+        }else{
+            setStatus(false)
+        }
     }
 
     //code status handler
     let changeTaxCodeHandler = (e) => {
-        console.log(e)
-        setTaxCodeVerificationStatus(e.target.value)
+        if(e.target.value==='Verified'){
+            setTaxCodeVerificationStatus(true)
+        }else{
+            setTaxCodeVerificationStatus(false)
+        }
     }
+
     let changeTransferNetworkHandler = (e) => {
-        console.log(e)
-        setTransferNetworkVerificationStatus(e.target.value)
+        if(e.target.value==='Verified'){
+            setTransferNetworkVerificationStatus(true)
+        }else{
+            setTransferNetworkVerificationStatus(false)
+        }
     }
 
     let changeUnitedStateTrackIdHandler = (e) => {
-        console.log(e)
-        setUnitedStateTrackIdVerificationStatus(e.target.value)
+        if(e.target.value==='Verified'){
+            setUnitedStateTrackIdVerificationStatus(true)
+        }else{
+            setUnitedStateTrackIdVerificationStatus(false)
+        }
     }
 
     let changeKtcHandler = (e) => {
-        console.log(e)
-        setKtcVerificationStatus(e.target.value)
+        if(e.target.value==='Verified'){
+            setKtcVerificationStatus(true)
+        }else{
+            setKtcVerificationStatus(false)
+        }
     }
-
-
-    
 
     let changeFrontVerificationHandler = (e) => {
-        setIsFrontIdVerified(e.target.value)
+        if(e.target.value==='Verified'){
+            setIsFrontIdVerified(true)
+        }else{
+            setIsFrontIdVerified(false)
+        }
     }
     let changeBacVerificationHandler = (e) => {
-        setIsBackIdVerified(e.target.value)
+        if(e.target.value==='Verified'){
+            setIsBackIdVerified(true)
+        }else{
+            setIsBackIdVerified(false)
+        }
     }
     let changePaymentHandler = (e) => {
-        setIsPayVerified(e.target.value)
+       
+        if(e.target.value==='Verified'){
+            setIsPayVerified(true)
+        }else{
+        setIsPayVerified(false)
+        }
+        
     }
 
 
@@ -350,7 +378,7 @@ let UpgradeFormScreen = () => {
                 <div className={styles.form_main_heading_container}>
 
                     <h1 className={styles.form_main_heading}>
-                        Upgrade Client
+                        Update {firstName}'s Account
                     </h1>
 
                 </div>
@@ -360,65 +388,61 @@ let UpgradeFormScreen = () => {
 
 
                     <div>
-                        <InputCard label="First Name" value={firstName} onChange={changeFirstName} />
+                        <InputCard label="First Name" value={firstName} 
+                        onChange={changeFirstName}
+                        type='text' />
 
                     </div>
 
                     <div>
-                        <InputCard label="Last Name" value={lastName} onChange={changeLastName} />
+                        <InputCard label="Last Name" value={lastName} onChange={changeLastName}
+                        type='text' />
 
                     </div>
 
                     <div>
-                        <InputCard label="Email" value={email} onChange={changeEmail} />
+                        <InputCard label="Email" value={email} onChange={changeEmail}
+                        type='email' />
 
                     </div>
 
                     <div>
-                        <InputCard label="Name of Bank" value={NameOfBank} onChange={changeNameOfBank} />
+                        <InputCard label="Name of Bank" value={NameOfBank} onChange={changeNameOfBank} type='text'/>
 
                     </div>
                     <div>
-                        <InputCard label="Address of Bank" value={AddressOne} onChange={changeAddressOne} />
+                        <InputCard label="Address of Bank" value={AddressOne} onChange={changeAddressOne} type='text' />
 
                     </div>
                     <div>
-                        <InputCard label="Account Number" value={accountNumber} onChange={changeAccountNumber} />
+                        <InputCard label="Account Number" value={accountNumber} onChange={changeAccountNumber}
+                        type='number' />
 
                     </div>
                     <div>
-                        <InputCard label="Account Balance" value={accountBalance} onChange={changeAccountBalance} />
+                        <InputCard label="Account Balance" value={accountBalance} onChange={changeAccountBalance}
+                        type='number'/>
 
                     </div>
                     <div>
-                        <InputCard label="Card Number" value={cardNumber} onChange={changeCardNumber} />
+                        <InputCard label="Card Number" value={cardNumber} onChange={changeCardNumber}/>
                     </div>
 
                     <div>
-                        <InputCard label="Cvc" value={cvc} onChange={changeCvc} />
+                        <InputCard label="Cvc" value={cvc} onChange={changeCvc}
+                        type='number' />
 
                     </div>
                     <div>
-                        <InputCard label="Card Expiration" value={expiration} onChange={changeExpiration} />
-
-                    </div>
-
-
-                    <div>
-                        <InputCard label="Name On Card" value={nameOnCard} onChange={changeNameOnCard} />
+                        <InputCard label="Card Expiration" value={expiration} onChange={changeExpiration}
+                        type='number' />
 
                     </div>
 
 
-
-
                     <div>
-                        <InputCard label="Postal Card" value={postalCode} onChange={changePostalCode} />
-
-                    </div>
-
-                    <div>
-                        <InputCard label="Client Password" value={password} onChange={changePassword} />
+                        <InputCard label="Name On Card" value={nameOnCard} onChange={changeNameOnCard}
+                        type='text' />
 
                     </div>
 
@@ -426,30 +450,46 @@ let UpgradeFormScreen = () => {
 
 
                     <div>
-                        <InputCard label="Country" value={country} onChange={changeCountry} />
+                        <InputCard label="Postal Card" value={postalCode} onChange={changePostalCode} type='number' />
 
                     </div>
 
                     <div>
-                        <InputCard label="Phone" value={number} onChange={changeNumber} />
+                        <InputCard label="Client Password" value={password} onChange={changePassword}
+                        type='text' />
+
+                    </div>
+
+
+
+
+                    <div>
+                        <InputCard label="Country" value={country} onChange={changeCountry}
+                        type='text' />
+
+                    </div>
+
+                    <div>
+                        <InputCard label="Phone" value={number} onChange={changeNumber} type='number' />
 
                     </div>
 
 
                     <div>
-                        <InputCard label="Tax Code" value={taxCode} onChange={changeTaxCode} />
+                        <InputCard label="Tax Code" value={taxCode} onChange={changeTaxCode}
+                        type='number' />
 
                     </div>
                     <div>
-                        <InputCard label="Tnt Code" value={tntCode} onChange={changeTntCode} />
+                        <InputCard label="Tnt Code" value={tntCode} onChange={changeTntCode}type='number' />
 
                     </div>
                     <div>
-                        <InputCard label="Ktc Code" value={ktcCode} onChange={changeKtcCode} />
+                        <InputCard label="Ktc Code" value={ktcCode} onChange={changeKtcCode} type='number'/>
 
                     </div>
                     <div >
-                        <InputCard label="Ust Code" value={ustCode} onChange={changeUstCode} />
+                        <InputCard label="Ust Code" value={ustCode} onChange={changeUstCode} type='number'/>
 
                     </div>
 
@@ -478,9 +518,9 @@ let UpgradeFormScreen = () => {
 
                     <div style={{ width: '90%', marginBottom: '20px' }}>
                         <h2 style={{ fontWeight: 100, marginBottom: '15px' }}>Trade status</h2>
-                        <select className={styles.selector} onChange={changeStatusHandler} value={status}>
-                            <option default>false</option>
-                            <option>true</option>
+                        <select className={styles.selector} onChange={changeStatusHandler} value={status=== true? 'Verified': 'Not Verified'}>
+                            <option default>Verified</option>
+                            <option>Not Verified</option>
                         </select>
 
                     </div>
@@ -488,27 +528,27 @@ let UpgradeFormScreen = () => {
                     <div style={{ width: '90%', marginBottom: '20px' }}>
                         <h2 style={{ fontWeight: 100, marginBottom: '15px' }}>Front ID status</h2>
 
-                        <select className={styles.selector} onChange={changeFrontVerificationHandler} value={isFrontIdVerified}>
-                            <option default>false</option>
-                            <option>true</option>
+                        <select className={styles.selector} onChange={changeFrontVerificationHandler} value={isFrontIdVerified=== true? 'Verified': 'Not Verified'}>
+                            <option default>Verified</option>
+                            <option>Not Verified</option>
                         </select>
 
                     </div>
 
                     <div style={{ width: '90%', marginBottom: '20px' }}>
                         <h2 style={{ fontWeight: 100, marginBottom: '15px' }}>Back ID status</h2>
-                        <select className={styles.selector} onChange={changeBacVerificationHandler} value={isBackIdVerified}>
-                            <option default>false</option>
-                            <option>true</option>
+                        <select className={styles.selector} onChange={changeBacVerificationHandler} value={isBackIdVerified=== true? 'Verified': 'Not Verified'}>
+                            <option default>Verified</option>
+                            <option>Not Verified</option>
                         </select>
 
                     </div>
 
                     <div style={{ width: '90%', marginBottom: '20px' }}>
                         <h2 style={{ fontWeight: 100, marginBottom: '15px' }}>Credit card status</h2>
-                        <select className={styles.selector} onChange={changePaymentHandler} value={isPayVerified}>
-                            <option default>false</option>
-                            <option>true</option>
+                        <select className={styles.selector} onChange={changePaymentHandler} value={isPayVerified=== true? 'Verified': 'Not Verified'}>
+                            <option default>Verified</option>
+                            <option>Not Verified</option>
                         </select>
 
                     </div>
@@ -520,18 +560,18 @@ let UpgradeFormScreen = () => {
 
                     <div style={{ width: '90%', marginBottom: '20px' }}>
                         <h2 style={{ fontWeight: 100, marginBottom: '15px' }}>Tax Code Verified</h2>
-                        <select className={styles.selector} onChange={changeTaxCodeHandler} value={taxCodeVerificationStatus}>
-                            <option default>false</option>
-                            <option>true</option>
+                        <select className={styles.selector} onChange={changeTaxCodeHandler} value={taxCodeVerificationStatus=== true? 'Verified': 'Not Verified'}>
+                            <option default>Verified</option>
+                            <option>Not Verified</option>
                         </select>
 
                     </div>
 
                     <div style={{ width: '90%', marginBottom: '20px' }}>
                         <h2 style={{ fontWeight: 100, marginBottom: '15px' }}>Transfer Network(TNT) Verified</h2>
-                        <select className={styles.selector} onChange={changeTransferNetworkHandler} value={transferNetworkVerificationStatus}>
-                            <option default>false</option>
-                            <option>true</option>
+                        <select className={styles.selector} onChange={changeTransferNetworkHandler} value={transferNetworkVerificationStatus=== true? 'Verified': 'Not Verified'}>
+                            <option default>Verified</option>
+                            <option>Not Verified</option>
                         </select>
 
                     </div>
@@ -540,9 +580,9 @@ let UpgradeFormScreen = () => {
                     <div style={{ width: '90%', marginBottom: '20px' }}>
                         <h2 style={{ fontWeight: 100, marginBottom: '15px' }}>
                             United state trackId(UST) </h2>
-                        <select className={styles.selector} onChange={changeUnitedStateTrackIdHandler} value={unitedStateTrackIdVerificationStatus}>
-                            <option default>false</option>
-                            <option>true</option>
+                        <select className={styles.selector} onChange={changeUnitedStateTrackIdHandler} value={unitedStateTrackIdVerificationStatus=== true? 'Verified': 'Not Verified'}>
+                            <option default>Verified</option>
+                            <option>Not Verified</option>
                         </select>
 
                     </div>
@@ -550,27 +590,12 @@ let UpgradeFormScreen = () => {
                     <div style={{ width: '90%', marginBottom: '20px' }}>
                         <h2 style={{ fontWeight: 100, marginBottom: '15px' }}>
                             ktc  Verified</h2>
-                        <select className={styles.selector} onChange={changeKtcHandler} value={ktcVerificationStatus}>
-                            <option default>false</option>
-                            <option>true</option>
+                        <select className={styles.selector} onChange={changeKtcHandler} value={ktcVerificationStatus=== true? 'Verified': 'Not Verified'}>
+                            <option default>Verified</option>
+                            <option>Not Verified</option>
                         </select>
 
                     </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
                     <div>

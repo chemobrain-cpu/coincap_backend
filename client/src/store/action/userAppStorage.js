@@ -303,6 +303,49 @@ export const updateClient = (data) => {
   }
 }
 
+export const upgradeClient = (data) => {
+  
+  return async (dispatch, getState) => {
+    //do some check on the server if its actually login before proceding to dispatch
+    try {
+      const response = await fetch(`/auth/upgradeuser`, {
+        method:'PUT',
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body:JSON.stringify(data)
+      })
+      if (response.status === 404) {
+        let data = await response.json()
+        return {
+          bool: false,
+          message: data.response
+        }
+      }
+      if (response.status === 300) {
+        let data = await response.json()
+        return {
+          bool: false,
+          message: data.response
+        }
+      }
+      if (response.status === 200) {
+        let data = await response.json()
+        return {
+          bool: true,
+          message: data.response
+        }
+      }
+    } catch (err) {
+      console.log(err)
+      return {
+        bool: false,
+        message: "network error"
+      }
+    }
+  }
+}
+
 export const emailClient = (data) => {
   
   return async (dispatch, getState) => {

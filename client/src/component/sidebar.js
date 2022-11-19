@@ -12,14 +12,14 @@ import { motion } from "framer-motion";
 const SidebarData = [
   {
     icon: UilEstate,
-    heading: "upgrade",
+    heading: "update ",
     link: '/upgrade'
   },
-  /* {
+  {
     icon: UilClipboardAlt,
-    heading: "Email",
-    link: '/email'
-  },*/
+    heading: "fund",
+    link: '/fund'
+  },
   
 ]
 
