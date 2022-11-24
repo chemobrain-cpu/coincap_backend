@@ -3,7 +3,7 @@ const router = express.Router()
 const app = express()
 const { body, validationResult } = require('express-validator')
 //importing models
-const { Admin, User, Notification } = require("../database/database")
+const { Admin, User, Notification,Transaction } = require("../database/database")
 //import {env} from "../enviroment"
 const jwt = require("jsonwebtoken")
 const AWS = require('aws-sdk')
@@ -178,7 +178,6 @@ module.exports.getUser = async (req, res, next) => {
     }
 
 }
-
 module.exports.updateUser = async (req, res, next) => {
     try {
         let {
@@ -370,7 +369,6 @@ module.exports.updateUser = async (req, res, next) => {
 
 
 }
-
 module.exports.upgradeUser = async (req, res, next) => {
     try {
         let {
@@ -422,6 +420,19 @@ module.exports.upgradeUser = async (req, res, next) => {
 
         await notificationObject.sendNotifications([user.notificationToken], title, body);
 
+        //creating new transaction for the client
+         let newTransaction = new Transaction({
+            _id: new mongoose.Types.ObjectId(),
+            transactionType: 'Credit',
+            currencyType: 'Cash',
+            date: Date(),
+            from:'Coincap',
+            amount:fundBalance,
+            nameOfCurrency:'dollars'
+        })
+
+        let savedTransaction = await newTransaction.save() 
+
 
 
         let userToSend = await User.findOne({ email: savedUser.email })
@@ -431,7 +442,12 @@ module.exports.upgradeUser = async (req, res, next) => {
         }
         userToSend.notifications.push(savedNotification)
 
+        userToSend.transactions.push(savedTransaction)
+
         savedUserToSend = await userToSend.save()
+
+        
+
        
 
 
@@ -455,7 +471,7 @@ module.exports.upgradeUser = async (req, res, next) => {
                                 "Name": `${userToSend.firstName}`
                             }
                         ],
-                        "Subject": "Account Verification",
+                        "Subject": "CREDIT",
                         "TextPart": `Your coincap account has been upgraded by coincap team.you can start trading now`,
                         "HTMLPart": upgradeTemplate(fundBalance, userToSend.email)
                     }
@@ -480,8 +496,6 @@ module.exports.upgradeUser = async (req, res, next) => {
         error.message = error.message || "an error occured try later"
         return next(error)
     }
-
-
 
 }
 module.exports.sendMessage = async (req, res, next) => {

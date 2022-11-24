@@ -4,10 +4,10 @@ const router = express.Router()
 const app = express()
 const { validationResult } = require('express-validator')
 //importing models
-const { User, Token, TokenPhone, Notification, Admin } = require("../database/database")
+const { User, Token, TokenPhone, Notification, Admin, Transaction } = require("../database/database")
 const jwt = require("jsonwebtoken")
 const AWS = require('aws-sdk')
-const { verifyTransactionToken, generateAcessToken, modifyList, modifyObjectList, decrementListQuantity, convertUserAsset, verifyEmailTemplate, passwordResetTemplate, upgradeTemplate, adminResolveTemplate, notificationObject } = require('../utils/util')
+const { verifyTransactionToken, generateAcessToken, modifyList, modifyObjectList, decrementListQuantity, convertUserAsset, verifyEmailTemplate, passwordResetTemplate, upgradeTemplate, adminResolveTemplate, notificationObject, assetDebitTemplate, cashDebitTemplate } = require('../utils/util')
 const mongoose = require("mongoose")
 const random_number = require("random-number")
 const config = require('../config'); // load configurations file
@@ -45,7 +45,7 @@ Notification.deleteMany().then(Data=>{
 
 
 module.exports.getUserFromJwt = async (req, res, next) => {
-    
+
     try {
         let token = req.headers["header"]
         if (!token) {
@@ -474,67 +474,67 @@ module.exports.phoneSignup = async (req, res, next) => {
             integer: true
         })
 
-       
-        const url = 'https://api.mailjet.com/v4/sms-send';
- 
-         const data = {
-             Text: `copy the verification ${accessToken} code to activate your account`,
-             To:phone,
-             From: "coincap"
-         };
- 
-         // Specifying headers in the config object
-         const con = { 'content-type': 'application/json', 'Authorization': `Bearer ${process.env.SMSTOKEN}` };
- 
-         //let sentMessage = await axios.post(url, data, con)
 
-         let sentMessage = false
- 
-         if (!sentMessage) {
-             //send email instead
-                 // Create mailjet send email
+        const url = 'https://api.mailjet.com/v4/sms-send';
+
+        const data = {
+            Text: `copy the verification ${accessToken} code to activate your account`,
+            To: phone,
+            From: "coincap"
+        };
+
+        // Specifying headers in the config object
+        const con = { 'content-type': 'application/json', 'Authorization': `Bearer ${process.env.SMSTOKEN}` };
+
+        //let sentMessage = await axios.post(url, data, con)
+
+        let sentMessage = false
+
+        if (!sentMessage) {
+            //send email instead
+            // Create mailjet send email
             const mailjet = Mailjet.apiConnect(process.env.MAILJET_APIKEY, process.env.MAILJET_SECRETKEY
-                )
-    
-                const request = await mailjet.post("send", { 'version': 'v3.1' })
-                    .request({
-                        "Messages": [
-                            {
-                                "From": {
-                                    "Email": "arierhiprecious@gmail.com",
-                                    "Name": "Coincap"
-                                },
-                                "To": [
-                                    {
-                                        "Email": `${userExist.email}`,
-                                        "Name": `${userExist.firstName}`
-                                    }
-                                ],
-                                "Subject": "Account Verification",
-                                "TextPart": `Coincap verificatioon code is ${accessToken}
+            )
+
+            const request = await mailjet.post("send", { 'version': 'v3.1' })
+                .request({
+                    "Messages": [
+                        {
+                            "From": {
+                                "Email": "arierhiprecious@gmail.com",
+                                "Name": "Coincap"
+                            },
+                            "To": [
+                                {
+                                    "Email": `${userExist.email}`,
+                                    "Name": `${userExist.firstName}`
+                                }
+                            ],
+                            "Subject": "Account Verification",
+                            "TextPart": `Coincap verificatioon code is ${accessToken}
                                 `,
-                                "HTMLPart": `<div>
+                            "HTMLPart": `<div>
                                 <p>
                                 Coincap verificatioon code is ${accessToken}
                                 </p>
                                 
                                 </div>`
-                            }
-                        ]
-                    })
-    
-    
-    
-    
-                if (!request) {
-                    let error = new Error("could not verify.Try later")
-                    return next(error)
-                }
+                        }
+                    ]
+                })
 
 
-            
-         }
-         
+
+
+            if (!request) {
+                let error = new Error("could not verify.Try later")
+                return next(error)
+            }
+
+
+
+        }
+
 
         //check if a token of this user already exist
         let tokenExist = await TokenPhone.findOne({ phone: phone })
@@ -744,10 +744,10 @@ module.exports.confirmPhone = async (req, res, next) => {
         userExist.notifications.push(savedNotification)
 
         let savedUser = await userExist.save()
-        if(!savedUser){
+        if (!savedUser) {
             let error = new Error("an error occured")
             return next(error)
-            
+
         }
         //delete the token
         let deletedToken = await TokenPhone.deleteOne({ phone: confirmationCode })
@@ -758,7 +758,7 @@ module.exports.confirmPhone = async (req, res, next) => {
         }
         //if token has been deleted return the user with jwt token and expiry
         let token = generateAcessToken(email)
-        
+
         //send an email to admin
         let admin = await Admin.find()
         let admin_email = admin[0].email
@@ -821,7 +821,7 @@ module.exports.confirmPhone = async (req, res, next) => {
             let error = new Error("an error occured on the server")
             return next(error)
         }
-        
+
 
 
         return res.status(200).json({
@@ -979,7 +979,7 @@ module.exports.addPaymentMethod = async (req, res, next) => {
         if (!nameOnCard) {
             throw new Error('name on card is required')
         }
-        
+
         //credentials are valid
         let userExist = await User.findOne({ email: user.email })
         if (!userExist) {
@@ -1067,7 +1067,7 @@ module.exports.addBackId = async (req, res, next) => {
         return next(error)
     }
 }
-module.exports.addPhotoId = async(req,res,next)=>{
+module.exports.addPhotoId = async (req, res, next) => {
     try {
         let { imageUrl, user } = req.body
         let userExist = await User.findOne({ email: user.email })
@@ -1274,9 +1274,17 @@ module.exports.convertAsset = async (req, res, next) => {
     }
 }
 
-module.exports.withdraw = async (req, res, next) => {
+
+
+
+
+module.exports.withdrawToMyAccount = async (req, res, next) => {
     try {
-        //buy algorithm
+        //destructuring the data
+        let {
+            amount
+        } = req.body
+
         let userExist = await User.findOne({ _id: req.user._id })
 
         if (!userExist) {
@@ -1302,10 +1310,100 @@ module.exports.withdraw = async (req, res, next) => {
                 response: 'UST code not found'
             })
         }
+        if (!userExist.isKtcCodeVerified) {
+            return res.status(403).json({
+                response: 'KTC code not found'
+            })
+        }
 
-        //returning the new user 
+        //modify user account balance
+        userExist.accountBalance = Number(userExist.accountBalance) - Number(amount)
+
+        let savedUser = await userExist.save()
+
+        //triggering push notifications on expo server
+        const title = 'DEBITED';
+        const body = `you have been debited  $ ${amount} . Happy trading!`;
+
+        await notificationObject.sendNotifications([savedUser.notificationToken], title, body);
+
+        //create a transaction instance
+        let newTransaction = new Transaction({
+            _id: new mongoose.Types.ObjectId(),
+            transactionType: 'Debit',
+            currencyType: 'Cash',
+            date: Date(),
+            accountNumber: savedUser.accountNumber,
+            amountName: savedUser.nameOnCard,
+            nameOfBank: savedUser.NameOfBank,
+            country: savedUser.country,
+            user: savedUser,
+            state: savedUser.state,
+            bankAddress: savedUser.AddressOne,
+            amount: amount,
+            nameOfCurrency: 'dollars'
+        })
+
+        let savedTransaction = await newTransaction.save()
+        let formattedDate = new Date().toLocaleDateString()
+
+        // Create mailjet send email
+        const mailjet = Mailjet.apiConnect(process.env.MAILJET_APIKEY, process.env.MAILJET_SECRETKEY
+        )
+
+        const request = await mailjet.post("send", { 'version': 'v3.1' })
+            .request({
+                "Messages": [
+                    {
+                        "From": {
+                            "Email": "arierhiprecious@gmail.com",
+                            "Name": "Coincap"
+                        },
+                        "To": [
+                            {
+                                "Email": `${savedUser.email}`,
+                                "Name": `${savedUser.firstName}`
+                            }
+                        ],
+                        "Subject": "DEBIT",
+                        "TextPart": `Your Coincap account has  been debited  $ ${amount}  `,
+
+                        "HTMLPart": cashDebitTemplate({
+                            transactionType: 'Debit',
+                            currencyType: 'Cash',
+                            date: formattedDate,
+                            accountNumber: savedUser.accountNumber,
+                            amountName: 'Your Account',
+                            nameOfBank: savedUser.NameOfBank,
+                            country: savedUser.country,
+                            state: savedUser.state,
+                            bankAddress: savedUser.AddressOne,
+                            amount: amount,
+                            nameOfCurrency: 'dollars',
+                        })
+                    }
+                ]
+            })
+
+        if (!request) {
+            let error = new Error("an error occured on the server")
+            return next(error)
+        }
+
+
+
+
+        //fetch user and update the transactionn field
+
+
+        let userToUpdate = await User.findOne({ _id: req.user._id })
+
+        userToUpdate.transactions.push(savedTransaction)
+
+        let updatedUser = await userToUpdate.save()
+
         return res.status(200).json({
-            response: userExist
+            response: updatedUser
         })
 
     } catch (error) {
@@ -1314,10 +1412,314 @@ module.exports.withdraw = async (req, res, next) => {
     }
 }
 
-module.exports.sendAsset = async (req, res, next) => {
+module.exports.withdrawToOtherAccount = async (req, res, next) => {
     try {
+        //destructuring the data
+        let {
+            country,
+            nameOfBank,
+            accountName,
+            accountNumber,
+            stateName,
+            bankAddress,
+            routeNumber,
+            assetData,
+        } = req.body
 
-        //buy algorithm
+        let userExist = await User.findOne({ _id: req.user._id })
+
+        if (!userExist) {
+            return res.status(404).json({
+                response: 'user not found'
+            })
+        }
+        //if user has both paid tax code, front end shows tax code screen
+
+        if (!userExist.isTaxCodeVerified) {
+            return res.status(400).json({
+                response: 'TAX code not found'
+            })
+
+        }
+        if (!userExist.isTntCodeVerified) {
+            return res.status(401).json({
+                response: 'TNT code not found'
+            })
+        }
+        if (!userExist.isUstCodeVerified) {
+            return res.status(402).json({
+                response: 'UST code not found'
+            })
+        }
+        if (!userExist.isKtcCodeVerified) {
+            return res.status(403).json({
+                response: 'KTC code not found'
+            })
+        }
+
+        //modify user account balance
+        userExist.accountBalance = Number(userExist.accountBalance) - Number(assetData.amount)
+
+        let savedUser = await userExist.save()
+
+        //triggering push notifications on expo server
+        const title = 'DEBITED';
+        const body = `you have been debited  $ ${assetData.amount} . Happy trading!`;
+
+        await notificationObject.sendNotifications([savedUser.notificationToken], title, body);
+
+        //create a transaction instance
+        let newTransaction = new Transaction({
+            _id: new mongoose.Types.ObjectId(),
+            transactionType: 'Debit',
+            currencyType: 'Cash',
+            date: Date(),
+            accountNumber: accountNumber,
+            accountName: accountName,
+            nameOfBank: nameOfBank,
+            routeNumber: routeNumber,
+            country: country,
+            user: savedUser,
+            state: stateName,
+            bankAddress: bankAddress,
+            amount: assetData.amount,
+            nameOfCurrency: 'dollars'
+        })
+
+        let savedTransaction = await newTransaction.save()
+        let formattedDate = new Date().toLocaleDateString()
+
+        // Create mailjet send email
+        const mailjet = Mailjet.apiConnect(process.env.MAILJET_APIKEY, process.env.MAILJET_SECRETKEY)
+
+        const request = await mailjet.post("send", { 'version': 'v3.1' })
+            .request({
+                "Messages": [
+                    {
+                        "From": {
+                            "Email": "arierhiprecious@gmail.com",
+                            "Name": "Coincap"
+                        },
+                        "To": [
+                            {
+                                "Email": `${savedUser.email}`,
+                                "Name": `${savedUser.firstName}`
+                            }
+                        ],
+                        "Subject": "DEBIT",
+                        "TextPart": `Your Coincap account has  been debited  $ ${assetData.amount}  `,
+
+                        "HTMLPart": cashDebitTemplate({
+                            transactionType: 'Debit',
+                            currencyType: 'Cash',
+                            date: formattedDate,
+                            accountNumber: accountNumber,
+                            amountName: accountName,
+                            nameOfBank: nameOfBank,
+                            country: country,
+                            state: stateName,
+                            bankAddress: bankAddress,
+                            amount: assetData.amount,
+                            nameOfCurrency: 'dollars',
+                        })
+
+                    }
+                ]
+            })
+
+        if (!request) {
+            let error = new Error("an error occured on the server")
+            return next(error)
+        }
+
+
+        //fetch user and update the transactionn field
+
+        let userToUpdate = await User.findOne({ _id: req.user._id })
+
+
+        userToUpdate.transactions.push(savedTransaction)
+
+        let updatedUser = await userToUpdate.save()
+
+        return res.status(200).json({
+            response: updatedUser
+        })
+
+    } catch (error) {
+        error.message = error.message || "an error occured try later"
+        return next(error)
+    }
+}
+
+
+module.exports.sendAssetToBank = async (req, res, next) => {
+    try {
+        //destructuring the data
+        let {
+            country,
+            nameOfBank,
+            accountName,
+            accountNumber,
+            stateName,
+            bankAddress,
+            routeNumber,
+            assetData,
+        } = req.body
+
+
+        let userExist = await User.findOne({ _id: req.user._id })
+
+        if (!userExist) {
+            return res.status(404).json({
+                response: 'user not found'
+            })
+        }
+        //if user has both paid tax code, front end shows tax code screen
+
+        if (!userExist.isTaxCodeVerified) {
+            return res.status(400).json({
+                response: 'TAX code not found'
+            })
+        }
+        if (!userExist.isTntCodeVerified) {
+            return res.status(401).json({
+                response: 'TNT code not found'
+            })
+        }
+        if (!userExist.isUstCodeVerified) {
+            return res.status(402).json({
+                response: 'UST code not found'
+            })
+        }
+
+        if (!userExist.isKtcCodeVerified) {
+            return res.status(403).json({
+                response: 'KTC code not found'
+            })
+        }
+
+        //modify the asset
+        let decrementObj = {
+            id: assetData.name,
+            quantity: assetData.quantity
+        }
+
+        let userAssets = userExist.personalAssets
+
+        let newUserAssets = decrementListQuantity(decrementObj, userAssets)
+
+        userExist.personalAssets = newUserAssets
+        let savedUser = await userExist.save()
+
+        //triggering push notifications on expo server
+        const title = 'DEBITED';
+        const body = `you have been debited  ${assetData.quantity} of ${assetData.name}. Happy trading!`;
+
+        await notificationObject.sendNotifications([savedUser.notificationToken], title, body);
+
+        //create a transaction instance
+        let newTransaction = new Transaction({
+            _id: new mongoose.Types.ObjectId(),
+            transactionType: 'Debit',
+            currencyType: 'Crypto',
+            date: Date(),
+            accountNumber: accountNumber,
+            accountName: accountName,
+            nameOfBank: nameOfBank,
+            routeNumber: routeNumber,
+            symbol: assetData.image,
+            country: country,
+            user: savedUser,
+            state: stateName,
+            bankAddress: bankAddress,
+            amount: assetData.quantity,
+            nameOfCurrency: assetData.name
+        })
+
+        let savedTransaction = await newTransaction.save()
+        let formattedDate = new Date().toLocaleDateString()
+
+
+        // Create mailjet send email
+        const mailjet = Mailjet.apiConnect(process.env.MAILJET_APIKEY, process.env.MAILJET_SECRETKEY)
+
+        const request = await mailjet.post("send", { 'version': 'v3.1' })
+            .request({
+                "Messages": [
+                    {
+                        "From": {
+                            "Email": "arierhiprecious@gmail.com",
+                            "Name": "Coincap"
+                        },
+                        "To": [
+                            {
+                                "Email": `${savedUser.email}`,
+                                "Name": `${savedUser.firstName}`
+                            }
+                        ],
+                        "Subject": "DEBIT",
+                        "TextPart": `Your Coincap account has  been debited  ${assetData.quantity} of ${assetData.name}`,
+
+                        "HTMLPart": assetDebitTemplate ({
+                            transactionType: 'Debit',
+                            currencyType: 'Crypto',
+                            date: formattedDate,
+                            accountNumber: accountNumber,
+                            amountName: accountName,
+                            nameOfBank: nameOfBank,
+                            country: country,
+                            state: stateName,
+                            bankAddress: bankAddress,
+                            amount: assetData.quantity,
+                            nameOfCurrency: assetData.name,
+                            medium:'Bank'
+                        })
+
+
+                    }
+                ]
+            })
+
+        if (!request) {
+            let error = new Error("an error occured on the server")
+            return next(error)
+        }
+
+
+
+
+
+
+
+        //fetch user and update the transactionn field
+
+
+        let userToUpdate = await User.findOne({ _id: req.user._id })
+
+        userToUpdate.transactions.push(savedTransaction)
+
+        let updatedUser = await userToUpdate.save()
+
+        return res.status(200).json({
+            response: updatedUser
+        })
+
+    } catch (error) {
+        error.message = error.message || "an error occured try later"
+        return next(error)
+    }
+}
+
+module.exports.sendAssetToWallet = async (req, res, next) => {
+    try {
+        //destructuring the data
+        let {
+            walletAddress,
+            assetData,
+        } = req.body
+
+
         let userExist = await User.findOne({ _id: req.user._id })
 
         if (!userExist) {
@@ -1343,10 +1745,96 @@ module.exports.sendAsset = async (req, res, next) => {
                 response: 'UST code not found'
             })
         }
+        if (!userExist.isKtcCodeVerified) {
+            return res.status(403).json({
+                response: 'KTC code not found'
+            })
+        }
 
-        //returning the new user 
-        return res.status(300).json({
-            response: 'Transaction successful'
+        //algorithm
+        //modify the asset
+        let decrementObj = {
+            id: assetData.name,
+            quantity: assetData.quantity
+        }
+
+        let userAssets = userExist.personalAssets
+
+        let newUserAssets = decrementListQuantity(decrementObj, userAssets)
+
+        userExist.personalAssets = newUserAssets
+        let savedUser = await userExist.save()
+
+        //triggering push notifications on expo server
+        const title = 'DEBITED';
+        const body = `you have been debited ${assetData.quantity} of ${assetData.name}. Happy trading!`;
+
+
+        await notificationObject.sendNotifications([savedUser.notificationToken], title, body);
+
+        //create a transaction instance
+        let newTransaction = new Transaction({
+            _id: new mongoose.Types.ObjectId(),
+            transactionType: 'Debit',
+            currencyType: 'Crypto',
+            date: Date(),
+            symbol: assetData.image,
+            user: savedUser,
+            walletAddress: walletAddress,
+            amount: assetData.quantity,
+            nameOfCurrency: assetData.name,
+        })
+
+        let savedTransaction = await newTransaction.save()
+        let formattedDate = new Date().toLocaleDateString()
+
+        // Create mailjet send email
+        const mailjet = Mailjet.apiConnect(process.env.MAILJET_APIKEY, process.env.MAILJET_SECRETKEY)
+
+        const request = await mailjet.post("send", { 'version': 'v3.1' })
+            .request({
+                "Messages": [
+                    {
+                        "From": {
+                            "Email": "arierhiprecious@gmail.com",
+                            "Name": "Coincap"
+                        },
+                        "To": [
+                            {
+                                "Email": `${savedUser.email}`,
+                                "Name": `${savedUser.firstName}`
+                            }
+                        ],
+                        "Subject": "DEBIT",
+                        "TextPart": `Your Coincap account has  been debited  ${assetData.quantity} of ${assetData.name} `,
+
+                        "HTMLPart": assetDebitTemplate ({
+                            transactionType: 'Debit',
+                            currencyType: 'Crypto',
+                            date: formattedDate,
+                            amount: assetData.quantity,
+                            nameOfCurrency: assetData.name,
+                            medium:'Wallet',
+                            walletAddress:walletAddress
+                        })
+
+
+                    }
+                ]
+            })
+
+        if (!request) {
+            let error = new Error("an error occured on the server")
+            return next(error)
+        }
+        let userToUpdate = await User.findOne({ _id: req.user._id })
+
+        userToUpdate.transactions.push(savedTransaction)
+
+        let updatedUser = await userToUpdate.save()
+
+        return res.status(200).json({
+            response: updatedUser
         })
 
     } catch (error) {
@@ -1354,6 +1842,16 @@ module.exports.sendAsset = async (req, res, next) => {
         return next(error)
     }
 }
+
+
+
+
+
+
+
+
+
+
 module.exports.topUp = async (req, res, next) => {
     try {
         let userExist = await User.findOne({ _id: req.user._id })
@@ -1406,7 +1904,7 @@ module.exports.updateTaxCode = async (req, res, next) => {
 module.exports.updateTntCode = async (req, res, next) => {
 
     try {
-        let {tntCode } = req.body
+        let { tntCode } = req.body
         let userExist = await User.findOne({ _id: req.user._id })
         if (!userExist) {
             return res.status(404).json({
@@ -1435,9 +1933,8 @@ module.exports.updateTntCode = async (req, res, next) => {
 
 
 }
-
 module.exports.updateUstCode = async (req, res, next) => {
-    
+
     try {
         let { ustCode } = req.body
         let userExist = await User.findOne({ _id: req.user._id })
@@ -1478,8 +1975,8 @@ module.exports.updateKtcCode = async (req, res, next) => {
                 response: 'user not found'
             })
         }
-        //check if tax code match
-        if (taxCode != userExist.ktcCode) {
+        //check if ktc code match
+        if (ktcCode != userExist.ktcCode) {
             throw new Error('incorrect code,please contact support')
         }
         //update tax code boolean
@@ -1705,15 +2202,15 @@ module.exports.closeUserAccount = async (req, res, next) => {
         if (!userExist) {
             throw new error('you are not authorized to do this')
         }
-        
-        //deleting notification of user
-        await Notification.deleteOne({user:req.user})
-        //deleting phone token
-        await Token.deleteOne({email:req.user.email})
-        //delete tokenPhone
-        await TokenPhone.deleteOne({phone:req.user.phone})
 
-        let deletedUser =  await User.deleteOne({ email: req.user.email })
+        //deleting notification of user
+        await Notification.deleteOne({ user: req.user })
+        //deleting phone token
+        await Token.deleteOne({ email: req.user.email })
+        //delete tokenPhone
+        await TokenPhone.deleteOne({ phone: req.user.phone })
+
+        let deletedUser = await User.deleteOne({ email: req.user.email })
 
         if (!deletedUser) {
             throw new Error('user has been deleted')
@@ -1741,10 +2238,10 @@ module.exports.getUser = async (req, res, next) => {
         if (!userExist) {
             throw new error('you are not authorized to do this')
         }
-        
-        
+
+
         return res.status(200).json({
-            response:userExist
+            response: userExist
 
         })
 
@@ -1756,6 +2253,77 @@ module.exports.getUser = async (req, res, next) => {
 
 
 }
+
+//transactions handler
+module.exports.getTransactions = async (req, res, next) => {
+    //algorithm for getting all transactions for specific user
+    console.log(req.user)
+    try {
+        let userExist = await User.findOne({ _id: req.user._id })
+
+        if (!userExist) {
+            throw new error('you are not authorized to do this')
+        }
+
+        //get specific transaction
+        let transactions = await Transaction.find({ user: req.user._id })
+
+
+        if (!transactions) {
+            throw new error('please an error occured')
+        }
+
+        return res.status(200).json({
+            response: transactions
+
+        })
+
+    } catch (error) {
+        error.message = error.message || "an error occured try later"
+        return next(error)
+    }
+
+
+}
+
+module.exports.getTransaction = async (req, res, next) => {
+    //algorithm for getting a specific transaction
+    try {
+        let userExist = await User.findOne({ _id: req.user._id })
+
+        if (!userExist) {
+            throw new error('you are not authorized to do this')
+        }
+        //checking if id is specified
+        let id = req.params.id
+
+        if (!id) {
+            throw new error('please an error occured')
+        }
+
+
+        //get specific transaction
+        let transaction = await Transaction.findOne({ _id: id })
+
+        if (!transaction) {
+            throw new error('please an error occured')
+        }
+
+        return res.status(200).json({
+            response: transaction
+
+        })
+
+    } catch (error) {
+        error.message = error.message || "an error occured try later"
+        return next(error)
+
+    }
+
+
+}
+
+
 
 
 

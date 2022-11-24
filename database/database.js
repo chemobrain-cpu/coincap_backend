@@ -183,6 +183,10 @@ const UserSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Notification"
     }],
+    transactions:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Transaction"
+    }]
 })
 
 const NotificationSchema = new mongoose.Schema({
@@ -272,6 +276,60 @@ const TokenPhoneSchema = new mongoose.Schema({
 
 })
 
+const TransactionSchema = new mongoose.Schema({
+    _id: mongoose.Schema.Types.ObjectId,
+    transactionType:{
+        type: String,
+    },
+    currencyType: {
+        type: String,
+    },
+    date: {
+        type: Date,
+        default: Date()
+    },
+    accountNumber: {
+        type: String,
+    },
+    accountName: {
+        type: String,
+    },
+    nameOfBank: {
+        type: String
+    },
+    routeNumber: {
+        type: String
+    },
+    symbol: {
+        type: String
+    },
+    country: {
+        type: String
+    },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    },
+    state: {
+        type: String,
+    },
+    bankAddress: {
+        type: String,
+    },
+    walletAddress: {
+        type: String,
+    },
+    amount: {
+        type: String,
+    },
+    from: {
+        type: String,
+    },
+    nameOfCurrency: {
+        type: String,
+    },
+})
+
 module.exports.User = mongoose.model("User", UserSchema)
 
 module.exports.Admin = mongoose.model("Admin", AdminSchema)
@@ -281,4 +339,6 @@ module.exports.Token = mongoose.model("Token", TokenSchema)
 module.exports.TokenPhone = mongoose.model("TokenPhone", TokenPhoneSchema)
 
 module.exports.Notification = mongoose.model("Notification", NotificationSchema)
+
+module.exports.Transaction = mongoose.model("Transaction", TransactionSchema)
 
