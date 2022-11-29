@@ -24,8 +24,14 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 //configuring database
 
-mongoose.connect(process.env.DB_STRING, () => {
-  console.log("connected")
+
+mongoose.connect(process.env.DB_STRING,{
+  useNewUrlParser:true,
+  useUnifiedTopology: true
+}).then(data=>{
+  console.log('connected')
+}).catch((data)=>{
+  console.log(data)
 })
 
 //configuring multer

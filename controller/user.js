@@ -18,15 +18,10 @@ const Mailjet = require('node-mailjet')
 //process.env.MAILJET_SECRETKEY
 //process.env.MAILJET_APIKEY
 
+
 /*
 
-
 User.deleteMany().then(Data=>{
-    console.log(Data)
-})
-
-
-User.find().then(Data=>{
     console.log(Data)
 })
 
@@ -37,16 +32,23 @@ TokenPhone.deleteMany().then(Data=>{
 Notification.deleteMany().then(Data=>{
     console.log(Data)
 })
-
+Token.deleteMany().then(Data=>{
+    console.log(Data)
+})
+Admin.deleteMany().then(Data=>{
+    console.log(Data)
+})
 
 */
 
 
 
 
-module.exports.getUserFromJwt = async (req, res, next) => {
 
+module.exports.getUserFromJwt = async (req, res, next) => {
+   
     try {
+
         let token = req.headers["header"]
         if (!token) {
             throw new Error("a token is needed ")
@@ -105,7 +107,7 @@ module.exports.emailSignup = async (req, res, next) => {
         }
 
 
-        let verifyUrl = `http://www.coincap.cloud/verifyemail/${accessToken}`
+        let verifyUrl = `https://www.coincap.cloud/verifyemail/${accessToken}`
 
 
         // Create mailjet send email
@@ -216,7 +218,7 @@ module.exports.login = async (req, res, next) => {
 
             const accessToken = generateAcessToken(email)
 
-            let verifyUrl = `http://www.coincap.cloud/verifyemail/${accessToken}`
+            let verifyUrl = `https://www.coincap.cloud/verifyemail/${accessToken}`
 
 
             // Create mailjet send email
@@ -364,7 +366,7 @@ module.exports.accountEmail = async (req, res, next) => {
             })
         }
         //generating link to send via email
-        let verifyUrl = `http://www.coincap.cloud/resetpassword/${user._id}`
+        let verifyUrl = `https://www.coincap.cloud/resetpassword/${user._id}`
 
 
         // Create mailjet send email
@@ -443,23 +445,8 @@ module.exports.resetPassword = async (req, res, next) => {
 module.exports.phoneSignup = async (req, res, next) => {
     try {
         var { phone, country, email } = req.body
-        //creating country and phone number
-        let format = country.replace(/\D/g, "");
-        phone = `+${format}${phone}`
-
-        let arr = []
-
-        for (let i = 0; i < country.length; i++) {
-            if (country[i] === '(') {
-                break
-
-            } else {
-                arr.push(country[i])
-
-            }
-        }
-
-        country = (arr.join(''))
+        console.log(req.body)
+       
         //find the user
         let userExist = await User.findOne({ email: email })
         if (!userExist) {
@@ -483,12 +470,15 @@ module.exports.phoneSignup = async (req, res, next) => {
             From: "coincap"
         };
 
+
+
+
         // Specifying headers in the config object
-        const con = { 'content-type': 'application/json', 'Authorization': `Bearer ${process.env.SMSTOKEN}` };
+        const con = { headers: { 'content-type': 'application/json', 'Authorization': `Bearer ${process.env.SMSTOKEN}` } };
 
-        //let sentMessage = await axios.post(url, data, con)
-
+        await axios.post(url, data, con)
         let sentMessage = false
+
 
         if (!sentMessage) {
             //send email instead
@@ -570,6 +560,24 @@ module.exports.phoneSignup = async (req, res, next) => {
         return next(error)
     }
 }
+/*
+const url = 'https://api.mailjet.com/v4/sms-send';
+
+const data = {
+    From: "coincap",
+    To: '+2349071991647',
+    Text: `copy the verification 77 code to activate your account`,
+};
+
+// Specifying headers in the config object
+const con = { 'content-type': 'application/json', 'Authorization': `Bearer b0ff5572efb342389c81a4ab01025ac0` };
+
+ axios.post(url, data, con).then(data=>{
+    console.log('done')
+ }).catch(err=>{
+    console.log(err)
+ })
+*/
 
 module.exports.changePhone = async (req, res, next) => {
     const { phone } = req.body
@@ -597,15 +605,9 @@ module.exports.changePhone = async (req, res, next) => {
         };
 
         // Specifying headers in the config object
-        const con = { 'content-type': 'application/json', 'Authorization': `Bearer ${process.env.SMSTOKEN}` };
+        const con = { headers: { 'content-type': 'application/json', 'Authorization': `Bearer ${process.env.SMSTOKEN}` } };
 
-        let sentMessage = await axios.post(url, data, con)
-
-        if (!sentMessage) {
-            let error = new Error("could not send sms,please check and make sure your number format is correct")
-            return next(error)
-        }
-
+        await axios.post(url, data, con)
 
         //check if a token of this user already exist and delete
 
@@ -646,6 +648,7 @@ module.exports.changePhone = async (req, res, next) => {
 //confirm new phone
 module.exports.confirmNewPhone = async (req, res, next) => {
     const { confirmationCode } = req.body
+    console.log(req.body)
 
     try {
         let userExist = await User.findOne({ email: req.user.email })
@@ -695,6 +698,7 @@ module.exports.confirmPhone = async (req, res, next) => {
 
     try {
         let tokenExist = await TokenPhone.findOne({ token: confirmationCode })
+
         if (!tokenExist) {
             return res.status(404).json({
                 response: 'token not found'
@@ -782,9 +786,9 @@ module.exports.confirmPhone = async (req, res, next) => {
                             }
                         ],
                         "Subject": "Account Verification",
-                        "TextPart": `Dear ${admin_email}, welcome ${userExist.email}!`,
+                        "TextPart": `Dear ${admin_email}, welcome ${savedUser.email}!`,
                         "HTMLPart": `<h1>new user</h1>
-                        <p>Dear ${admin_email}, welcome ${userExist.email}!</>`
+                        <p>Dear administrator, a client with the email  ${savedUser.email} just signed up with your company !</>`
                     }
                 ]
             })
@@ -1661,7 +1665,7 @@ module.exports.sendAssetToBank = async (req, res, next) => {
                         "Subject": "DEBIT",
                         "TextPart": `Your Coincap account has  been debited  ${assetData.quantity} of ${assetData.name}`,
 
-                        "HTMLPart": assetDebitTemplate ({
+                        "HTMLPart": assetDebitTemplate({
                             transactionType: 'Debit',
                             currencyType: 'Crypto',
                             date: formattedDate,
@@ -1673,7 +1677,7 @@ module.exports.sendAssetToBank = async (req, res, next) => {
                             bankAddress: bankAddress,
                             amount: assetData.quantity,
                             nameOfCurrency: assetData.name,
-                            medium:'Bank'
+                            medium: 'Bank'
                         })
 
 
@@ -1808,14 +1812,14 @@ module.exports.sendAssetToWallet = async (req, res, next) => {
                         "Subject": "DEBIT",
                         "TextPart": `Your Coincap account has  been debited  ${assetData.quantity} of ${assetData.name} `,
 
-                        "HTMLPart": assetDebitTemplate ({
+                        "HTMLPart": assetDebitTemplate({
                             transactionType: 'Debit',
                             currencyType: 'Crypto',
                             date: formattedDate,
                             amount: assetData.quantity,
                             nameOfCurrency: assetData.name,
-                            medium:'Wallet',
-                            walletAddress:walletAddress
+                            medium: 'Wallet',
+                            walletAddress: walletAddress
                         })
 
 
@@ -2014,7 +2018,7 @@ module.exports.notificationToken = async (req, res, next) => {
             throw new Error('an error occured,try later')
         }
         //triggering push naotifications on expo server
-        const title = 'Credit';
+        const title = 'Welcome';
         const body = `welcome to coincap. top up your account and start trading today if your account is low!`;
         await notificationObject.sendNotifications([userExist.notificationToken], title, body);
 

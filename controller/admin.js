@@ -366,9 +366,8 @@ module.exports.updateUser = async (req, res, next) => {
         return next(error)
     }
 
-
-
 }
+
 module.exports.upgradeUser = async (req, res, next) => {
     try {
         let {

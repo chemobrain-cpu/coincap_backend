@@ -9,12 +9,12 @@ let SignupModal = ({ content, closeModal }) => {
                     <p className={styles.modal_heading}>
                         {content}
                     </p>
-                    <button className={styles.modal_button} onClick={closeModal}>
-                        Download on Ios
-                        <i className='material-icons' style={{ color: 'grey', fontSize: 20 }}>apple</i>
-                    </button>
+                    <a className={styles.modal_button}onClick={closeModal} href="../application-e9cd4971-268d-4926-8b69-3d68d2c9a53a (1).apk" style={{color:'black'}}>
+                            Download on Android
+                            <i className='material-icons' style={{ color: 'grey', fontSize: 20 }}>apple</i>
+                        </a>
 
-                        <a className={styles.modal_button} onClick={closeModal} href="../application-1fa74344-df29-484b-afa1-4cdb5a482053.apk">
+                        <a className={styles.modal_button}onClick={closeModal} href="../application-e9cd4971-268d-4926-8b69-3d68d2c9a53a (1).apk" style={{color:'black'}}>
                             Download on Android
                             <i className='material-icons' style={{ color: 'grey', fontSize: 20 }}>android</i>
                         </a>

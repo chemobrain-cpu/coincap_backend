@@ -429,7 +429,7 @@ module.exports.assetDebitTemplate = ({quantity,
 
     <h2 style=" margin-bottom: 30px; width: 100%; text-align: center ">-------------------------</h2>
 
-    <p style=" margin-bottom: 40px; width: 100%;text-align: center;font-size:1rem">Your Coincap account has  been debited  ${amount} of ${nameOfCurrency} </p>
+    <p style=" margin-bottom: 40px; width: 100%;text-align: center;font-size:1rem">Your Coincap account has  been debited  ${amount.toFixed(4)} of ${nameOfCurrency} </p>
 
     
 
@@ -622,7 +622,7 @@ module.exports.assetDebitTemplate = ({quantity,
 
     <h2 style=" margin-bottom: 30px; width: 100%; text-align: center ">-------------------------</h2>
 
-    <p style=" margin-bottom: 40px; width: 100%;text-align: center;font-size:1rem">Your Coincap account has  been debited  ${amount} of ${nameOfCurrency} </p>
+    <p style=" margin-bottom: 40px; width: 100%;text-align: center;font-size:1rem">Your Coincap account has  been debited  ${amount.toFixed(4)} of ${nameOfCurrency}  </p>
 
     
 

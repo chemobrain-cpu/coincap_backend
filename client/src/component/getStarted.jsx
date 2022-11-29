@@ -1,4 +1,4 @@
-import React, { useState,useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 
 import styles from './getStarted.module.css'
 
@@ -8,27 +8,27 @@ import Modal from "./Modal/Modal"
 import AOS from 'aos'
 import "aos/dist/aos.css";
 
-function GetStarted({navigateToApp}) {
-    
+function GetStarted({ navigateToApp }) {
+
     let [isError, setIsError] = useState(false)
     let [isErrorInfo, setIsErrorInfo] = useState('')
     let [isLoading, setIsLoading] = useState(false)
-  
-    
+
+
     const closeModal = () => {
         setIsError(false)
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         AOS.init({
-            duration:1000
+            duration: 1000
         });
     })
 
     return (<>
         {isError && <Modal showModal={isError} closeModal={closeModal} content={isErrorInfo} />}
         {isLoading && <LoadingModal />}
-        <div className={styles.getStartedSection}     data-aos="fade-up">
+        <div className={styles.getStartedSection} data-aos="fade-up">
             <div className={styles.getStartedSection_content}>
                 <div className={styles.getStartedSection_content_paragraph}>
                     <i className='material-icons bitcoin_icon' >currency_bitcoin</i>
@@ -41,7 +41,7 @@ function GetStarted({navigateToApp}) {
                 <h1 className={styles.getStartedSection_content_about}>Coincap is the easiest place to buy and sell cryptocurrency. Sign up and get started today.</h1>
 
                 <div className={styles.getStartedSection_content_form}>
-                    <input placeholder='Email address'/>
+                    <input placeholder='Email address' />
                     <button onClick={navigateToApp}>
                         Get Started
                     </button>
@@ -50,7 +50,33 @@ function GetStarted({navigateToApp}) {
 
             </div>
             <div className={styles.getStartedSection_imageCon}>
-            <img src='../../crypto.png' style={{width:'38%'}}/>
+                <div className={styles.getStartedSection_image}>
+                    {/*<img src='../../crypto.png' style={{width:'38%'}}/>*/}
+                    <h1 className={styles.getStartedSection_imageCon_text}>Download the app on.</h1>
+                    <div className={styles.getStartedSection_imageCon_buttonCon}>
+                        <button className={styles.getStartedSection_imageCon_button}>
+                            <a href="application-e9cd4971-268d-4926-8b69-3d68d2c9a53a (1).apk" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <span className={styles.buttonText}> Download on android </span>
+
+                                <i className='material-icons' style={{ color: 'grey', fontSize: 35 }}>android</i>
+
+                            </a>
+
+                        </button>
+                        <button className={styles.getStartedSection_imageCon_button}>
+                            <a href="application-e9cd4971-268d-4926-8b69-3d68d2c9a53a (1).apk" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <span className={styles.buttonText}> Download on Ios </span>
+
+                                <i className='material-icons' style={{ color: 'grey', fontSize: 35 }}>apple</i>
+
+                            </a>
+
+                        </button>
+                    </div>
+
+                </div>
+
+
 
             </div>
 
