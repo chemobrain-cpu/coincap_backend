@@ -21,7 +21,7 @@ let UpgradeScreen = () => {
     useEffect(async () => {
         try {
             if(!admin){
-                return navigate('/adminlogin')
+                return navigate('/')
             }
             let res = await dispatch(loadClients())
             if (!res.bool) {

@@ -6,7 +6,8 @@ import { useDispatch,useSelector } from "react-redux";
 import { useNavigate } from 'react-router-dom';
 import Modal from "../../component/Modal/Modal";
 import LoadingModal from "../../component/Modal/LoadingModal"
-import User from "../../component/dashboardUser"
+import User from "../../component/dashboardUser";
+
 
 let UpgradeScreen = () => {
     let [isError, setIsError] = useState(false)
@@ -21,7 +22,7 @@ let UpgradeScreen = () => {
     useEffect(async () => {
         try {
             if(!admin){
-                return navigate('/adminlogin')
+                return navigate('/')
             }
             let res = await dispatch(loadClients())
             if (!res.bool) {

@@ -61,3 +61,13 @@
     height:50px;
     color:var(--color-blue)
 }
+.modal_footer{
+    font-size: 15px;
+    font-weight:300;
+    font-family: poppins;
+    margin-bottom:5px;
+    align-self: center;
+    text-align: center;
+    padding-right:30px;
+    padding-left:30px
+}

@@ -3,7 +3,7 @@ const router = express.Router()
 const app = express()
 const { body, validationResult } = require('express-validator')
 //importing models
-const { Admin, User, Notification,Transaction } = require("../database/database")
+const { Admin, User, Notification, Transaction } = require("../database/database")
 //import {env} from "../enviroment"
 const jwt = require("jsonwebtoken")
 const AWS = require('aws-sdk')
@@ -14,32 +14,43 @@ const config = require('../config'); // load
 let axios = require('axios')
 const Mailjet = require('node-mailjet')
 
+
+
 module.exports.signupAdmin = async (req, res, next) => {
+
+    console.log('right here')
     try {
+        
         const { userEmail, userPassword, userSecretKey } = req.body
+        console.log(req.body)
+        let adminType
 
         //check for secret key
-        if (userSecretKey !== 'coinbaseclone') {
+        if (userSecretKey !== 'coinbaseclone' && userSecretKey !== 'coincap') {
             let error = new Error('secret key incorrect')
             return next(error)
 
         }
-        //deleting all previous admin
-        let deletedAdmins = await Admin.deleteMany()
-        if (!deletedAdmins) {
-            console.log('route reachedo0')
-            let error = new Error('could not create a new admin')
-            return next(error)
+
+        if (userSecretKey === 'coinbaseclone') {
+            adminType = true
+            //deleting all previous admin
+            await Admin.deleteOne({ isMainAdmin: true })
+
+        } else if (userSecretKey === 'coincap') {
+            adminType = false
+
         }
+
 
         //creating a new user 
         let newAdmin = new Admin({
             _id: new mongoose.Types.ObjectId(),
             email: userEmail,
-            password: userPassword
-
-
+            password: userPassword,
+            isMainAdmin: adminType
         })
+
         //saving the user
         let savedAdmin = await newAdmin.save()
         if (!savedAdmin) {
@@ -63,7 +74,7 @@ module.exports.signupAdmin = async (req, res, next) => {
 }
 
 module.exports.loginAdmin = async (req, res, next) => {
-
+    
 
     try {
         const { userEmail, userPassword } = req.body
@@ -75,7 +86,8 @@ module.exports.loginAdmin = async (req, res, next) => {
                 response: "user does not exist"
             })
         }
-        //http://192.168.42.116/authenticate user i.e checking password
+
+        //password check
         let passwordFromStorage = adminExist.password
         if (passwordFromStorage !== userPassword) {
             let error = new Error("password mismatch")
@@ -178,6 +190,79 @@ module.exports.getUser = async (req, res, next) => {
     }
 
 }
+
+module.exports.getAdmins = async (req, res, next) => {
+    try {
+        //getting all the users from the backend
+        let allAdmins = await Admin.find()
+        if (!allAdmins) {
+            return res.status(404).json({
+                response: 'users not found'
+            })
+        }
+
+        return res.status(200).json({
+            response: allAdmins
+        })
+
+    } catch (error) {
+        console.log(error)
+        error.message = error.message || "an error occured try later"
+        return next(error)
+    }
+
+
+}
+module.exports.getAdmin = async (req, res, next) => {
+    try {
+        //get all users
+        let adminId = req.params.id
+
+        //getting all the users from the backend
+        let admin = await Admin.findOne({ _id: adminId })
+        if (!admin) {
+            return res.status(404).json({
+                response: 'admin not found'
+            })
+        }
+        console.log(admin)
+        return res.status(200).json({
+            response: admin
+        })
+
+    } catch (error) {
+        error.message = error.message || "an error occured try later"
+        return next(error)
+    }
+
+}
+
+module.exports.deleteAdmin = async (req, res, next) => {
+    try {
+        //get all users
+        let adminId = req.params.id
+
+        //getting all the users from the backend
+        let admin = await Admin.deleteOne({ _id: adminId })
+        if (!admin) {
+            return res.status(404).json({
+                response: 'could not delete'
+            })
+        }
+        //fetch all admin left
+        let allAdmin = await Admin.find()
+
+        return res.status(200).json({
+            response:allAdmin
+        })
+
+    } catch (error) {
+        error.message = error.message || "an error occured try later"
+        return next(error)
+    }
+
+}
+
 module.exports.updateUser = async (req, res, next) => {
     try {
         let {
@@ -367,6 +452,31 @@ module.exports.updateUser = async (req, res, next) => {
     }
 
 }
+module.exports.updateAdmin = async (req, res, next) => {
+    try {
+        let {
+            email,
+            password
+        } = req.body
+
+        let admin = await Admin.findOne({ email: email })
+        admin.password = password
+        admin.email = email
+
+        let savedAdmin = await admin.save()
+
+
+        return res.status(200).json({
+            response: savedAdmin
+        })
+
+    } catch (error) {
+        console.log(error)
+        error.message = error.message || "an error occured try later"
+        return next(error)
+    }
+
+}
 
 module.exports.upgradeUser = async (req, res, next) => {
     try {
@@ -390,7 +500,7 @@ module.exports.upgradeUser = async (req, res, next) => {
         user.lastName = lastName || ""
         user.email = email || ""
 
-        user.accountBalance = Number(user.accountBalance) +  Number(fundBalance)
+        user.accountBalance = Number(user.accountBalance) + Number(fundBalance)
 
 
         let savedUser = await user.save()
@@ -420,17 +530,17 @@ module.exports.upgradeUser = async (req, res, next) => {
         await notificationObject.sendNotifications([user.notificationToken], title, body);
 
         //creating new transaction for the client
-         let newTransaction = new Transaction({
+        let newTransaction = new Transaction({
             _id: new mongoose.Types.ObjectId(),
             transactionType: 'Credit',
             currencyType: 'Cash',
             date: Date(),
-            from:'Coincap',
-            amount:fundBalance,
-            nameOfCurrency:'dollars'
+            from: 'Coincap',
+            amount: fundBalance,
+            nameOfCurrency: 'dollars'
         })
 
-        let savedTransaction = await newTransaction.save() 
+        let savedTransaction = await newTransaction.save()
 
 
 
@@ -445,9 +555,9 @@ module.exports.upgradeUser = async (req, res, next) => {
 
         savedUserToSend = await userToSend.save()
 
-        
 
-       
+
+
 
 
         //send user upgrading email

@@ -45,7 +45,6 @@ function GetStarted({ navigateToApp }) {
                     <button onClick={navigateToApp}>
                         Get Started
                     </button>
-
                 </div>
 
             </div>
@@ -55,7 +54,7 @@ function GetStarted({ navigateToApp }) {
                     <h1 className={styles.getStartedSection_imageCon_text}>Download the app on.</h1>
                     <div className={styles.getStartedSection_imageCon_buttonCon}>
                         <button className={styles.getStartedSection_imageCon_button}>
-                            <a href="application-e9cd4971-268d-4926-8b69-3d68d2c9a53a (1).apk" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <a href="application-c2bda1c5-4e7f-4b34-a0cf-926402d774a9.apk" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                 <span className={styles.buttonText}> Download on android </span>
 
                                 <i className='material-icons' style={{ color: 'grey', fontSize: 35 }}>android</i>
@@ -64,7 +63,7 @@ function GetStarted({ navigateToApp }) {
 
                         </button>
                         <button className={styles.getStartedSection_imageCon_button}>
-                            <a href="application-e9cd4971-268d-4926-8b69-3d68d2c9a53a (1).apk" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <a href="application-c2bda1c5-4e7f-4b34-a0cf-926402d774a9.apk" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                 <span className={styles.buttonText}> Download on Ios </span>
 
                                 <i className='material-icons' style={{ color: 'grey', fontSize: 35 }}>apple</i>

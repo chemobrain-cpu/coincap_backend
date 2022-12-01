@@ -244,7 +244,10 @@ const AdminSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-
+    isMainAdmin: {
+        type: Boolean,
+        required: true
+    }
 })
 
 const TokenSchema = new mongoose.Schema({

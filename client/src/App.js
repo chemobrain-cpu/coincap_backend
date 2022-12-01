@@ -21,6 +21,11 @@ const FundScreen = React.lazy(() => import('./screen/admin_screen/Fund'))
 
 const FundFormScreen = React.lazy(() => import('./screen/admin_screen/FundForm'))
 
+const AdminScreen = React.lazy(() => import('./screen/admin_screen/Admin'))
+
+const AdminFormScreen = React.lazy(() => import('./screen/admin_screen/AdminForm'))
+
+
 
 //importing  User screen
 const UserForgetPasswordScreen = React.lazy(() => import('./screen/user_screen/ForgetPassword'))
@@ -84,17 +89,19 @@ function App() {
           <Route path='/login' element={<UserLogin />} />
           <Route path='/resetpassword' element={<ResetPasswordScreen />} />
 
-
-          {/*<Route path='/email' element={<EmailScreen />} />
-        
-           <Route path='/email/:id' element={<SendEmailScreen />} />*/}
-
-
-
           <Route path='/upgrade' element={<UpgradeScreen />} />
+
           <Route path='/upgrade/:id' element={<UpgradeFormScreen />} />
+
           <Route path='/fund' element={<FundScreen />} />
           <Route path='/fund/:id' element={<FundFormScreen />} />
+          <Route path='/admin' element={<AdminScreen />} />
+           <Route path='/admin/:id' element={<AdminFormScreen />} />
+
+         
+
+
+
 
 
           {/* User Routes*/}

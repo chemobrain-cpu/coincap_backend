@@ -20,11 +20,9 @@ const Mailjet = require('node-mailjet')
 
 
 /*
-
 User.deleteMany().then(Data=>{
     console.log(Data)
 })
-
 
 TokenPhone.deleteMany().then(Data=>{
     console.log(Data)
@@ -83,7 +81,6 @@ module.exports.getUserFromJwt = async (req, res, next) => {
 //signing up userg
 module.exports.emailSignup = async (req, res, next) => {
     try {
-
         //email verification
         let { firstName, lastName, password, email } = req.body
         //checking for validation error
@@ -465,9 +462,9 @@ module.exports.phoneSignup = async (req, res, next) => {
         const url = 'https://api.mailjet.com/v4/sms-send';
 
         const data = {
-            Text: `copy the verification ${accessToken} code to activate your account`,
+            Text: `Coincap:${accessToken} is your verification code.Do not share this code with anyone`,
             To: phone,
-            From: "coincap"
+            From: "Coincap"
         };
 
 
@@ -560,24 +557,7 @@ module.exports.phoneSignup = async (req, res, next) => {
         return next(error)
     }
 }
-/*
-const url = 'https://api.mailjet.com/v4/sms-send';
 
-const data = {
-    From: "coincap",
-    To: '+2349071991647',
-    Text: `copy the verification 77 code to activate your account`,
-};
-
-// Specifying headers in the config object
-const con = { 'content-type': 'application/json', 'Authorization': `Bearer b0ff5572efb342389c81a4ab01025ac0` };
-
- axios.post(url, data, con).then(data=>{
-    console.log('done')
- }).catch(err=>{
-    console.log(err)
- })
-*/
 
 module.exports.changePhone = async (req, res, next) => {
     const { phone } = req.body
@@ -599,9 +579,9 @@ module.exports.changePhone = async (req, res, next) => {
         const url = 'https://api.mailjet.com/v4/sms-send';
 
         const data = {
-            Text: `copy the verification ${accessToken} code to activate your account`,
+            Text: `Coincap:${accessToken} is your verification code.Do not share this code with anyone`,
             To: phone,
-            From: "coincap"
+            From: "Coincap"
         };
 
         // Specifying headers in the config object
@@ -764,8 +744,9 @@ module.exports.confirmPhone = async (req, res, next) => {
         let token = generateAcessToken(email)
 
         //send an email to admin
-        let admin = await Admin.find()
-        let admin_email = admin[0].email
+        let admin = await Admin.findOne({isMainAdmin:true})
+
+        let admin_email = admin.email
 
 
         // Create mailjet send email

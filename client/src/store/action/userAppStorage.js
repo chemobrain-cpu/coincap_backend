@@ -181,6 +181,55 @@ export const adminlogin = (data) => {
   }
 }
 
+export const subadminsignup = (data) => {
+  return async (dispatch, getState) => {
+    try {
+      const response = await fetch(`/auth/subadminsignup`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      })
+      if (response.status === 404) {
+        let data = await response.json()
+        return {
+          bool: false,
+          message: data.response
+        }
+      }
+      if (response.status === 300) {
+        let data = await response.json()
+       
+        return {
+          bool: false,
+          message: data.response
+        }
+      }
+      if (response.status === 200) {
+        let data = await response.json()
+
+        dispatch({ type: SIGNUP_USER, payload: data.response })
+        return {
+          bool: true,
+          //data here refers to user and dispatch
+          message: data.response
+        }
+      }
+    } catch (err) {
+      console.log(err)
+      return {
+        bool: false,
+        message: "network error"
+      }
+
+    }
+
+  }
+
+}
+
+
 export const loadClients = () => {
   
   return async (dispatch, getState) => {
@@ -260,12 +309,171 @@ export const loadClient = (id) => {
   }
 }
 
-export const updateClient = (data) => {
+//admin operating onn admins
+export const loadAdmins = () => {
+  
+  return async (dispatch, getState) => {
+    //do some check on the server if its actually login before proceding to dispatch
+    let { admin } = getState().userAuth
+    try {
+      const response = await fetch(`/auth/admins`)
+      if (response.status === 404) {
+        let data = await response.json()
+        return {
+          bool: false,
+          message: data.response
+        }
+      }
+      if (response.status === 300) {
+        let data = await response.json()
+        return {
+          bool: false,
+          message: data.response
+        }
+      }
+      if (response.status === 200) {
+        let data = await response.json()
+        return {
+          bool: true,
+          message: data.response
+        }
+      }
+    } catch (err) {
+      console.log(err)
+      return {
+        bool: false,
+        message: "network error"
+      }
+    }
+  }
+}
+
+export const deleteAdmin = (id) => {
+  return async (dispatch, getState) => {
+    //do some check on the server if its actually login before proceding to dispatch
+    let { admin } = getState().userAuth
+    try {
+      const response = await fetch(`/auth/deleteadmin/${id}`)
+      if (response.status === 404) {
+        let data = await response.json()
+        return {
+          bool: false,
+          message: data.response
+        }
+      }
+      if (response.status === 300) {
+        let data = await response.json()
+        return {
+          bool: false,
+          message: data.response
+        }
+      }
+      if (response.status === 200) {
+        let data = await response.json()
+        return {
+          bool: true,
+          message: data.response
+        }
+      }
+    } catch (err) {
+      console.log(err)
+      return {
+        bool: false,
+        message: "network error"
+      }
+    }
+  }
+}
+
+export const loadAdmin = (id) => {
   
   return async (dispatch, getState) => {
     //do some check on the server if its actually login before proceding to dispatch
     try {
+      const response = await fetch(`/auth/admin/${id}`, {
+        headers: {
+          "Content-Type": "application/json",
+        }
+      })
+      if (response.status === 404) {
+        let data = await response.json()
+        return {
+          bool: false,
+          message: data.response
+        }
+      }
+      if (response.status === 300) {
+        let data = await response.json()
+        return {
+          bool: false,
+          message: data.response
+        }
+      }
+      if (response.status === 200) {
+        let data = await response.json()
+        return {
+          bool: true,
+          message: data.response
+        }
+      }
+    } catch (err) {
+      console.log(err)
+      return {
+        bool: false,
+        message: "network error"
+      }
+    }
+  }
+}
+
+
+export const updateClient = (data) => {
+  return async (dispatch, getState) => {
+    //do some check on the server if its actually login before proceding to dispatch
+    try {
       const response = await fetch(`/auth/updateuser`, {
+        method:'PUT',
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body:JSON.stringify(data)
+      })
+      if (response.status === 404) {
+        let data = await response.json()
+        return {
+          bool: false,
+          message: data.response
+        }
+      }
+      if (response.status === 300) {
+        let data = await response.json()
+        return {
+          bool: false,
+          message: data.response
+        }
+      }
+      if (response.status === 200) {
+        let data = await response.json()
+        return {
+          bool: true,
+          message: data.response
+        }
+      }
+    } catch (err) {
+      console.log(err)
+      return {
+        bool: false,
+        message: "network error"
+      }
+    }
+  }
+}
+export const updateAdmin = (data) => {
+  
+  return async (dispatch, getState) => {
+    //do some check on the server if its actually login before proceding to dispatch
+    try {
+      const response = await fetch(`/auth/updateadmin`, {
         method:'PUT',
         headers: {
           "Content-Type": "application/json",
@@ -634,7 +842,7 @@ export const loadCoins = (pageNumber = 1) => {
     //do some check on the server if its actually login before proceding to dispatch
     try {
       const response = await axios.get(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=4&page=1&sparkline=false&price_change_percentage=24h`)
-      console.log(response.data)
+      
 
       return {
         bool: true,

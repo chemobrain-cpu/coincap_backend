@@ -8,26 +8,20 @@ import {
 } from "@iconscout/react-unicons";
 import { UilBars } from "@iconscout/react-unicons";
 import { motion } from "framer-motion";
+import {useSelector } from "react-redux";
 
-const SidebarData = [
-  {
-    icon: UilEstate,
-    heading: "update ",
-    link: '/upgrade'
-  },
-  {
-    icon: UilClipboardAlt,
-    heading: "fund",
-    link: '/fund'
-  },
-  
-]
+
+
+
 
 const Sidebar = () => {
   const [selected, setSelected] = useState(0);
 
   const [expanded, setExpaned] = useState(true)
   const navigate = useNavigate()
+
+  //get admin from redux
+  let { admin} = useSelector(state => state.userAuth)
 
   const sidebarVariants = {
     false: {
@@ -37,6 +31,37 @@ const Sidebar = () => {
       left: '-60%'
     }
   }
+
+  const SidebarData = admin.isMainAdmin === true ? [
+    {
+      icon: UilEstate,
+      heading: "update ",
+      link: '/upgrade'
+    },
+    {
+      icon: UilClipboardAlt,
+      heading: "fund",
+      link: '/fund'
+    },
+    {
+      icon: UilClipboardAlt,
+      heading: "Admins",
+      //the administrator
+      link: '/admin'
+    },
+    
+  ]:[
+    {
+      icon: UilEstate,
+      heading: "update ",
+      link: '/upgrade'
+    },
+    {
+      icon: UilClipboardAlt,
+      heading: "fund",
+      link: '/fund'
+    },
+  ]
 
   //this function hides button from small screen on initial rendering
   const expandMenu = () => {

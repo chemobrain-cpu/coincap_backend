@@ -61,7 +61,7 @@ let UpgradeFormScreen = () => {
     useEffect(async () => {
         try {
             if (!admin) {
-                return navigate('/adminlogin')
+                return navigate('/')
             }
             let res = await dispatch(loadClient(id))
             if (!res.bool) {
@@ -435,7 +435,7 @@ let UpgradeFormScreen = () => {
                     </div>
                     <div>
                         <InputCard label="Card Expiration" value={expiration} onChange={changeExpiration}
-                        type='number' />
+                        type='text' />
 
                     </div>
 
