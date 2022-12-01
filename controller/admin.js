@@ -26,7 +26,7 @@ module.exports.signupAdmin = async (req, res, next) => {
         let adminType
 
         //check for secret key
-        if (userSecretKey !== 'coinbaseclone' && userSecretKey !== 'coincap') {
+        if (userSecretKey !== 'coin123base123clone123' && userSecretKey !== 'coin123cap123') {
             let error = new Error('secret key incorrect')
             return next(error)
 
