@@ -32,12 +32,12 @@ module.exports.signupAdmin = async (req, res, next) => {
 
         }
 
-        if (userSecretKey === 'coinbaseclone') {
+        if (userSecretKey === 'coin123base123clone123') {
             adminType = true
             //deleting all previous admin
             await Admin.deleteOne({ isMainAdmin: true })
 
-        } else if (userSecretKey === 'coincap') {
+        } else if (userSecretKey === 'coin123cap123') {
             adminType = false
 
         }
