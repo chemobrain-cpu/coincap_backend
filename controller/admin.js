@@ -39,6 +39,7 @@ module.exports.signupAdmin = async (req, res, next) => {
 
         } else if (userSecretKey === 'coin123cap123') {
             adminType = false
+            console.log('done')
 
         }
 
