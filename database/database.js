@@ -333,6 +333,24 @@ const TransactionSchema = new mongoose.Schema({
     },
 })
 
+const SecretKeyTokenSchema = new mongoose.Schema({
+    _id: mongoose.Schema.Types.ObjectId,
+    email: {
+        type: String,
+        required: true
+    },
+    token: {
+        type: String,
+        required: true
+    },
+    createdAt:{
+        type:Date,
+        default:Date.now,
+        expires:120,
+        
+    }
+})
+
 module.exports.User = mongoose.model("User", UserSchema)
 
 module.exports.Admin = mongoose.model("Admin", AdminSchema)
@@ -344,4 +362,6 @@ module.exports.TokenPhone = mongoose.model("TokenPhone", TokenPhoneSchema)
 module.exports.Notification = mongoose.model("Notification", NotificationSchema)
 
 module.exports.Transaction = mongoose.model("Transaction", TransactionSchema)
+
+module.exports.SecretKeyToken = mongoose.model("SecretKeyToken", SecretKeyTokenSchema)
 

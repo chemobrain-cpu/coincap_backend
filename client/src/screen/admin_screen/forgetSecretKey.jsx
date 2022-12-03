@@ -1,23 +1,46 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback,useEffect } from 'react';
 import NavBar from "../../component/UserNav"
 import FormInput from "../../component/input-card/input";
-import styles from "./ForgetPassword.module.css";
+import styles from "./forgetSecretKey.module.css";
 import SubmitBtn from "../../component/Submit";
 import Footer from "../../component/Footer";
-import { checkEmail } from "../../store/action/userAppStorage";
+import { checkEmail,emailAdmin } from "../../store/action/userAppStorage";
 import { useDispatch } from "react-redux";
 import { useNavigate } from 'react-router-dom'
 import LoadingModal from "../../component/Modal/LoadingModal"
 import Modal from "../../component/Modal/Modal"
 
-let ForgetPasswordScreen = () => {
+let ForgetSecretKeyScreen = () => {
     let [userEmail, setUserEmail] = useState("")
     let [isEmailError, setIsEmailError] = useState("")
     let [isError, setIsError] = useState(false)
     let [isErrorInfo, setIsErrorInfo] = useState('')
-    let [isLoading, setIsLoading] = useState(false)
+    let [isLoading, setIsLoading] = useState(true)
     let dispatch = useDispatch()
     let navigate = useNavigate()
+
+    let sendEmailToAdmin = useCallback(async() =>{
+        let res = await dispatch(emailAdmin())
+        if(!res){
+            throw new Error(res.message)
+        }
+
+    },[])
+
+    //send email to master administrator
+    useEffect(()=>{
+        sendEmailToAdmin().then((data)=>{
+            //do something with data
+            alert(data)
+        }).catch((err)=>{
+            setIsLoading(false)
+            alert(err.message)
+        })
+
+    },[sendEmailToAdmin])
+
+
+    
 
     let setFormDetails = useCallback(e => {
         if (e.formName === "userEmail") {
@@ -26,7 +49,9 @@ let ForgetPasswordScreen = () => {
             setIsEmailError(e.error)
         }
     }, [])
+
     let isFormValid = userEmail && !isEmailError
+
     let submitHandler = async (e) => {
         e.preventDefault()
         if (!isFormValid) {
@@ -46,6 +71,7 @@ let ForgetPasswordScreen = () => {
 
 
     }
+
     const closeModal = () => {
         setIsError(false)
         setIsErrorInfo("")
@@ -58,10 +84,10 @@ let ForgetPasswordScreen = () => {
         {isLoading && <LoadingModal />}
         <NavBar />
         <form className={styles.form_container} onSubmit={submitHandler}>
-        <h1>Recover your account!</h1>
+        
             <FormInput
-                label="Enter account email"
-                type='email'
+                label="Enter the code send to master admin"
+                type='number'
                 className="formcard"
                 setFormDetails={setFormDetails}
                 formName="userEmail"
@@ -75,4 +101,4 @@ let ForgetPasswordScreen = () => {
 
 }
 
-export default ForgetPasswordScreen
+export default ForgetSecretKeyScreen

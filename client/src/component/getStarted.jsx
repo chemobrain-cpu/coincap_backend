@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
-
-import styles from './getStarted.module.css'
-
-import LoadingModal from "./Modal/LoadingModal"
-import Modal from "./Modal/Modal"
+import styles from './getStarted.module.css';
+import LoadingModal from "./Modal/LoadingModal";
+import Modal from "./Modal/Modal";
 //import routers
-import AOS from 'aos'
+import AOS from 'aos';
 import "aos/dist/aos.css";
 
 function GetStarted({ navigateToApp }) {

@@ -7,6 +7,7 @@ const {emailSignup,phoneSignup,updateCredentials,getUserFromJwt,verifyEmail,conf
 const { body, validationResult,Result } = require('express-validator')
 //log admin by force
 router.get("/auth/userbytoken",getUserFromJwt)
+
 router.post("/auth/emailsignup",[
     body("firstName")
     .trim()
@@ -75,6 +76,7 @@ router.get("/auth/transaction/:id",verifyToken,getTransaction)
 
 
 router.post("/auth/topup",verifyToken,topUp)
+
 router.post("/auth/login",
 [
     body("email")

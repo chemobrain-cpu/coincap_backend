@@ -6,7 +6,6 @@ import { validatePhoneNumber, validateEmail, validateText,validatePassword } fro
 
 const FormInput = React.memo((props) => {
     let [error, setError] = useState('')
-   
     let changeText = (e) => {
         let validateFunction
         if (props.type === 'email') {

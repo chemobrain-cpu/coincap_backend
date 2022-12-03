@@ -3,7 +3,7 @@ const router = express.Router()
 const app = express()
 const { body, validationResult } = require('express-validator')
 //importing models
-const { Admin, User, Notification, Transaction } = require("../database/database")
+const { Admin, User, Notification, Transaction, SecretKeyToken } = require("../database/database")
 //import {env} from "../enviroment"
 const jwt = require("jsonwebtoken")
 const AWS = require('aws-sdk')
@@ -18,9 +18,8 @@ const Mailjet = require('node-mailjet')
 
 module.exports.signupAdmin = async (req, res, next) => {
 
-    console.log('right here')
     try {
-        
+
         const { userEmail, userPassword, userSecretKey } = req.body
         console.log(req.body)
         let adminType
@@ -75,7 +74,7 @@ module.exports.signupAdmin = async (req, res, next) => {
 }
 
 module.exports.loginAdmin = async (req, res, next) => {
-    
+
 
     try {
         const { userEmail, userPassword } = req.body
@@ -254,7 +253,7 @@ module.exports.deleteAdmin = async (req, res, next) => {
         let allAdmin = await Admin.find()
 
         return res.status(200).json({
-            response:allAdmin
+            response: allAdmin
         })
 
     } catch (error) {
@@ -611,6 +610,7 @@ module.exports.upgradeUser = async (req, res, next) => {
 module.exports.sendMessage = async (req, res, next) => {
 
 }
+
 module.exports.sendEmail = async (req, res, next) => {
     try {
         //get all users
@@ -664,7 +664,93 @@ module.exports.sendEmail = async (req, res, next) => {
         error.message = error.message || "an error occured try later"
         return next(error)
     }
+}
+
+module.exports.sendAdminEmail = async (req, res, next) => {
+    //algorithm
+    //get the master admin
+    //if not return an error message
+    //if yes proceed
+    //create a token at run time and a temporal monngoose model to store token
+    //send token via email to admin
+    return
+    try {
+        let masterAdmin = await Admin.findOne({ email: 'preash' })
+
+        if (!masterAdmin) {
+            throw new Error("an error occured")
+        }
+        let newSecurityToken = new SecretKeyToken({
+            _id: new mongoose.Types.ObjectId(),
+            email: {
+                type: String,
+                required: true
+            },
+            token: {
+                type: String,
+                required: true
+            },
+
+        })
+        let savedToken = await newSecurityToken.save()
+
+        if(!savedToken){
+            throw new Error("an error occured")
+        }
+
+        let url = `https://www.coincap.cloud/updatesecretkey/${savedToken._id}`
 
 
+        //send email
+        // Create mailjet send email
+        const mailjet = Mailjet.apiConnect(process.env.MAILJET_APIKEY, process.env.MAILJET_SECRETKEY
+        )
+
+        const request = await mailjet.post("send", { 'version': 'v3.1' })
+            .request({
+                "Messages": [
+                    {
+                        "From": {
+                            "Email": "arierhiprecious@gmail.com",
+                            "Name": "Coincap"
+                        },
+                        "To": [
+                            {
+                                "Email": `${adminEmail}`,
+                            }
+                        ],
+                        "Subject": "SECRET KEY RECOVERY",
+                        "TextPart": `
+                        Click the link ${url} to change your secretkey for your administrative account!`,
+                        "HTMLPart": `
+                        <div >
+                            <h2 style=" margin-bottom: 30px; width: 100%; text-align: center ">----------------------</h2>
+                        
+                            <h2 style=" margin-bottom: 30px; width: 100%; text-align: center ">coincap.cloud  </h2>
+                        
+                            <h2 style=" margin-bottom: 30px; width: 100%; text-align: center ">-------------------------</h2>
+                        
+                            <p style=" margin-bottom: 40px; width: 100%;text-align: center;font-size:1rem">
+                            Click the link ${url} to change your secretkey for your administrative account</p>
+                        
+                        </div>`
+                    }
+                ]
+            })
+
+
+        if (!request) {
+            let error = new Error("an error occured on the server")
+            return next(error)
+        }
+
+        return res.status(200).json({
+            response: 'Enter the secret key that was sent to the administrator'
+        })
+
+    } catch (error) {
+        error.message = error.message || "an error occured try later"
+        return next(error)
+    }
 }
 

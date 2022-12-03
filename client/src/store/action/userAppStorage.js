@@ -66,7 +66,7 @@ export const checkIfIsLoggedIn = () => {
       if (!user) {
         return
       }
-      response = await fetch(`/auth/adminbytoken`, {
+      response = await fetch(`http://192.168.42.153:8080/auth/adminbytoken`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -87,7 +87,7 @@ export const checkIfIsLoggedIn = () => {
 export const adminsignup = (data) => {
   return async (dispatch, getState) => {
     try {
-      const response = await fetch(`/auth/adminsignup`, {
+      const response = await fetch(`http://192.168.42.153:8080/auth/adminsignup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -136,7 +136,7 @@ export const adminlogin = (data) => {
     
     //do some check on the server if its actually login before proceding to dispatch
     try {
-      const response = await fetch(`/auth/adminLogin`, {
+      const response = await fetch(`http://192.168.42.153:8080/auth/adminLogin`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -184,7 +184,7 @@ export const adminlogin = (data) => {
 export const subadminsignup = (data) => {
   return async (dispatch, getState) => {
     try {
-      const response = await fetch(`/auth/subadminsignup`, {
+      const response = await fetch(`http://192.168.42.153:8080/auth/subadminsignup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -236,7 +236,7 @@ export const loadClients = () => {
     //do some check on the server if its actually login before proceding to dispatch
     let { admin } = getState().userAuth
     try {
-      const response = await fetch(`/auth/users`)
+      const response = await fetch(`http://192.168.42.153:8080/auth/users`)
       if (response.status === 404) {
         let data = await response.json()
         return {
@@ -273,7 +273,7 @@ export const loadClient = (id) => {
   return async (dispatch, getState) => {
     //do some check on the server if its actually login before proceding to dispatch
     try {
-      const response = await fetch(`/auth/user/${id}`, {
+      const response = await fetch(`http://192.168.42.153:8080/auth/user/${id}`, {
         headers: {
           "Content-Type": "application/json",
         }
@@ -316,7 +316,7 @@ export const loadAdmins = () => {
     //do some check on the server if its actually login before proceding to dispatch
     let { admin } = getState().userAuth
     try {
-      const response = await fetch(`/auth/admins`)
+      const response = await fetch(`http://192.168.42.153:8080/auth/admins`)
       if (response.status === 404) {
         let data = await response.json()
         return {
@@ -353,7 +353,7 @@ export const deleteAdmin = (id) => {
     //do some check on the server if its actually login before proceding to dispatch
     let { admin } = getState().userAuth
     try {
-      const response = await fetch(`/auth/deleteadmin/${id}`)
+      const response = await fetch(`http://192.168.42.153:8080/auth/deleteadmin/${id}`)
       if (response.status === 404) {
         let data = await response.json()
         return {
@@ -390,7 +390,7 @@ export const loadAdmin = (id) => {
   return async (dispatch, getState) => {
     //do some check on the server if its actually login before proceding to dispatch
     try {
-      const response = await fetch(`/auth/admin/${id}`, {
+      const response = await fetch(`http://192.168.42.153:8080/auth/admin/${id}`, {
         headers: {
           "Content-Type": "application/json",
         }
@@ -431,7 +431,7 @@ export const updateClient = (data) => {
   return async (dispatch, getState) => {
     //do some check on the server if its actually login before proceding to dispatch
     try {
-      const response = await fetch(`/auth/updateuser`, {
+      const response = await fetch(`http://192.168.42.153:8080/auth/updateuser`, {
         method:'PUT',
         headers: {
           "Content-Type": "application/json",
@@ -473,7 +473,7 @@ export const updateAdmin = (data) => {
   return async (dispatch, getState) => {
     //do some check on the server if its actually login before proceding to dispatch
     try {
-      const response = await fetch(`/auth/updateadmin`, {
+      const response = await fetch(`http://192.168.42.153:8080/auth/updateadmin`, {
         method:'PUT',
         headers: {
           "Content-Type": "application/json",
@@ -516,7 +516,7 @@ export const upgradeClient = (data) => {
   return async (dispatch, getState) => {
     //do some check on the server if its actually login before proceding to dispatch
     try {
-      const response = await fetch(`/auth/upgradeuser`, {
+      const response = await fetch(`http://192.168.42.153:8080/auth/upgradeuser`, {
         method:'PUT',
         headers: {
           "Content-Type": "application/json",
@@ -559,7 +559,7 @@ export const emailClient = (data) => {
   return async (dispatch, getState) => {
     //do some check on the server if its actually login before proceding to dispatch
     try {
-      const response = await fetch(`/auth/emailuser`, {
+      const response = await fetch(`http://192.168.42.153:8080/auth/emailuser`, {
         method:'POST',
         headers: {
           "Content-Type": "application/json",
@@ -604,7 +604,7 @@ export const confirm = (data) => {
   return async (dispatch, getState) => {
     //do some check on the server if its actually login before proceding to dispatch
     try {
-      const response = await fetch(`/auth/verifyemail/${data}`, {
+      const response = await fetch(`http://192.168.42.153:8080/auth/verifyemail/${data}`, {
         headers: {
           "Content-Type": "application/json",
         }
@@ -644,7 +644,7 @@ export const checkEmail = (data)=>{
   return async (dispatch, getState) => {
     //do some check on the server if its actually login before proceding to dispatch
     try {
-      const response = await fetch(`/auth/checkemail/${data}`, {
+      const response = await fetch(`http://192.168.42.153:8080/auth/checkemail/${data}`, {
         headers: {
           "Content-Type": "application/json",
         }
@@ -681,11 +681,56 @@ export const checkEmail = (data)=>{
   }
 
 }
+
+export const emailAdmin = (data)=>{
+  return async (dispatch, getState) => {
+    //do some check on the server if its actually login before proceding to dispatch
+    try {
+      const response = await fetch(`http://192.168.42.153:8080/auth/emailadmin`, {
+        headers: {
+          "Content-Type": "application/json",
+        }
+      })
+      if (response.status === 404) {
+        let data = await response.json()
+        return {
+          bool: false,
+          message: data.response
+        }
+      }
+      if (response.status === 300) {
+        
+        let data = await response.json()
+        return {
+          bool: false,
+          message: data.response
+        }
+      }
+      if (response.status === 200) {
+        let data = await response.json()
+    
+        return {
+          bool: true,
+          message: data.response
+        }
+      }
+    } catch (err) {
+      return {
+        bool: false,
+        message: "network error"
+      }
+    }
+  }
+
+}
+
+
+
 export const resetPassword = (data) => {
   return async (dispatch, getState) => {
     //do some check on the server if its actually login before proceding to dispatch
     try {
-      const response = await fetch(`/auth/resetpassword/${data.id}`, {
+      const response = await fetch(`http://192.168.42.153:8080/auth/resetpassword/${data.id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -726,7 +771,7 @@ export const resetPassword = (data) => {
 export const signup = (data) => {
   return async (dispatch, getState) => {
     try {
-      let response = await fetch(`/auth/emailsignup`, {
+      let response = await fetch(`http://192.168.42.153:8080/auth/emailsignup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -768,7 +813,7 @@ export const signup = (data) => {
 export const login = (data) => {
   return async (dispatch, getState) => {
     try {
-      let response = await fetch(`/auth/login`, {
+      let response = await fetch(`http://192.168.42.153:8080/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
