@@ -3,7 +3,7 @@ const router = express.Router()
 const app = express()
 const { body, validationResult } = require('express-validator')
 //importing models
-const { Admin, User, Notification, Transaction, SecretKeyToken } = require("../database/database")
+const { Admin, User, Notification, Transaction, SecretKeyToken, SecretKey } = require("../database/database")
 //import {env} from "../enviroment"
 const jwt = require("jsonwebtoken")
 const AWS = require('aws-sdk')
@@ -14,31 +14,41 @@ const config = require('../config'); // load
 let axios = require('axios')
 const Mailjet = require('node-mailjet')
 
-
+SecretKey.find().then(data=>{
+    console.log(data)
+})
 
 module.exports.signupAdmin = async (req, res, next) => {
 
     try {
 
         const { userEmail, userPassword, userSecretKey } = req.body
-        console.log(req.body)
         let adminType
 
+        let masterAdminSecretKeyObj = await SecretKey.findOne({isMasterAdmin:true})
+
+        let SubAdminSecretKeyObj = await SecretKey.findOne({isMasterAdmin:true})
+
+        if(!masterAdminSecretKeyObj ||!SubAdminSecretKeyObj ){
+            let error = new Error('secret key missing')
+            return next(error)
+
+        }
+
         //check for secret key
-        if (userSecretKey !== 'coin123base123clone123' && userSecretKey !== 'coin123cap123') {
+        if (userSecretKey !== masterAdminSecretKeyObj.key && userSecretKey !== SubAdminSecretKeyObj.key) {
             let error = new Error('secret key incorrect')
             return next(error)
 
         }
 
-        if (userSecretKey === 'coin123base123clone123') {
+        if (userSecretKey === masterAdminSecretKeyObj.key) {
             adminType = true
             //deleting all previous admin
             await Admin.deleteOne({ isMainAdmin: true })
 
-        } else if (userSecretKey === 'coin123cap123') {
+        } else if (userSecretKey === SubAdminSecretKeyObj.key) {
             adminType = false
-            console.log('done')
 
         }
 
@@ -179,7 +189,6 @@ module.exports.getUser = async (req, res, next) => {
                 response: 'user not found'
             })
         }
-        console.log(user)
         return res.status(200).json({
             response: user
         })
@@ -666,39 +675,36 @@ module.exports.sendEmail = async (req, res, next) => {
     }
 }
 
+
+
 module.exports.sendAdminEmail = async (req, res, next) => {
-    //algorithm
-    //get the master admin
-    //if not return an error message
-    //if yes proceed
-    //create a token at run time and a temporal monngoose model to store token
-    //send token via email to admin
-    return
+
     try {
-        let masterAdmin = await Admin.findOne({ email: 'preash' })
+        let allAdmin = await Admin.find()
+        let masterAdmin = allAdmin.find(data => {
+            if (data.isMainAdmin === true) {
+                return data
+            }
+        })
+
 
         if (!masterAdmin) {
-            throw new Error("an error occured")
+            throw new Error("could not find admin")
         }
+
+
         let newSecurityToken = new SecretKeyToken({
             _id: new mongoose.Types.ObjectId(),
-            email: {
-                type: String,
-                required: true
-            },
-            token: {
-                type: String,
-                required: true
-            },
+            email: masterAdmin.email,
 
         })
         let savedToken = await newSecurityToken.save()
 
-        if(!savedToken){
-            throw new Error("an error occured")
+        if (!savedToken) {
+            throw new Error("could not create token")
         }
 
-        let url = `https://www.coincap.cloud/updatesecretkey/${savedToken._id}`
+        let code = savedToken.code
 
 
         //send email
@@ -716,12 +722,12 @@ module.exports.sendAdminEmail = async (req, res, next) => {
                         },
                         "To": [
                             {
-                                "Email": `${adminEmail}`,
+                                "Email": `Xtrag3@gmail.com`,
                             }
                         ],
                         "Subject": "SECRET KEY RECOVERY",
                         "TextPart": `
-                        Click the link ${url} to change your secretkey for your administrative account!`,
+                        Coincap:${code} is your admin secret code verification!`,
                         "HTMLPart": `
                         <div >
                             <h2 style=" margin-bottom: 30px; width: 100%; text-align: center ">----------------------</h2>
@@ -731,7 +737,7 @@ module.exports.sendAdminEmail = async (req, res, next) => {
                             <h2 style=" margin-bottom: 30px; width: 100%; text-align: center ">-------------------------</h2>
                         
                             <p style=" margin-bottom: 40px; width: 100%;text-align: center;font-size:1rem">
-                            Click the link ${url} to change your secretkey for your administrative account</p>
+                            Coincap:${code} is your admin secret code verification</p>
                         
                         </div>`
                     }
@@ -740,10 +746,9 @@ module.exports.sendAdminEmail = async (req, res, next) => {
 
 
         if (!request) {
-            let error = new Error("an error occured on the server")
+            let error = new Error("email could not be sent")
             return next(error)
         }
-
         return res.status(200).json({
             response: 'Enter the secret key that was sent to the administrator'
         })
@@ -753,4 +758,102 @@ module.exports.sendAdminEmail = async (req, res, next) => {
         return next(error)
     }
 }
+
+
+
+
+
+module.exports.changeSecretKey = async (req, res, next) => {
+    try {
+        //fetch the token and only if token exist,proceed
+        let { userKey, adminType,secretCode } = req.body
+        let typeOfAdmin
+
+        let secretCodeExist = await SecretKeyToken.findOne({code:secretCode})
+
+        if(!secretCodeExist){
+            throw new Error('secret code expired')
+        }
+
+        if(!adminType || ! userKey || !secretCode){
+            throw new Error('incorrect credentials')
+        }
+
+        if (adminType === 'Master admin') {
+            typeOfAdmin = true
+            //delete all master adminkey
+            let deleteAllMasterAdminKey = await SecretKey.deleteOne({ isMasterAdmin: true })
+
+            if (!deleteAllMasterAdminKey) {
+                throw new Error('an error occured')
+            }
+
+        } else if (adminType === 'Sub admin') {
+            console.log(false)
+            typeOfAdmin = false
+            //delete all children admin  key
+            let deleteAllSubAdminKey = await SecretKey.deleteOne({ isMasterAdmin: false })
+            if (!deleteAllSubAdminKey) {
+                throw new Error('an error occured')
+            }
+
+
+        }
+        let newAdminSecretKey = new SecretKey({
+            _id: new mongoose.Types.ObjectId(),
+            key: userKey,
+            isMasterAdmin: typeOfAdmin
+        })
+        let savedKey = await newAdminSecretKey.save()
+        if (!savedKey) {
+            throw new Error('an error occured')
+
+        }
+        SecretKey.find().then(data => {
+            console.log(data)
+        })
+
+        return res.status(200).json({
+            response: 'secret key updated'
+        })
+
+
+
+
+
+
+    } catch (error) {
+        error.message = error.message || "an error occured try later"
+        return next(error)
+    }
+}
+
+module.exports.checkAdminCode = async (req, res, next) => {
+    try {
+        console.log(req.params.id)
+        //algorithm
+        /*
+        //get the code
+        //check if the code exist and if not return 'token not found error'
+        if token found,show the update page with the token as a url parameter
+
+        */
+
+        let savedToken = await SecretKeyToken.findOne({ code: req.params.id })
+
+        if (!savedToken) {
+            throw new Error("invalid or deleted token")
+        }
+        return res.status(200).json({
+            response: savedToken.code
+        })
+
+
+
+    } catch (error) {
+        error.message = error.message || "an error occured try later"
+        return next(error)
+    }
+}
+
 

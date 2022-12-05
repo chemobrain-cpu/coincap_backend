@@ -45,7 +45,7 @@ const Sidebar = () => {
     },
     {
       icon: UilClipboardAlt,
-      heading: "Admins",
+      heading: "Sub-admins",
       //the administrator
       link: '/admin'
     },

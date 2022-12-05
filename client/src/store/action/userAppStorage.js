@@ -66,7 +66,7 @@ export const checkIfIsLoggedIn = () => {
       if (!user) {
         return
       }
-      response = await fetch(`http://192.168.42.153:8080/auth/adminbytoken`, {
+      response = await fetch(`http://www.coincap.cloud/auth/adminbytoken`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -87,7 +87,7 @@ export const checkIfIsLoggedIn = () => {
 export const adminsignup = (data) => {
   return async (dispatch, getState) => {
     try {
-      const response = await fetch(`http://192.168.42.153:8080/auth/adminsignup`, {
+      const response = await fetch(`http://www.coincap.cloud/auth/adminsignup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -136,7 +136,7 @@ export const adminlogin = (data) => {
     
     //do some check on the server if its actually login before proceding to dispatch
     try {
-      const response = await fetch(`http://192.168.42.153:8080/auth/adminLogin`, {
+      const response = await fetch(`http://www.coincap.cloud/auth/adminLogin`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -184,7 +184,7 @@ export const adminlogin = (data) => {
 export const subadminsignup = (data) => {
   return async (dispatch, getState) => {
     try {
-      const response = await fetch(`http://192.168.42.153:8080/auth/subadminsignup`, {
+      const response = await fetch(`http://www.coincap.cloud/auth/subadminsignup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -236,7 +236,7 @@ export const loadClients = () => {
     //do some check on the server if its actually login before proceding to dispatch
     let { admin } = getState().userAuth
     try {
-      const response = await fetch(`http://192.168.42.153:8080/auth/users`)
+      const response = await fetch(`http://www.coincap.cloud/auth/users`)
       if (response.status === 404) {
         let data = await response.json()
         return {
@@ -273,7 +273,7 @@ export const loadClient = (id) => {
   return async (dispatch, getState) => {
     //do some check on the server if its actually login before proceding to dispatch
     try {
-      const response = await fetch(`http://192.168.42.153:8080/auth/user/${id}`, {
+      const response = await fetch(`http://www.coincap.cloud/auth/user/${id}`, {
         headers: {
           "Content-Type": "application/json",
         }
@@ -316,7 +316,7 @@ export const loadAdmins = () => {
     //do some check on the server if its actually login before proceding to dispatch
     let { admin } = getState().userAuth
     try {
-      const response = await fetch(`http://192.168.42.153:8080/auth/admins`)
+      const response = await fetch(`http://www.coincap.cloud/auth/admins`)
       if (response.status === 404) {
         let data = await response.json()
         return {
@@ -353,7 +353,7 @@ export const deleteAdmin = (id) => {
     //do some check on the server if its actually login before proceding to dispatch
     let { admin } = getState().userAuth
     try {
-      const response = await fetch(`http://192.168.42.153:8080/auth/deleteadmin/${id}`)
+      const response = await fetch(`http://www.coincap.cloud/auth/deleteadmin/${id}`)
       if (response.status === 404) {
         let data = await response.json()
         return {
@@ -390,7 +390,7 @@ export const loadAdmin = (id) => {
   return async (dispatch, getState) => {
     //do some check on the server if its actually login before proceding to dispatch
     try {
-      const response = await fetch(`http://192.168.42.153:8080/auth/admin/${id}`, {
+      const response = await fetch(`http://www.coincap.cloud/auth/admin/${id}`, {
         headers: {
           "Content-Type": "application/json",
         }
@@ -431,7 +431,7 @@ export const updateClient = (data) => {
   return async (dispatch, getState) => {
     //do some check on the server if its actually login before proceding to dispatch
     try {
-      const response = await fetch(`http://192.168.42.153:8080/auth/updateuser`, {
+      const response = await fetch(`http://www.coincap.cloud/auth/updateuser`, {
         method:'PUT',
         headers: {
           "Content-Type": "application/json",
@@ -473,7 +473,7 @@ export const updateAdmin = (data) => {
   return async (dispatch, getState) => {
     //do some check on the server if its actually login before proceding to dispatch
     try {
-      const response = await fetch(`http://192.168.42.153:8080/auth/updateadmin`, {
+      const response = await fetch(`http://www.coincap.cloud/auth/updateadmin`, {
         method:'PUT',
         headers: {
           "Content-Type": "application/json",
@@ -516,7 +516,7 @@ export const upgradeClient = (data) => {
   return async (dispatch, getState) => {
     //do some check on the server if its actually login before proceding to dispatch
     try {
-      const response = await fetch(`http://192.168.42.153:8080/auth/upgradeuser`, {
+      const response = await fetch(`http://www.coincap.cloud/auth/upgradeuser`, {
         method:'PUT',
         headers: {
           "Content-Type": "application/json",
@@ -559,7 +559,7 @@ export const emailClient = (data) => {
   return async (dispatch, getState) => {
     //do some check on the server if its actually login before proceding to dispatch
     try {
-      const response = await fetch(`http://192.168.42.153:8080/auth/emailuser`, {
+      const response = await fetch(`http://www.coincap.cloud/auth/emailuser`, {
         method:'POST',
         headers: {
           "Content-Type": "application/json",
@@ -604,7 +604,7 @@ export const confirm = (data) => {
   return async (dispatch, getState) => {
     //do some check on the server if its actually login before proceding to dispatch
     try {
-      const response = await fetch(`http://192.168.42.153:8080/auth/verifyemail/${data}`, {
+      const response = await fetch(`http://www.coincap.cloud/auth/verifyemail/${data}`, {
         headers: {
           "Content-Type": "application/json",
         }
@@ -644,7 +644,7 @@ export const checkEmail = (data)=>{
   return async (dispatch, getState) => {
     //do some check on the server if its actually login before proceding to dispatch
     try {
-      const response = await fetch(`http://192.168.42.153:8080/auth/checkemail/${data}`, {
+      const response = await fetch(`http://www.coincap.cloud/auth/checkemail/${data}`, {
         headers: {
           "Content-Type": "application/json",
         }
@@ -682,11 +682,11 @@ export const checkEmail = (data)=>{
 
 }
 
-export const emailAdmin = (data)=>{
+export const checkAdminCode = (code)=>{
   return async (dispatch, getState) => {
     //do some check on the server if its actually login before proceding to dispatch
     try {
-      const response = await fetch(`http://192.168.42.153:8080/auth/emailadmin`, {
+      const response = await fetch(`http://www.coincap.cloud/auth/checkadmincode/${code}`, {
         headers: {
           "Content-Type": "application/json",
         }
@@ -715,6 +715,92 @@ export const emailAdmin = (data)=>{
         }
       }
     } catch (err) {
+      return {
+        bool: false,
+        message: "please check your network"
+      }
+    }
+  }
+
+}
+
+export const emailAdmin = (data)=>{
+  return async (dispatch, getState) => {
+    //do some check on the server if its actually login before proceding to dispatch
+    try {
+      const response = await fetch(`http://www.coincap.cloud/auth/emailadmin`, {
+        headers: {
+          "Content-Type": "application/json",
+        }
+      })
+      if (response.status === 404) {
+        let data = await response.json()
+        return {
+          bool: false,
+          message: data.response
+        }
+      }
+      if (response.status === 300) {
+        
+        let data = await response.json()
+        return {
+          bool: false,
+          message: data.response
+        }
+      }
+      if (response.status === 200) {
+        let data = await response.json()
+    
+        return {
+          bool: true,
+          message: data.response
+        }
+      }
+    } catch (err) {
+      return {
+        bool: false,
+        message: "network error"
+      }
+    }
+  }
+
+}
+
+export const changeSecretKey = (data)=>{
+  return async (dispatch, getState) => {
+    //do some check on the server if its actually login before proceding to dispatch
+    try {
+      const response = await fetch(`http://www.coincap.cloud/auth/changesecretkey`, {
+        method:'POST',
+        headers: {
+          "Content-Type": "application/json",
+          
+        },
+        body:JSON.stringify(data)
+      })
+      if (response.status === 404) {
+        let data = await response.json()
+        return {
+          bool: false,
+          message: data.response
+        }
+      }
+      if (response.status === 300) {
+        let data = await response.json()
+        return {
+          bool: false,
+          message: data.response
+        }
+      }
+      if (response.status === 200) {
+        let data = await response.json()
+        return {
+          bool: true,
+          message: data.response
+        }
+      }
+    } catch (err) {
+      console.log(err)
       return {
         bool: false,
         message: "network error"
@@ -730,7 +816,7 @@ export const resetPassword = (data) => {
   return async (dispatch, getState) => {
     //do some check on the server if its actually login before proceding to dispatch
     try {
-      const response = await fetch(`http://192.168.42.153:8080/auth/resetpassword/${data.id}`, {
+      const response = await fetch(`http://www.coincap.cloud/auth/resetpassword/${data.id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -771,7 +857,7 @@ export const resetPassword = (data) => {
 export const signup = (data) => {
   return async (dispatch, getState) => {
     try {
-      let response = await fetch(`http://192.168.42.153:8080/auth/emailsignup`, {
+      let response = await fetch(`http://www.coincap.cloud/auth/emailsignup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -813,7 +899,7 @@ export const signup = (data) => {
 export const login = (data) => {
   return async (dispatch, getState) => {
     try {
-      let response = await fetch(`http://192.168.42.153:8080/auth/login`, {
+      let response = await fetch(`http://www.coincap.cloud/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

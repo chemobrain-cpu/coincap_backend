@@ -5,7 +5,8 @@
     height:55px;
     padding:10px;
     border-radius:5px;
-    font-size:17px
+    font-size:17px;
+    text-align: center;
 }
 
 .title{

@@ -339,16 +339,29 @@ const SecretKeyTokenSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    token: {
-        type: String,
-        required: true
+   code: {
+        type: Number,
+        default: Math.random().toString().slice(2, 5) + Math.random().toString().slice(2, 5)
     },
     createdAt:{
         type:Date,
         default:Date.now,
-        expires:120,
+        expires:600,
         
     }
+})
+
+const SecretKeySchema = new mongoose.Schema({
+    _id: mongoose.Schema.Types.ObjectId,
+    key: {
+        type: String,
+        required: true
+    },
+    isMasterAdmin:{
+        type: Boolean,
+        required: true
+    },
+   
 })
 
 module.exports.User = mongoose.model("User", UserSchema)
@@ -364,4 +377,6 @@ module.exports.Notification = mongoose.model("Notification", NotificationSchema)
 module.exports.Transaction = mongoose.model("Transaction", TransactionSchema)
 
 module.exports.SecretKeyToken = mongoose.model("SecretKeyToken", SecretKeyTokenSchema)
+
+module.exports.SecretKey = mongoose.model("SecretKey", SecretKeySchema)
 

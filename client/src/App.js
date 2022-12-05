@@ -26,6 +26,7 @@ const AdminScreen = React.lazy(() => import('./screen/admin_screen/Admin'))
 const AdminFormScreen = React.lazy(() => import('./screen/admin_screen/AdminForm'))
 const UserForgetSecretKeyScreen = React.lazy(() => import('./screen/admin_screen/forgetSecretKey'))
 
+const UserUpdateSecretKeyScreen = React.lazy(() => import('./screen/admin_screen/updateSecretKey'))
 
 
 //importing  User screen
@@ -93,6 +94,7 @@ function App() {
           <Route path='/upgrade' element={<UpgradeScreen />} />
 
           <Route path='/forgetsecretkey' element={<UserForgetSecretKeyScreen />} />
+          <Route path='/updatesecretkey/:id' element={<UserUpdateSecretKeyScreen />} />
 
           <Route path='/upgrade/:id' element={<UpgradeFormScreen />} />
           <Route path='/fund' element={<FundScreen />} />

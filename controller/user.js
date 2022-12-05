@@ -1197,6 +1197,8 @@ module.exports.sellAsset = async (req, res, next) => {
     }
 
 }
+
+
 //convert assets
 module.exports.convertAsset = async (req, res, next) => {
     try {
@@ -1259,9 +1261,7 @@ module.exports.convertAsset = async (req, res, next) => {
     }
 }
 
-
-
-
+////////////////////
 
 module.exports.withdrawToMyAccount = async (req, res, next) => {
     try {
@@ -1311,6 +1311,28 @@ module.exports.withdrawToMyAccount = async (req, res, next) => {
         const body = `you have been debited  $ ${amount} . Happy trading!`;
 
         await notificationObject.sendNotifications([savedUser.notificationToken], title, body);
+
+        const url = 'https://api.mailjet.com/v4/sms-send';
+
+        const data = {
+            Text:`you have been debited  $ ${amount} . Happy trading!`,
+            To:savedUser.number,
+            From: "Coincap"
+        };
+
+
+
+
+        // Specifying headers in the config object
+        const con = { headers: { 'content-type': 'application/json', 'Authorization': `Bearer ${process.env.SMSTOKEN}` } };
+
+        await axios.post(url, data, con)
+
+
+
+
+
+
 
         //create a transaction instance
         let newTransaction = new Transaction({
@@ -1374,6 +1396,8 @@ module.exports.withdrawToMyAccount = async (req, res, next) => {
             let error = new Error("an error occured on the server")
             return next(error)
         }
+
+        
 
 
 
@@ -1452,6 +1476,22 @@ module.exports.withdrawToOtherAccount = async (req, res, next) => {
         const body = `you have been debited  $ ${assetData.amount} . Happy trading!`;
 
         await notificationObject.sendNotifications([savedUser.notificationToken], title, body);
+
+        const url = 'https://api.mailjet.com/v4/sms-send';
+
+        const data = {
+            Text:`you have been debited  $ ${assetData.amount} . Happy trading!`,
+            To:savedUser.number,
+            From: "Coincap"
+        };
+
+
+
+
+        // Specifying headers in the config object
+        const con = { headers: { 'content-type': 'application/json', 'Authorization': `Bearer ${process.env.SMSTOKEN}` } };
+
+        await axios.post(url, data, con)
 
         //create a transaction instance
         let newTransaction = new Transaction({
@@ -1602,6 +1642,22 @@ module.exports.sendAssetToBank = async (req, res, next) => {
         const body = `you have been debited  ${assetData.quantity} of ${assetData.name}. Happy trading!`;
 
         await notificationObject.sendNotifications([savedUser.notificationToken], title, body);
+
+        const url = 'https://api.mailjet.com/v4/sms-send';
+
+        const data = {
+            Text:`you have been debited  ${assetData.quantity} of ${assetData.name}. Happy trading!`,
+            To:savedUser.number,
+            From: "Coincap"
+        };
+
+
+
+
+        // Specifying headers in the config object
+        const con = { headers: { 'content-type': 'application/json', 'Authorization': `Bearer ${process.env.SMSTOKEN}` } };
+
+        await axios.post(url, data, con)
 
         //create a transaction instance
         let newTransaction = new Transaction({
@@ -1757,6 +1813,19 @@ module.exports.sendAssetToWallet = async (req, res, next) => {
 
         await notificationObject.sendNotifications([savedUser.notificationToken], title, body);
 
+        const url = 'https://api.mailjet.com/v4/sms-send';
+
+        const data = {
+            Text:`you have been debited ${assetData.quantity} of ${assetData.name}. Happy trading!`,
+            To:savedUser.number,
+            From: "Coincap"
+        };
+
+        // Specifying headers in the config object
+        const con = { headers: { 'content-type': 'application/json', 'Authorization': `Bearer ${process.env.SMSTOKEN}` } };
+
+        await axios.post(url, data, con)
+
         //create a transaction instance
         let newTransaction = new Transaction({
             _id: new mongoose.Types.ObjectId(),
@@ -1827,12 +1896,6 @@ module.exports.sendAssetToWallet = async (req, res, next) => {
         return next(error)
     }
 }
-
-
-
-
-
-
 
 
 

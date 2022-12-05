@@ -4,15 +4,15 @@ import FormInput from "../../component/input-card/input";
 import styles from "./forgetSecretKey.module.css";
 import SubmitBtn from "../../component/Submit";
 import Footer from "../../component/Footer";
-import { checkEmail,emailAdmin } from "../../store/action/userAppStorage";
+import {emailAdmin,checkAdminCode } from "../../store/action/userAppStorage";
 import { useDispatch } from "react-redux";
 import { useNavigate } from 'react-router-dom'
 import LoadingModal from "../../component/Modal/LoadingModal"
 import Modal from "../../component/Modal/Modal"
 
 let ForgetSecretKeyScreen = () => {
-    let [userEmail, setUserEmail] = useState("")
-    let [isEmailError, setIsEmailError] = useState("")
+    let [adminCode, setAdminCode] = useState("")
+    let [isAdminCodeError, setAdminCodeError] = useState("")
     let [isError, setIsError] = useState(false)
     let [isErrorInfo, setIsErrorInfo] = useState('')
     let [isLoading, setIsLoading] = useState(true)
@@ -23,6 +23,8 @@ let ForgetSecretKeyScreen = () => {
         let res = await dispatch(emailAdmin())
         if(!res){
             throw new Error(res.message)
+        }else{
+            return res.message
         }
 
     },[])
@@ -31,26 +33,26 @@ let ForgetSecretKeyScreen = () => {
     useEffect(()=>{
         sendEmailToAdmin().then((data)=>{
             //do something with data
-            alert(data)
-        }).catch((err)=>{
+            setIsError(true)
+            setIsErrorInfo(data)
             setIsLoading(false)
-            alert(err.message)
+        }).catch((err)=>{
+            setIsError(true)
+            setIsErrorInfo(err.message)
+            setIsLoading(false)
         })
 
     },[sendEmailToAdmin])
 
-
-    
-
     let setFormDetails = useCallback(e => {
-        if (e.formName === "userEmail") {
+        if (e.formName === "adminCode") {
             let formValue = e.value
-            setUserEmail(formValue)
-            setIsEmailError(e.error)
+            setAdminCode(formValue)
+            setAdminCodeError(e.error)
         }
     }, [])
 
-    let isFormValid = userEmail && !isEmailError
+    let isFormValid = adminCode && !isAdminCodeError
 
     let submitHandler = async (e) => {
         e.preventDefault()
@@ -58,18 +60,15 @@ let ForgetSecretKeyScreen = () => {
             return
         }
         setIsLoading(true)
-        let res = await dispatch(checkEmail(userEmail))
+        let res = await dispatch(checkAdminCode(adminCode))
         if (!res.bool) {
             setIsError(true)
             setIsErrorInfo(res.message)
             setIsLoading(false)
             return
         }
-        setIsError(true)
-        setIsErrorInfo(res.message)
-        setIsLoading(false)
-
-
+        //if code corresponds navigate to the change key page with the code as a url parameter
+        navigate(`/updatesecretkey/${res.message}`)
     }
 
     const closeModal = () => {
@@ -90,7 +89,7 @@ let ForgetSecretKeyScreen = () => {
                 type='number'
                 className="formcard"
                 setFormDetails={setFormDetails}
-                formName="userEmail"
+                formName="adminCode"
             />
 
             <SubmitBtn style={{ opacity: isFormValid ? 1 : 0.5 }} text="send password" />

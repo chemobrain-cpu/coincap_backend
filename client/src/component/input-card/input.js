@@ -122,6 +122,7 @@ const FormInput = React.memo((props) => {
                 className={`${styles.input} ${props.class}`}
                 onChange={changeText}
                 value = {props.value}
+                placeholder = {props.placeholder}
             />
         </div>
         {error ? <p className={styles.error}>{error}</p> : ""}

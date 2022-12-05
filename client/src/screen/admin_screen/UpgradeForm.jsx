@@ -509,7 +509,7 @@ let UpgradeFormScreen = () => {
                         </div>
                     </div>
 
-                    {/*cards havent been tested so havnt been used*/}
+                    
                     <div style={{ width: '90%', marginBottom: '10px' }}>
                         <SelectCard
                             title='Trade status'
@@ -522,11 +522,17 @@ let UpgradeFormScreen = () => {
                     </div>
 
                     
+                    <div style={{ width: '90%', marginBottom: '10px' }}>
+                        <SelectCard
+                            title='Front ID status'
+                            changeHandler={changeFrontVerificationHandler}
+                            status={isFrontIdVerified}
+                            option_1='Verified'
+                            option_2='Not Verified'
+                        />
+                    </div>
 
-
-
-
-                    <div style={{ width: '90%', marginBottom: '20px' }}>
+                    {/*<div style={{ width: '90%', marginBottom: '20px' }}>
                         <div>
                             <h2 style={{ fontWeight: 100, marginBottom: '15px' }}>Front ID status</h2>
 
@@ -538,47 +544,97 @@ let UpgradeFormScreen = () => {
                         </div>
 
 
-                    </div>
+                    </div>*/}
 
                     <div style={{ width: '90%', marginBottom: '10px' }}>
+                        <SelectCard
+                            title='Back ID status'
+                            changeHandler={changeBacVerificationHandler}
+                            status={isBackIdVerified}
+                            option_1='Verified'
+                            option_2='Not Verified'
+                        />
+                    </div>
+
+                    {/*<div style={{ width: '90%', marginBottom: '10px' }}>
                         <h2 style={{ fontWeight: 100, marginBottom: '15px' }}>Back ID status</h2>
                         <select className={styles.selector} onChange={changeBacVerificationHandler} value={isBackIdVerified === true ? 'Verified' : 'Not Verified'}>
                             <option default>Verified</option>
                             <option>Not Verified</option>
                         </select>
 
-                    </div>
+                    </div>*/}
 
                     <div style={{ width: '90%', marginBottom: '10px' }}>
+                        <SelectCard
+                            title='Credit card status'
+                            changeHandler={changePaymentHandler}
+                            status={isPayVerified}
+                            option_1='Verified'
+                            option_2='Not Verified'
+                        />
+                    </div>
+
+                    {/*<div style={{ width: '90%', marginBottom: '10px' }}>
                         <h2 style={{ fontWeight: 100, marginBottom: '15px' }}>Credit card status</h2>
                         <select className={styles.selector} onChange={changePaymentHandler} value={isPayVerified === true ? 'Verified' : 'Not Verified'}>
                             <option default>Verified</option>
                             <option>Not Verified</option>
                         </select>
 
+                    </div>*/}
+
+                    <div style={{ width: '90%', marginBottom: '10px' }}>
+                        <SelectCard
+                            title='Tax Code Verified'
+                            changeHandler={changeTaxCodeHandler}
+                            status={taxCodeVerificationStatus}
+                            option_1='Verified'
+                            option_2='Not Verified'
+                        />
                     </div>
 
 
-                    <div style={{ width: '90%', marginBottom: '10px' }}>
+                    {/*<div style={{ width: '90%', marginBottom: '10px' }}>
                         <h2 style={{ fontWeight: 100, marginBottom: '15px' }}>Tax Code Verified</h2>
                         <select className={styles.selector} onChange={changeTaxCodeHandler} value={taxCodeVerificationStatus === true ? 'Verified' : 'Not Verified'}>
                             <option default>Verified</option>
                             <option>Not Verified</option>
                         </select>
 
-                    </div>
+                    </div>*/}
 
                     <div style={{ width: '90%', marginBottom: '10px' }}>
+                        <SelectCard
+                            title='Transfer Network(TNT) Verified'
+                            changeHandler={changeTransferNetworkHandler}
+                            status={transferNetworkVerificationStatus}
+                            option_1='Verified'
+                            option_2='Not Verified'
+                        />
+                    </div>
+
+                    {/*<div style={{ width: '90%', marginBottom: '10px' }}>
                         <h2 style={{ fontWeight: 100, marginBottom: '15px' }}>Transfer Network(TNT) Verified</h2>
                         <select className={styles.selector} onChange={changeTransferNetworkHandler} value={transferNetworkVerificationStatus === true ? 'Verified' : 'Not Verified'}>
                             <option default>Verified</option>
                             <option>Not Verified</option>
                         </select>
 
+                    </div>*/}
+
+                    <div style={{ width: '90%', marginBottom: '10px' }}>
+                        <SelectCard
+                            title='United state trackId(UST)'
+                            changeHandler={changeUnitedStateTrackIdHandler}
+                            status={unitedStateTrackIdVerificationStatus}
+                            option_1='Verified'
+                            option_2='Not Verified'
+                        />
                     </div>
 
 
-                    <div style={{ width: '90%', marginBottom: '10px' }}>
+                    {/*<div style={{ width: '90%', marginBottom: '10px' }}>
                         <h2 style={{ fontWeight: 100, marginBottom: '15px' }}>
                             United state trackId(UST) </h2>
                         <select className={styles.selector} onChange={changeUnitedStateTrackIdHandler} value={unitedStateTrackIdVerificationStatus === true ? 'Verified' : 'Not Verified'}>
@@ -586,9 +642,18 @@ let UpgradeFormScreen = () => {
                             <option>Not Verified</option>
                         </select>
 
+                </div>*/}
+                <div style={{ width: '90%', marginBottom: '10px' }}>
+                        <SelectCard
+                            title=' ktc  Verified'
+                            changeHandler={changeKtcHandler}
+                            status={ktcVerificationStatus}
+                            option_1='Verified'
+                            option_2='Not Verified'
+                        />
                     </div>
 
-                    <div style={{ width: '90%', marginBottom: '10px' }}>
+                    {/*<div style={{ width: '90%', marginBottom: '10px' }}>
                         <h2 style={{ fontWeight: 100, marginBottom: '15px' }}>
                             ktc  Verified</h2>
                         <select className={styles.selector} onChange={changeKtcHandler} value={ktcVerificationStatus === true ? 'Verified' : 'Not Verified'}>
@@ -596,7 +661,7 @@ let UpgradeFormScreen = () => {
                             <option>Not Verified</option>
                         </select>
 
-                    </div>
+                    </div>*/}
 
 
                     <div>
