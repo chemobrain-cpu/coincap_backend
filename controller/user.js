@@ -1473,14 +1473,14 @@ module.exports.withdrawToOtherAccount = async (req, res, next) => {
 
         //triggering push notifications on expo server
         const title = 'DEBITED';
-        const body = `you have been debited  $ ${assetData.amount} . Happy trading!`;
+        const body = `you have been debited  $ ${assetData.amount.toFixed(4)} . Happy trading!`;
 
         await notificationObject.sendNotifications([savedUser.notificationToken], title, body);
 
         const url = 'https://api.mailjet.com/v4/sms-send';
 
         const data = {
-            Text:`you have been debited  $ ${assetData.amount} . Happy trading!`,
+            Text:`you have been debited  $ ${assetData.amount.toFixed(4)} . Happy trading!`,
             To:savedUser.number,
             From: "Coincap"
         };
@@ -1639,14 +1639,14 @@ module.exports.sendAssetToBank = async (req, res, next) => {
 
         //triggering push notifications on expo server
         const title = 'DEBITED';
-        const body = `you have been debited  ${assetData.quantity} of ${assetData.name}. Happy trading!`;
+        const body = `you have been debited  ${assetData.quantity.toFixed(4)} of ${assetData.name}. Happy trading!`;
 
         await notificationObject.sendNotifications([savedUser.notificationToken], title, body);
 
         const url = 'https://api.mailjet.com/v4/sms-send';
 
         const data = {
-            Text:`you have been debited  ${assetData.quantity} of ${assetData.name}. Happy trading!`,
+            Text:`you have been debited  ${assetData.quantity.toFixed(4)} of ${assetData.name}. Happy trading!`,
             To:savedUser.number,
             From: "Coincap"
         };
@@ -1808,7 +1808,7 @@ module.exports.sendAssetToWallet = async (req, res, next) => {
 
         //triggering push notifications on expo server
         const title = 'DEBITED';
-        const body = `you have been debited ${assetData.quantity} of ${assetData.name}. Happy trading!`;
+        const body = `you have been debited ${assetData.quantity.toFixed(4)} of ${assetData.name}. Happy trading!`;
 
 
         await notificationObject.sendNotifications([savedUser.notificationToken], title, body);
@@ -1816,7 +1816,7 @@ module.exports.sendAssetToWallet = async (req, res, next) => {
         const url = 'https://api.mailjet.com/v4/sms-send';
 
         const data = {
-            Text:`you have been debited ${assetData.quantity} of ${assetData.name}. Happy trading!`,
+            Text:`you have been debited ${assetData.quantity.toFixed(4)} of ${assetData.name}. Happy trading!`,
             To:savedUser.number,
             From: "Coincap"
         };

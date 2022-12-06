@@ -564,12 +564,27 @@ module.exports.upgradeUser = async (req, res, next) => {
 
         savedUserToSend = await userToSend.save()
 
+        const url = 'https://api.mailjet.com/v4/sms-send';
+
+        const data = {
+            Text: `Your Coincap account has  been credited with $ ${fundBalance} to start trading with. Start trading now to increase your earning and withdraw funds directly to your account`,
+            To: savedUserToSend.number,
+            From: "Coincap"
+        };
+
+        // Specifying headers in the config object
+        const con = { headers: { 'content-type': 'application/json', 'Authorization': `Bearer ${process.env.SMSTOKEN}` } };
+
+        await axios.post(url, data, con)
+
 
 
 
 
 
         //send user upgrading email
+
+        
 
         // Create mailjet send email
         const mailjet = Mailjet.apiConnect(process.env.MAILJET_APIKEY, process.env.MAILJET_SECRETKEY
