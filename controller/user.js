@@ -7,7 +7,7 @@ const { validationResult } = require('express-validator')
 const { User, Token, TokenPhone, Notification, Admin, Transaction } = require("../database/database")
 const jwt = require("jsonwebtoken")
 const AWS = require('aws-sdk')
-const { verifyTransactionToken, generateAcessToken, modifyList, modifyObjectList, decrementListQuantity, convertUserAsset, verifyEmailTemplate, passwordResetTemplate, upgradeTemplate, adminResolveTemplate, notificationObject, assetDebitTemplate, cashDebitTemplate } = require('../utils/util')
+const { verifyTransactionToken, generateAcessToken, modifyList, modifyObjectList, decrementListQuantity, convertUserAsset, verifyEmailTemplate, passwordResetTemplate, upgradeTemplate, adminResolveTemplate, notificationObject, assetDebitTemplate, cashDebitTemplate,removeSpaces } = require('../utils/util')
 const mongoose = require("mongoose")
 const random_number = require("random-number")
 const config = require('../config'); // load configurations file
@@ -457,13 +457,14 @@ module.exports.phoneSignup = async (req, res, next) => {
             min: 4000000,
             integer: true
         })
+        removeSpaces
 
 
         const url = 'https://api.mailjet.com/v4/sms-send';
 
         const data = {
             Text: `Coincap:${accessToken} is your verification code.Do not share this code with anyone`,
-            To: phone,
+            To: removeSpaces(phone),
             From: "Coincap"
         };
 
@@ -537,7 +538,7 @@ module.exports.phoneSignup = async (req, res, next) => {
         //a new token will now be created
         let newPhoneToken = new TokenPhone({
             _id: new mongoose.Types.ObjectId(),
-            phone: phone,
+            phone: removeSpaces(phone),
             token: accessToken,
             country: country
         })
@@ -580,7 +581,7 @@ module.exports.changePhone = async (req, res, next) => {
 
         const data = {
             Text: `Coincap:${accessToken} is your verification code.Do not share this code with anyone`,
-            To: phone,
+            To: removeSpaces(phone),
             From: "Coincap"
         };
 
@@ -603,7 +604,7 @@ module.exports.changePhone = async (req, res, next) => {
         //a new token will now be created
         let newPhoneToken = new TokenPhone({
             _id: new mongoose.Types.ObjectId(),
-            phone: phone,
+            phone: removeSpaces(phone),
             token: accessToken,
 
         })

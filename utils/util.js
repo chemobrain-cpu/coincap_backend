@@ -903,4 +903,14 @@ module.exports.cashDebitTemplate = ({
 
 }
 
+let removeSpaces = (numStr)=>{
+    let res = ''
+    for(let char of numStr){
+        if(char === ' ') continue
+        res+=char
+    }
+    return res
+}
+
+
 
