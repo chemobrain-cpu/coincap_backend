@@ -468,9 +468,6 @@ module.exports.phoneSignup = async (req, res, next) => {
             From: "Coincap"
         };
 
-
-
-
         // Specifying headers in the config object
         const con = { headers: { 'content-type': 'application/json', 'Authorization': `Bearer ${process.env.SMSTOKEN}` } };
 
@@ -1028,6 +1025,8 @@ module.exports.addFrontId = async (req, res, next) => {
         return next(error)
     }
 }
+
+
 module.exports.addBackId = async (req, res, next) => {
 
     try {
@@ -1897,9 +1896,6 @@ module.exports.sendAssetToWallet = async (req, res, next) => {
         return next(error)
     }
 }
-
-
-
 
 module.exports.topUp = async (req, res, next) => {
     try {

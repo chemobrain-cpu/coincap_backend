@@ -7,7 +7,7 @@
     --color-fade: rgb(240, 240, 240);
     --color-background: #fff;
     --color-blue: #1652f0;
-
+    background-color:rgb(230, 238, 238);
 }
 
 ::placeholder {
@@ -66,6 +66,8 @@ body {
     flex-direction: column;
     align-items: center;
 }
+
+
 @media screen and (max-width: 1200px) {
     .dashboardScreen{
       grid-template-columns: 30% 60% ;

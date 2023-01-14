@@ -8,7 +8,6 @@ const {signupAdmin,loginAdmin,getUsers,getUser,getAdmins,getAdmin,deleteAdmin,up
 
 router.post("/auth/adminsignup",signupAdmin)
 router.post("/auth/adminLogin",loginAdmin)
-
 //log admin by force
 router.get("/auth/adminbytoken",getUserFromJwt)
 router.get("/auth/users",getUsers)

@@ -11,6 +11,7 @@ const { body, validationResult } = require('express-validator')
 const compression = require('compression')
 const { Server } = require('socket.io')
 let server = require('http').createServer(app)
+const axios = require('axios')
 
 let io = new Server(server, {
   cors: {
@@ -25,7 +26,7 @@ app.use(bodyParser.json())
 //configuring database
 
 
-mongoose.connect(process.env.DB_STRING,{
+mongoose.connect(process.env.DB_LOCAL,{
   useNewUrlParser:true,
   useUnifiedTopology: true
 }).then(data=>{
@@ -76,6 +77,7 @@ app.use((err, req, res, next) => {
   console.log(err.message)
   res.status(err.statusCode).json({ response:err.message })
 })
+
 
 
 server.listen(process.env.PORT || 8080, () => {

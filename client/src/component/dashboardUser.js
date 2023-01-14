@@ -1,5 +1,5 @@
-import React from 'react'
-import styles from './dashboardUser.module.css'
+import React from 'react';
+import styles from './dashboardUser.module.css';
 
 let DashboardUser = ({ username, email, imageUrl, navigateHandler, id }) => {
 
@@ -18,6 +18,7 @@ let DashboardUser = ({ username, email, imageUrl, navigateHandler, id }) => {
   };
 
 
+
   return <div className={styles.dashboard_main_user} onClick={() => navigateHandler(id)}>
     <div className={styles.dashboard_main_user_imgCon}>
       {imageUrl ? <img src={imageUrl} /> : <i className='material-icons' style={{ color: 'grey', fontSize: 50 }}>person</i>}
@@ -29,5 +30,7 @@ let DashboardUser = ({ username, email, imageUrl, navigateHandler, id }) => {
 
   </div>
 }
+
+
 
 export default DashboardUser

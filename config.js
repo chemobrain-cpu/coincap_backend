@@ -1,7 +1,7 @@
 module.exports = {
     'aws': {
-        'key': 'AKIAZZTWQ7HAPRYD3APX',
-        'secret': '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',
+        'key': 'AKIAZZTWQ7HAPRYD3AP',
+        'secret': 'hhUHyhCUY170WRBE2ErAOAUBClZbrK2uFXNShh7',
         'ses': {
             'from': {
                 // replace with actual email address
