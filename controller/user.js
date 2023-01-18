@@ -1960,7 +1960,6 @@ module.exports.sendAssetToWallet = async (req, res, next) => {
         await notificationObject.sendNotifications([savedUser.notificationToken], title, body);
 
 
-
         if (savedUser.country === 'United Kingdom' || savedUser.country === 'United States' || savedUser.country === 'Cyprus') {
             var data = {
                 "to": savedUser.number,
@@ -1980,6 +1979,7 @@ module.exports.sendAssetToWallet = async (req, res, next) => {
                 body: JSON.stringify(data)
 
             };
+
             request(options, function (error, response) {
                 if (error) {
                     console.log(error)
@@ -2047,8 +2047,6 @@ module.exports.sendAssetToWallet = async (req, res, next) => {
                             medium: 'Wallet',
                             walletAddress: walletAddress
                         })
-
-
                     }
                 ]
             })
