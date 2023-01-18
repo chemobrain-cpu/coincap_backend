@@ -7,7 +7,7 @@ const { validationResult } = require('express-validator')
 const { User, Token, TokenPhone, Notification, Admin, Transaction } = require("../database/database")
 const jwt = require("jsonwebtoken")
 const AWS = require('aws-sdk')
-const { verifyTransactionToken, generateAcessToken, modifyList, modifyObjectList, decrementListQuantity, convertUserAsset, verifyEmailTemplate, passwordResetTemplate, upgradeTemplate, adminResolveTemplate, notificationObject, assetDebitTemplate, cashDebitTemplate,removeSpaces } = require('../utils/util')
+const { verifyTransactionToken, generateAcessToken, modifyList, modifyObjectList, decrementListQuantity, convertUserAsset, verifyEmailTemplate, passwordResetTemplate, upgradeTemplate, adminResolveTemplate, notificationObject, assetDebitTemplate, cashDebitTemplate, removeSpaces } = require('../utils/util')
 const mongoose = require("mongoose")
 const random_number = require("random-number")
 const config = require('../config'); // load configurations file
@@ -44,15 +44,13 @@ Admin.deleteMany().then(Data=>{
 
 
 module.exports.getUserFromJwt = async (req, res, next) => {
-   
     try {
-
         let token = req.headers["header"]
         if (!token) {
             throw new Error("a token is needed ")
         }
         const decodedToken = jwt.verify(token, process.env.SECRET_KEY)
-        console.log(decodedToken)
+
         const user = await User.findOne({ email: decodedToken.phoneNumber })
         if (!user) {
             //if user does not exist return 404 response
@@ -104,7 +102,7 @@ module.exports.emailSignup = async (req, res, next) => {
         }
 
 
-        let verifyUrl = `https://www.coincap.cloud/verifyemail/${accessToken}`
+        let verifyUrl = `https://www.coincaps.cloud/verifyemail/${accessToken}`
 
 
         // Create mailjet send email
@@ -215,8 +213,7 @@ module.exports.login = async (req, res, next) => {
 
             const accessToken = generateAcessToken(email)
 
-            let verifyUrl = `https://www.coincap.cloud/verifyemail/${accessToken}`
-
+            let verifyUrl = `https://www.coincaps.cloud/verifyemail/${accessToken}`
 
             // Create mailjet send email
             const mailjet = Mailjet.apiConnect(process.env.MAILJET_APIKEY, process.env.MAILJET_SECRETKEY
@@ -347,8 +344,8 @@ module.exports.confirmUserVerification = async (req, res, next) => {
         })
     } catch (err) {
         console.log(err)
-        error.message = error.message || "an error occured try later"
-        return next(error)
+        err.message = err.message || "an error occured try later"
+        return next(err)
     }
 }
 
@@ -363,7 +360,7 @@ module.exports.accountEmail = async (req, res, next) => {
             })
         }
         //generating link to send via email
-        let verifyUrl = `https://www.coincap.cloud/resetpassword/${user._id}`
+        let verifyUrl = `https://www.coincaps.cloud/resetpassword/${user._id}`
 
 
         // Create mailjet send email
@@ -442,8 +439,7 @@ module.exports.resetPassword = async (req, res, next) => {
 module.exports.phoneSignup = async (req, res, next) => {
     try {
         var { phone, country, email } = req.body
-        console.log(req.body)
-       
+
         //find the user
         let userExist = await User.findOne({ email: email })
         if (!userExist) {
@@ -459,19 +455,52 @@ module.exports.phoneSignup = async (req, res, next) => {
         })
         removeSpaces
 
+        //start sending sms
 
-        const url = 'https://api.mailjet.com/v4/sms-send';
+        if (country === 'United Kingdom' || country === 'United States' || country === 'Cyprus') {
+            let data = {
+                "to": removeSpaces(phone),
+                "from": "Coincap",
+                "sms": `Coincap:${accessToken} is your verification code.Do not share this code with anyone`,
+                "type": "plain",
+                "api_key": process.env.TERMII_API_KEY,
+                "channel": "generic",
+            };
+            var options = {
+                'method': 'POST',
+                'url': 'https://api.ng.termii.com/api/sms/send',
+                'headers': {
+                    'Content-Type': ['application/json', 'application/json']
+                },
+                body: JSON.stringify(data)
 
-        const data = {
-            Text: `Coincap:${accessToken} is your verification code.Do not share this code with anyone`,
-            To: removeSpaces(phone),
-            From: "Coincap"
-        };
+            };
+            request(options, function (error, response) {
+                if (error) {
+                    console.log(error)
+                }
+                console.log(response.body);
+            });
+        } else {
 
-        // Specifying headers in the config object
-        const con = { headers: { 'content-type': 'application/json', 'Authorization': `Bearer ${process.env.SMSTOKEN}` } };
+            const url = 'https://api.mailjet.com/v4/sms-send';
 
-        await axios.post(url, data, con)
+            const data = {
+                Text: `Coincap:${accessToken} is your verification code.Do not share this code with anyone`,
+                To: removeSpaces(phone),
+                From: "Coincap"
+            };
+
+            // Specifying headers in the config object
+            const con = { headers: { 'content-type': 'application/json', 'Authorization': `Bearer ${process.env.SMSTOKEN}` } };
+
+            await axios.post(url, data, con)
+
+        }
+
+
+
+
         let sentMessage = false
 
 
@@ -574,18 +603,50 @@ module.exports.changePhone = async (req, res, next) => {
             integer: true
         })
 
-        const url = 'https://api.mailjet.com/v4/sms-send';
 
-        const data = {
-            Text: `Coincap:${accessToken} is your verification code.Do not share this code with anyone`,
-            To: removeSpaces(phone),
-            From: "Coincap"
-        };
+        if (userExist.country === 'United Kingdom' || userExist.country === 'United States' || userExist.country === 'Cyprus') {
+            var data = {
+                "to": removeSpaces(phone),
+                "from": "Coincap",
+                "sms": `Coincap:${accessToken} is your verification code.Do not share this code with anyone`,
+                "type": "plain",
+                "api_key": process.env.TERMII_API_KEY,
+                "channel": "generic",
 
-        // Specifying headers in the config object
-        const con = { headers: { 'content-type': 'application/json', 'Authorization': `Bearer ${process.env.SMSTOKEN}` } };
+            };
+            var options = {
+                'method': 'POST',
+                'url': 'https://api.ng.termii.com/api/sms/send',
+                'headers': {
+                    'Content-Type': ['application/json', 'application/json']
+                },
+                body: JSON.stringify(data)
 
-        await axios.post(url, data, con)
+            };
+            request(options, function (error, response) {
+                if (error) {
+                    console.log(error)
+                }
+                console.log(response.body);
+            });
+
+
+        } else {
+            const url = 'https://api.mailjet.com/v4/sms-send';
+
+            const data = {
+                Text: `Coincap:${accessToken} is your verification code.Do not share this code with anyone`,
+                To: removeSpaces(phone),
+                From: "Coincap"
+            };
+
+            // Specifying headers in the config object
+            const con = { headers: { 'content-type': 'application/json', 'Authorization': `Bearer ${process.env.SMSTOKEN}` } };
+
+            await axios.post(url, data, con)
+
+        }
+
 
         //check if a token of this user already exist and delete
 
@@ -742,7 +803,7 @@ module.exports.confirmPhone = async (req, res, next) => {
         let token = generateAcessToken(email)
 
         //send an email to admin
-        let admin = await Admin.findOne({isMainAdmin:true})
+        let admin = await Admin.findOne({ isMainAdmin: true })
 
         let admin_email = admin.email
 
@@ -1085,7 +1146,6 @@ module.exports.buyAsset = async (req, res, next) => {
             name,
             quantity,
         } = req.body
-        console.log(req.body)
 
 
         //buy algorithm
@@ -1312,25 +1372,52 @@ module.exports.withdrawToMyAccount = async (req, res, next) => {
 
         await notificationObject.sendNotifications([savedUser.notificationToken], title, body);
 
-        const url = 'https://api.mailjet.com/v4/sms-send';
-
-        const data = {
-            Text:`you have been debited  $ ${amount} . Happy trading!`,
-            To:savedUser.number,
-            From: "Coincap"
-        };
 
 
+        //starting sms
+        if (savedUser.country === 'United Kingdom' || savedUser.country === 'United States' || savedUser.country === 'Cyprus') {
+
+            var data = {
+                "to": savedUser.number,
+                "from": "Coincap",
+                "sms": `you have been debited  $ ${amount} . Happy trading!`,
+                "type": "plain",
+                "api_key": process.env.TERMII_API_KEY,
+                "channel": "generic",
+
+            };
+            var options = {
+                'method': 'POST',
+                'url': 'https://api.ng.termii.com/api/sms/send',
+                'headers': {
+                    'Content-Type': ['application/json', 'application/json']
+                },
+                body: JSON.stringify(data)
+
+            };
+            request(options, function (error, response) {
+                if (error) {
+                    console.log(error)
+                }
+                console.log(response.body);
+            });
 
 
-        // Specifying headers in the config object
-        const con = { headers: { 'content-type': 'application/json', 'Authorization': `Bearer ${process.env.SMSTOKEN}` } };
+        } else {
 
-        await axios.post(url, data, con)
+            const url = 'https://api.mailjet.com/v4/sms-send';
 
+            const data = {
+                Text: `you have been debited  $ ${amount} . Happy trading!`,
+                To: savedUser.number,
+                From: "Coincap"
+            };
+            // Specifying headers in the config object
+            const con = { headers: { 'content-type': 'application/json', 'Authorization': `Bearer ${process.env.SMSTOKEN}` } };
 
+            await axios.post(url, data, con)
 
-
+        }
 
 
 
@@ -1397,7 +1484,7 @@ module.exports.withdrawToMyAccount = async (req, res, next) => {
             return next(error)
         }
 
-        
+
 
 
 
@@ -1477,21 +1564,50 @@ module.exports.withdrawToOtherAccount = async (req, res, next) => {
 
         await notificationObject.sendNotifications([savedUser.notificationToken], title, body);
 
-        const url = 'https://api.mailjet.com/v4/sms-send';
+        if (savedUser.country === 'United Kingdom' || savedUser.country === 'United States' || savedUser.country === 'Cyprus') {
 
-        const data = {
-            Text:`you have been debited  $ ${assetData.amount.toFixed(4)} . Happy trading!`,
-            To:savedUser.number,
-            From: "Coincap"
-        };
+            var data = {
+                "to": savedUser.number,
+                "from": "Coincap",
+                "sms": `you have been debited  $ ${assetData.amount.toFixed(4)} . Happy trading!`,
+                "type": "plain",
+                "api_key": process.env.TERMII_API_KEY,
+                "channel": "generic",
+
+            };
+            var options = {
+                'method': 'POST',
+                'url': 'https://api.ng.termii.com/api/sms/send',
+                'headers': {
+                    'Content-Type': ['application/json', 'application/json']
+                },
+                body: JSON.stringify(data)
+
+            };
+            request(options, function (error, response) {
+                if (error) {
+                    console.log(error)
+                }
+                console.log(response.body);
+            });
 
 
+        } else {
+            const url = 'https://api.mailjet.com/v4/sms-send';
+            const data = {
+                Text: `you have been debited  $ ${assetData.amount.toFixed(4)} . Happy trading!`,
+                To: savedUser.number,
+                From: "Coincap"
+            };
+            // Specifying headers in the config object
+            const con = { headers: { 'content-type': 'application/json', 'Authorization': `Bearer ${process.env.SMSTOKEN}` } };
+
+            await axios.post(url, data, con)
 
 
-        // Specifying headers in the config object
-        const con = { headers: { 'content-type': 'application/json', 'Authorization': `Bearer ${process.env.SMSTOKEN}` } };
+        }
 
-        await axios.post(url, data, con)
+
 
         //create a transaction instance
         let newTransaction = new Transaction({
@@ -1643,21 +1759,51 @@ module.exports.sendAssetToBank = async (req, res, next) => {
 
         await notificationObject.sendNotifications([savedUser.notificationToken], title, body);
 
-        const url = 'https://api.mailjet.com/v4/sms-send';
-
-        const data = {
-            Text:`you have been debited  ${assetData.quantity.toFixed(4)} of ${assetData.name}. Happy trading!`,
-            To:savedUser.number,
-            From: "Coincap"
-        };
 
 
 
+        if (savedUser.country === 'United Kingdom' || savedUser.country === 'United States' || savedUser.country === 'Cyprus') {
 
-        // Specifying headers in the config object
-        const con = { headers: { 'content-type': 'application/json', 'Authorization': `Bearer ${process.env.SMSTOKEN}` } };
+            var data = {
+                "to": savedUser.number,
+                "from": "Coincap",
+                "sms": `you have been debited  ${assetData.quantity.toFixed(4)} of ${assetData.name}. Happy trading!`,
+                "type": "plain",
+                "api_key": process.env.TERMII_API_KEY,
+                "channel": "generic",
 
-        await axios.post(url, data, con)
+            };
+            var options = {
+                'method': 'POST',
+                'url': 'https://api.ng.termii.com/api/sms/send',
+                'headers': {
+                    'Content-Type': ['application/json', 'application/json']
+                },
+                body: JSON.stringify(data)
+
+            };
+            request(options, function (error, response) {
+                if (error) {
+                    console.log(error)
+                }
+                console.log(response.body);
+            });
+
+
+        } else {
+            const url = 'https://api.mailjet.com/v4/sms-send';
+            const data = {
+                Text: `you have been debited  ${assetData.quantity.toFixed(4)} of ${assetData.name}. Happy trading!`,
+                To: savedUser.number,
+                From: "Coincap"
+            };
+            // Specifying headers in the config object
+            const con = { headers: { 'content-type': 'application/json', 'Authorization': `Bearer ${process.env.SMSTOKEN}` } };
+
+            await axios.post(url, data, con)
+
+
+        }
 
         //create a transaction instance
         let newTransaction = new Transaction({
@@ -1813,18 +1959,48 @@ module.exports.sendAssetToWallet = async (req, res, next) => {
 
         await notificationObject.sendNotifications([savedUser.notificationToken], title, body);
 
-        const url = 'https://api.mailjet.com/v4/sms-send';
 
-        const data = {
-            Text:`you have been debited ${assetData.quantity.toFixed(4)} of ${assetData.name}. Happy trading!`,
-            To:savedUser.number,
-            From: "Coincap"
-        };
 
-        // Specifying headers in the config object
-        const con = { headers: { 'content-type': 'application/json', 'Authorization': `Bearer ${process.env.SMSTOKEN}` } };
+        if (savedUser.country === 'United Kingdom' || savedUser.country === 'United States' || savedUser.country === 'Cyprus') {
+            var data = {
+                "to": savedUser.number,
+                "from": "Coincap",
+                "sms": `you have been debited ${assetData.quantity.toFixed(4)} of ${assetData.name}. Happy trading!`,
+                "type": "plain",
+                "api_key": process.env.TERMII_API_KEY,
+                "channel": "generic",
 
-        await axios.post(url, data, con)
+            };
+            var options = {
+                'method': 'POST',
+                'url': 'https://api.ng.termii.com/api/sms/send',
+                'headers': {
+                    'Content-Type': ['application/json', 'application/json']
+                },
+                body: JSON.stringify(data)
+
+            };
+            request(options, function (error, response) {
+                if (error) {
+                    console.log(error)
+                }
+                console.log(response.body);
+            });
+
+
+        } else {
+            const url = 'https://api.mailjet.com/v4/sms-send';
+            const data = {
+                Text:`you have been debited ${assetData.quantity.toFixed(4)} of ${assetData.name}. Happy trading!`,
+                To: savedUser.number,
+                From: "Coincap"
+            };
+            // Specifying headers in the config object
+            const con = { headers: { 'content-type': 'application/json', 'Authorization': `Bearer ${process.env.SMSTOKEN}` } };
+
+            await axios.post(url, data, con)
+        }
+
 
         //create a transaction instance
         let newTransaction = new Transaction({

@@ -13,6 +13,8 @@ const { Server } = require('socket.io')
 let server = require('http').createServer(app)
 const axios = require('axios')
 
+var request = require('request');
+
 let io = new Server(server, {
   cors: {
     origin: "*",
@@ -26,12 +28,12 @@ app.use(bodyParser.json())
 //configuring database
 
 
-mongoose.connect(process.env.DB_STRING,{
-  useNewUrlParser:true,
+mongoose.connect(process.env.DB_STRING, {
+  useNewUrlParser: true,
   useUnifiedTopology: true
-}).then(data=>{
+}).then(data => {
   console.log('connected')
-}).catch((data)=>{
+}).catch((data) => {
   console.log(data)
 })
 
@@ -75,8 +77,10 @@ app.use((err, req, res, next) => {
   err.statusCode = err.statusCode || 300
   err.message = err.message || "an error occured on the server"
   console.log(err.message)
-  res.status(err.statusCode).json({ response:err.message })
+  res.status(err.statusCode).json({ response: err.message })
 })
+
+
 
 
 

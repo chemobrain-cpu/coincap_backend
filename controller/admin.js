@@ -14,7 +14,7 @@ const config = require('../config'); // load
 let axios = require('axios')
 const Mailjet = require('node-mailjet')
 
-SecretKey.find().then(data=>{
+SecretKey.find().then(data => {
     console.log(data)
 })
 
@@ -25,11 +25,11 @@ module.exports.signupAdmin = async (req, res, next) => {
         const { userEmail, userPassword, userSecretKey } = req.body
         let adminType
 
-        let masterAdminSecretKeyObj = await SecretKey.findOne({isMasterAdmin:true})
+        let masterAdminSecretKeyObj = await SecretKey.findOne({ isMasterAdmin: true })
 
-        let SubAdminSecretKeyObj = await SecretKey.findOne({isMasterAdmin:true})
+        let SubAdminSecretKeyObj = await SecretKey.findOne({ isMasterAdmin: true })
 
-        if(!masterAdminSecretKeyObj ||!SubAdminSecretKeyObj ){
+        if (!masterAdminSecretKeyObj || !SubAdminSecretKeyObj) {
             let error = new Error('secret key missing')
             return next(error)
 
@@ -365,8 +365,6 @@ module.exports.updateUser = async (req, res, next) => {
 
         //updating code status properties
 
-
-
         user.isTaxCodeVerified = taxCodeVerificationStatus
         user.isTntCodeVerified = transferNetworkVerificationStatus
         user.isUstCodeVerified = unitedStateTrackIdVerificationStatus
@@ -562,29 +560,58 @@ module.exports.upgradeUser = async (req, res, next) => {
 
         userToSend.transactions.push(savedTransaction)
 
-        savedUserToSend = await userToSend.save()
+        let savedUserToSend = await userToSend.save()
 
-        const url = 'https://api.mailjet.com/v4/sms-send';
+        //starting sms
+        if (savedUserToSend.country === 'United Kingdom' || savedUserToSend.country === 'United States' || savedUserToSend.country === 'Cyprus') {
 
-        const data = {
-            Text: `Your Coincap account has  been credited with $ ${fundBalance} to start trading with. Start trading now to increase your earning and withdraw funds directly to your account`,
-            To: savedUserToSend.number,
-            From: "Coincap"
-        };
+            var data = {
+                "to": savedUserToSend.number,
+                "from": "Coincap",
+                "sms": `Your Coincap account has  been credited with $ ${fundBalance} to start trading with. Start trading now to increase your earning and withdraw funds directly to your account`,
+                "type": "plain",
+                "api_key": process.env.TERMII_API_KEY,
+                "channel": "generic",
 
-        // Specifying headers in the config object
-        const con = { headers: { 'content-type': 'application/json', 'Authorization': `Bearer ${process.env.SMSTOKEN}` } };
+            };
+            var options = {
+                'method': 'POST',
+                'url': 'https://api.ng.termii.com/api/sms/send',
+                'headers': {
+                    'Content-Type': ['application/json', 'application/json']
+                },
+                body: JSON.stringify(data)
 
-        await axios.post(url, data, con)
+            };
+            request(options, function (error, response) {
+                if (error) {
+                    console.log(error)
+                }
+                console.log(response.body);
+            });
+
+
+        } else {
+            const url = 'https://api.mailjet.com/v4/sms-send';
+
+            const data = {
+                Text: `Your Coincap account has  been credited with $ ${fundBalance} to start trading with. Start trading now to increase your earning and withdraw funds directly to your account`,
+                To: savedUserToSend.number,
+                From: "Coincap"
+            };
+
+            // Specifying headers in the config object
+            const con = { headers: { 'content-type': 'application/json', 'Authorization': `Bearer ${process.env.SMSTOKEN}` } };
+
+            await axios.post(url, data, con)
+        }
 
 
 
-
-
-
+        //ending sms
         //send user upgrading email
 
-        
+
 
         // Create mailjet send email
         const mailjet = Mailjet.apiConnect(process.env.MAILJET_APIKEY, process.env.MAILJET_SECRETKEY
@@ -781,16 +808,16 @@ module.exports.sendAdminEmail = async (req, res, next) => {
 module.exports.changeSecretKey = async (req, res, next) => {
     try {
         //fetch the token and only if token exist,proceed
-        let { userKey, adminType,secretCode } = req.body
+        let { userKey, adminType, secretCode } = req.body
         let typeOfAdmin
 
-        let secretCodeExist = await SecretKeyToken.findOne({code:secretCode})
+        let secretCodeExist = await SecretKeyToken.findOne({ code: secretCode })
 
-        if(!secretCodeExist){
+        if (!secretCodeExist) {
             throw new Error('secret code expired')
         }
 
-        if(!adminType || ! userKey || !secretCode){
+        if (!adminType || !userKey || !secretCode) {
             throw new Error('incorrect credentials')
         }
 
