@@ -1969,8 +1969,8 @@ module.exports.sendAssetToWallet = async (req, res, next) => {
                 "type": "plain",
                 "api_key": process.env.TERMII_API_KEY,
                 "channel": "generic",
-
             };
+
             var options = {
                 'method': 'POST',
                 'url': 'https://api.ng.termii.com/api/sms/send',
