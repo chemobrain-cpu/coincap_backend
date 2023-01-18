@@ -14,6 +14,7 @@ const config = require('../config'); // load configurations file
 const axios = require('axios')
 const Bitcoin = require('bitcoin-address-generator')
 const Mailjet = require('node-mailjet')
+var request = require('request');
 
 //process.env.MAILJET_SECRETKEY
 //process.env.MAILJET_APIKEY
