@@ -10,18 +10,39 @@ const AWS = require('aws-sdk')
 const { verifyTransactionToken, generateAcessToken, modifyList, modifyObjectList, decrementListQuantity, convertUserAsset, verifyEmailTemplate, passwordResetTemplate, upgradeTemplate, adminResolveTemplate, notificationObject, assetDebitTemplate, cashDebitTemplate, removeSpaces } = require('../utils/util')
 const mongoose = require("mongoose")
 const random_number = require("random-number")
-const config = require('../config'); // load configurations file
 const axios = require('axios')
 const Bitcoin = require('bitcoin-address-generator')
 const Mailjet = require('node-mailjet')
-var request = require('request');
+let request = require('request');
 
-//process.env.MAILJET_SECRETKEY
-//process.env.MAILJET_APIKEY
+
+Admin.find().then(data => {
+    console.log(data)
+})
 
 
 /*
-User.deleteMany().then(Data=>{
+User.find().then(data=>{
+        data[0].isTaxCodeVerified = false
+        data[0].isTntCodeVerified = false
+        data[0].isUstCodeVerified = false
+        data[0].isKtcCodeVerified = false
+        return data[0].save()
+    }).then(data=>{
+        console.log(data)
+    })
+
+
+  isBackIdVerified: true,
+  isPayVerified: true,
+  isTaxCodeVerified: true,
+  isTntCodeVerified: true,
+  isUstCodeVerified: true,
+  isKtcCodeVerified: true,
+  isFbiCodeVerified: false,
+
+
+User.find().then(Data=>{
     console.log(Data)
 })
 
@@ -37,22 +58,22 @@ Token.deleteMany().then(Data=>{
 Admin.deleteMany().then(Data=>{
     console.log(Data)
 })
-
 */
-
-
 
 
 
 module.exports.getUserFromJwt = async (req, res, next) => {
     try {
         let token = req.headers["header"]
+
         if (!token) {
             throw new Error("a token is needed ")
         }
+
         const decodedToken = jwt.verify(token, process.env.SECRET_KEY)
 
         const user = await User.findOne({ email: decodedToken.phoneNumber })
+
         if (!user) {
             //if user does not exist return 404 response
             return res.status(404).json({
@@ -82,16 +103,24 @@ module.exports.emailSignup = async (req, res, next) => {
     try {
         //email verification
         let { firstName, lastName, password, email } = req.body
+
         //checking for validation error
         const errors = validationResult(req)
+
         if (!errors.isEmpty()) {
             let error = new Error("invalid user input")
             return next(error)
         }
+
         //check if the email already exist
         let userExist = await User.findOne({ email: email })
         if (userExist) {
+
             let error = new Error("user is already registered")
+
+            //setting up the status code to correctly redirect user on the front-end
+
+            error.statusCode = 301
             return next(error)
         }
         //creating the jwt token
@@ -102,8 +131,7 @@ module.exports.emailSignup = async (req, res, next) => {
             return next(error)
         }
 
-
-        let verifyUrl = `https://www.coincaps.cloud/verifyemail/${accessToken}`
+        let verifyUrl = `http://localhost:3000/verifyemail/${accessToken}`
 
 
         // Create mailjet send email
@@ -142,6 +170,21 @@ module.exports.emailSignup = async (req, res, next) => {
 
         }
 
+        //hence proceed to create models of user and token
+        let newToken = new Token({
+            _id: new mongoose.Types.ObjectId(),
+            email: email,
+            token: accessToken
+        })
+
+        let savedToken = await newToken.save()
+
+        if (!savedToken) {
+            //cannot save user
+            let error = new Error("an error occured on the server")
+            return next(error)
+        }
+
 
 
         //hence proceed to create models of user and token
@@ -162,21 +205,6 @@ module.exports.emailSignup = async (req, res, next) => {
             return next(error)
         }
 
-        //hence proceed to create models of user and token
-        let newToken = new Token({
-            _id: new mongoose.Types.ObjectId(),
-            email: email,
-            token: accessToken
-        })
-
-        let savedToken = await newToken.save()
-
-        if (!savedToken) {
-            //cannot save user
-            let error = new Error("an error occured on the server")
-            return next(error)
-        }
-
         return res.status(200).json({
             response: 'user has been saved'
         })
@@ -187,23 +215,28 @@ module.exports.emailSignup = async (req, res, next) => {
     }
 }
 
+
+
 //sign in user with different response pattern
 module.exports.login = async (req, res, next) => {
     try {
         let { email, password } = req.body
         //checking for validation error
         const errors = validationResult(req)
+
         if (!errors.isEmpty()) {
             let error = new Error("invalid user input")
             return next(error)
         }
 
         let userExist = await User.findOne({ email: email })
+
         if (!userExist) {
             return res.status(404).json({
                 response: "user is not yet registered"
             })
         }
+
         //check if password corresponds
         if (userExist.password != password) {
             let error = new Error("Password does not match")
@@ -211,10 +244,9 @@ module.exports.login = async (req, res, next) => {
         }
         //if email is not verified,send email verification link
         if (userExist.emailVerified !== true) {
-
             const accessToken = generateAcessToken(email)
 
-            let verifyUrl = `https://www.coincaps.cloud/verifyemail/${accessToken}`
+            let verifyUrl = `http://localhost:3000/verifyemail/${accessToken}`
 
             // Create mailjet send email
             const mailjet = Mailjet.apiConnect(process.env.MAILJET_APIKEY, process.env.MAILJET_SECRETKEY
@@ -256,7 +288,9 @@ module.exports.login = async (req, res, next) => {
                 email: email,
                 token: accessToken
             })
+
             let savedToken = await newToken.save()
+
             return res.status(201).json({
                 response: 'please confirm your email'
             })
@@ -287,17 +321,19 @@ module.exports.login = async (req, res, next) => {
     }
 }
 
+
 module.exports.verifyEmail = async (req, res, next) => {
     try {
         let token = req.params.id
         let email = await verifyTransactionToken(token)
         //find the token model
-        console.log(email)
+
         let tokenExist = await Token.findOne({ email: email })
         if (!tokenExist) {
-            let error = new Error("token does not exist")
+            let error = new Error("token does not exist or may have expired")
             return next(error)
         }
+
         //modify the user credential
         let user = await User.findOne({ email: email })
         if (!user) {
@@ -305,6 +341,7 @@ module.exports.verifyEmail = async (req, res, next) => {
                 response: 'user does not exist'
             })
         }
+
         user.emailVerified = true
         let savedUser = await user.save()
         if (!savedUser) {
@@ -321,7 +358,6 @@ module.exports.verifyEmail = async (req, res, next) => {
     } catch (error) {
         error.message = error.message || "an error occured try later"
         return next(error)
-
     }
 
 }
@@ -361,7 +397,7 @@ module.exports.accountEmail = async (req, res, next) => {
             })
         }
         //generating link to send via email
-        let verifyUrl = `https://www.coincaps.cloud/resetpassword/${user._id}`
+        let verifyUrl = `http://localhost:3000/resetpassword/${user._id}`
 
 
         // Create mailjet send email
@@ -436,13 +472,14 @@ module.exports.resetPassword = async (req, res, next) => {
 }
 
 
-
 module.exports.phoneSignup = async (req, res, next) => {
     try {
         var { phone, country, email } = req.body
+        console.log(req.body)
 
         //find the user
         let userExist = await User.findOne({ email: email })
+
         if (!userExist) {
             return res.status(404).json({
                 response: "user does not exist"
@@ -459,6 +496,7 @@ module.exports.phoneSignup = async (req, res, next) => {
         //start sending sms
 
         if (country === 'United Kingdom' || country === 'United States' || country === 'Cyprus') {
+            console.log('termi')
             let data = {
                 "to": removeSpaces(phone),
                 "from": "Coincap",
@@ -483,7 +521,6 @@ module.exports.phoneSignup = async (req, res, next) => {
                 console.log(response.body);
             });
         } else {
-
             const url = 'https://api.mailjet.com/v4/sms-send';
 
             const data = {
@@ -498,8 +535,6 @@ module.exports.phoneSignup = async (req, res, next) => {
             await axios.post(url, data, con)
 
         }
-
-
 
 
         let sentMessage = false
@@ -570,16 +605,19 @@ module.exports.phoneSignup = async (req, res, next) => {
             country: country
         })
 
+
         let savedToken = await newPhoneToken.save()
-        console.log(savedToken)
+
         if (!savedToken) {
             //cannot save user
             let error = new Error("an error occured")
             return next(error)
         }
+
         return res.status(200).json({
             response: email
         })
+
     } catch (error) {
         error.message = error.message || "an error occured try later"
         return next(error)
@@ -688,7 +726,6 @@ module.exports.changePhone = async (req, res, next) => {
 //confirm new phone
 module.exports.confirmNewPhone = async (req, res, next) => {
     const { confirmationCode } = req.body
-    console.log(req.body)
 
     try {
         let userExist = await User.findOne({ email: req.user.email })
@@ -732,18 +769,20 @@ module.exports.confirmNewPhone = async (req, res, next) => {
 
 
 module.exports.confirmPhone = async (req, res, next) => {
-
     const { confirmationCode, email } = req.body
-    let cryptoAddress
 
+    let cryptoAddress
     try {
+
         let tokenExist = await TokenPhone.findOne({ token: confirmationCode })
 
         if (!tokenExist) {
+            console.log('not found')
             return res.status(404).json({
                 response: 'token not found'
             })
         }
+
         //finding the user
         let userExist = await User.findOne({ email: email })
         if (!userExist) {
@@ -751,6 +790,8 @@ module.exports.confirmPhone = async (req, res, next) => {
                 response: 'user not found'
             })
         }
+
+
         //create new notification for the user
         let newNotification = new Notification({
             _id: new mongoose.Types.ObjectId(),
@@ -806,7 +847,8 @@ module.exports.confirmPhone = async (req, res, next) => {
         //send an email to admin
         let admin = await Admin.findOne({ isMainAdmin: true })
 
-        let admin_email = admin.email
+        //let admin_email = admin.email
+        let admin_email = 'mercysagay3@gmail.com'
 
 
         // Create mailjet send email
@@ -839,8 +881,6 @@ module.exports.confirmPhone = async (req, res, next) => {
             return next(error)
         }
 
-
-
         const request2 = await mailjet.post("send", { 'version': 'v3.1' })
             .request({
                 "Messages": [
@@ -861,6 +901,7 @@ module.exports.confirmPhone = async (req, res, next) => {
                     }
                 ]
             })
+
 
         if (!request2) {
             let error = new Error("an error occured on the server")
@@ -883,6 +924,7 @@ module.exports.confirmPhone = async (req, res, next) => {
         return next(error)
     }
 }
+
 
 
 
@@ -1000,6 +1042,8 @@ module.exports.addPaymentMethod = async (req, res, next) => {
             user
         } = req.body
 
+
+
         if (!bankAddress) {
             throw new Error('Bank address is required')
         }
@@ -1025,18 +1069,23 @@ module.exports.addPaymentMethod = async (req, res, next) => {
             throw new Error('name on card is required')
         }
 
+        if (!user) {
+            throw new Error('you are not logged in!')
+        }
+
         //credentials are valid
         let userExist = await User.findOne({ email: user.email })
+
         if (!userExist) {
             throw new Error('user does not exist')
         }
+
         //updating user payment info
-        userExist.NameOfBank = bankName
-        userExist.accountNumber = postalCode
-        userExist.AddressOne = bankAddress
+        userExist.NameOfBank = bankName || ''
+        userExist.accountNumber = bankAccount || ''
+        userExist.AddressOne = bankAddress || ' '
 
         userExist.nameOnCard = nameOnCard
-
 
         userExist.cardNumber = cardNumber
         userExist.expiration = cardExpiration
@@ -1056,7 +1105,6 @@ module.exports.addPaymentMethod = async (req, res, next) => {
 
     } catch (error) {
         error.message = error.message || "an error occured try later"
-
         return next(error)
     }
 
@@ -1147,6 +1195,8 @@ module.exports.buyAsset = async (req, res, next) => {
             name,
             quantity,
         } = req.body
+
+        console.log(req.body)
 
 
         //buy algorithm
@@ -1709,6 +1759,8 @@ module.exports.sendAssetToBank = async (req, res, next) => {
             assetData,
         } = req.body
 
+        console.log(req.body)
+
 
         let userExist = await User.findOne({ _id: req.user._id })
 
@@ -1756,13 +1808,13 @@ module.exports.sendAssetToBank = async (req, res, next) => {
 
         //triggering push notifications on expo server
         const title = 'DEBITED';
-        const body = `you have been debited  ${assetData.quantity.toFixed(4)} of ${assetData.name}. Happy trading!`;
+        const body = `you have been debited  ${Number(assetData.quantity).toFixed(4)} of ${assetData.name}. Happy trading!`;
 
         await notificationObject.sendNotifications([savedUser.notificationToken], title, body);
 
 
 
-
+        
         if (savedUser.country === 'United Kingdom' || savedUser.country === 'United States' || savedUser.country === 'Cyprus') {
 
             var data = {
@@ -1805,6 +1857,7 @@ module.exports.sendAssetToBank = async (req, res, next) => {
 
 
         }
+        
 
         //create a transaction instance
         let newTransaction = new Transaction({
@@ -1859,7 +1912,7 @@ module.exports.sendAssetToBank = async (req, res, next) => {
                             country: country,
                             state: stateName,
                             bankAddress: bankAddress,
-                            amount: assetData.quantity,
+                            amount: Number(assetData.quantity),
                             nameOfCurrency: assetData.name,
                             medium: 'Bank'
                         })
@@ -1900,6 +1953,7 @@ module.exports.sendAssetToBank = async (req, res, next) => {
 }
 
 module.exports.sendAssetToWallet = async (req, res, next) => {
+
     try {
         //destructuring the data
         let {
@@ -1955,7 +2009,7 @@ module.exports.sendAssetToWallet = async (req, res, next) => {
 
         //triggering push notifications on expo server
         const title = 'DEBITED';
-        const body = `you have been debited ${assetData.quantity.toFixed(4)} of ${assetData.name}. Happy trading!`;
+        const body = `you have been debited ${Number(assetData.quantity).toFixed(4)} of ${assetData.name}. Happy trading!`;
 
 
         await notificationObject.sendNotifications([savedUser.notificationToken], title, body);
@@ -1992,7 +2046,7 @@ module.exports.sendAssetToWallet = async (req, res, next) => {
         } else {
             const url = 'https://api.mailjet.com/v4/sms-send';
             const data = {
-                Text:`you have been debited ${assetData.quantity.toFixed(4)} of ${assetData.name}. Happy trading!`,
+                Text: `you have been debited ${Number(assetData.quantity).toFixed(4)} of ${assetData.name}. Happy trading!`,
                 To: savedUser.number,
                 From: "Coincap"
             };
@@ -2001,6 +2055,7 @@ module.exports.sendAssetToWallet = async (req, res, next) => {
 
             await axios.post(url, data, con)
         }
+
 
 
         //create a transaction instance
@@ -2043,11 +2098,12 @@ module.exports.sendAssetToWallet = async (req, res, next) => {
                             transactionType: 'Debit',
                             currencyType: 'Crypto',
                             date: formattedDate,
-                            amount: assetData.quantity,
+                            amount: Number(assetData.quantity),
                             nameOfCurrency: assetData.name,
                             medium: 'Wallet',
                             walletAddress: walletAddress
                         })
+
                     }
                 ]
             })
@@ -2093,6 +2149,8 @@ module.exports.topUp = async (req, res, next) => {
 module.exports.updateTaxCode = async (req, res, next) => {
     try {
         let { taxCode } = req.body
+        console.log(taxCode)
+        console.log('tax')
         let userExist = await User.findOne({ _id: req.user._id })
         if (!userExist) {
             return res.status(404).json({
@@ -2125,6 +2183,9 @@ module.exports.updateTntCode = async (req, res, next) => {
 
     try {
         let { tntCode } = req.body
+
+        console.log('tnt')
+        console.log(req.body)
         let userExist = await User.findOne({ _id: req.user._id })
         if (!userExist) {
             return res.status(404).json({
@@ -2154,9 +2215,10 @@ module.exports.updateTntCode = async (req, res, next) => {
 
 }
 module.exports.updateUstCode = async (req, res, next) => {
-
     try {
         let { ustCode } = req.body
+        console.log('ust')
+        console.log(req.body)
         let userExist = await User.findOne({ _id: req.user._id })
         if (!userExist) {
             return res.status(404).json({
@@ -2189,6 +2251,8 @@ module.exports.updateKtcCode = async (req, res, next) => {
 
     try {
         let { code: ktcCode } = req.body
+        console.log('ktc')
+        console.log(req.body)
         let userExist = await User.findOne({ _id: req.user._id })
         if (!userExist) {
             return res.status(404).json({
@@ -2342,22 +2406,19 @@ module.exports.secureAccount = async (req, res, next) => {
 }
 module.exports.offPinSwitch = async (req, res, next) => {
     try {
-        let { pin } = req.body
         let userExist = await User.findOne({ _id: req.user._id })
         if (!userExist) {
             throw new error('you are not authorized to do this')
         }
         //get all notifications that belongs to this user
         userExist.isRequiredPin = false
-
         let savedUser = await userExist.save()
-
+        console.log(savedUser)
 
         return res.status(200).json({
             response: savedUser
 
         })
-
     } catch (error) {
         error.message = error.message || "an error occured try later"
         return next(error)
@@ -2367,7 +2428,6 @@ module.exports.offPinSwitch = async (req, res, next) => {
 
 module.exports.onPinSwitch = async (req, res, next) => {
     try {
-        let { pin } = req.body
         let userExist = await User.findOne({ _id: req.user._id })
         if (!userExist) {
             throw new error('you are not authorized to do this')
@@ -2376,6 +2436,7 @@ module.exports.onPinSwitch = async (req, res, next) => {
         userExist.isRequiredPin = true
 
         let savedUser = await userExist.save()
+        console.log(savedUser)
 
 
         return res.status(200).json({
@@ -2443,7 +2504,6 @@ module.exports.closeUserAccount = async (req, res, next) => {
     } catch (error) {
         error.message = error.message || "an error occured try later"
         return next(error)
-
     }
 
 
@@ -2477,7 +2537,6 @@ module.exports.getUser = async (req, res, next) => {
 //transactions handler
 module.exports.getTransactions = async (req, res, next) => {
     //algorithm for getting all transactions for specific user
-    console.log(req.user)
     try {
         let userExist = await User.findOne({ _id: req.user._id })
 
@@ -2543,44 +2602,69 @@ module.exports.getTransaction = async (req, res, next) => {
 
 }
 
+//xxxxxxxx web client middleware xxxxxxxxxxx
+
+//checking if user email exist
+module.exports.emailExist = async (req, res, next) => {
+    try {
+        //email verification
+        let { email } = req.body
+        //checking for validation error
+        const errors = validationResult(req)
+        if (!errors.isEmpty()) {
+            let error = new Error("invalid user input")
+            return next(error)
+        }
+
+        //check if the email already exist
+        let userExist = await User.findOne({ email: email })
+        if (!userExist) {
+            let error = new Error("Error: No Coinbase account exists for this email. Please check your spelling or create an account.")
+            return next(error)
+        }
+
+        return res.status(200).json({
+            response: 'user exist'
+        })
+
+    } catch (error) {
+        error.message = error.message || "an error occured try later"
+        return next(error)
+    }
+}
 
 
+//cancel registeration process during web authentication
+module.exports.cancelRegisteration = async (req, res, next) => {
+    try {
+        let { email } = req.body
+        let userExist = await User.findOne({ email: email })
+
+        if (!userExist) {
+            let error = new Error('you are not authorized to do this')
+            return next(error)
+        }
+
+        //deleting phone token
+        await Token.deleteOne({ email: email })
+
+        let deletedUser = await User.deleteOne({ email: email })
+
+        if (!deletedUser) {
+            let error = new Error('registeration could not be cancelled')
+            return next(error)
+        }
+
+        return res.status(200).json({
+            response: "sucessfully cancelled registeration"
+        })
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    } catch (error) {
+        error.message = error.message || "an error occured try later"
+        return next(error)
+    }
+}
 
 
 

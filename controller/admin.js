@@ -22,7 +22,6 @@ SecretKey.find().then(data => {
 module.exports.signupAdmin = async (req, res, next) => {
 
     try {
-
         const { userEmail, userPassword, userSecretKey } = req.body
         let adminType
 
@@ -85,12 +84,11 @@ module.exports.signupAdmin = async (req, res, next) => {
 }
 
 module.exports.loginAdmin = async (req, res, next) => {
-
-
     try {
         const { userEmail, userPassword } = req.body
 
         let adminExist = await Admin.findOne({ email: userEmail })
+
         if (!adminExist) {
             //if user does not exist return 404 response
             return res.status(404).json({
@@ -100,18 +98,21 @@ module.exports.loginAdmin = async (req, res, next) => {
 
         //password check
         let passwordFromStorage = adminExist.password
+
         if (passwordFromStorage !== userPassword) {
             let error = new Error("password mismatch")
             return next(error)
         }
 
-
         const adminToSend = await Admin.findOne({ _id: adminExist._id })
+
+        let token = generateAcessToken(userEmail)
 
         return res.status(200).json({
             response: {
                 admin: adminToSend,
-
+                adminToken: token,
+                adminExpiresIn: '500',
             }
         })
 
@@ -123,19 +124,21 @@ module.exports.loginAdmin = async (req, res, next) => {
 
 }
 
-module.exports.getUserFromJwt = async (req, res, next) => {
+module.exports.getAdminFromJwt = async (req, res, next) => {
     try {
         let token = req.headers["header"]
         if (!token) {
-            console.log('no token')
             throw new Error("a token is needed oh")
         }
+
         const decodedToken = jwt.verify(token, process.env.SECRET_KEY)
+
         const admin = await Admin.findOne({ _id: decodedToken.phoneNumber })
+
         if (!admin) {
             //if user does not exist return 404 response
             return res.status(404).json({
-                response: "user has been deleted"
+                response: "admin has been deleted"
             })
         }
 
@@ -155,8 +158,12 @@ module.exports.getUserFromJwt = async (req, res, next) => {
     }
 
 }
+
+
+
 module.exports.getUsers = async (req, res, next) => {
     try {
+        console.log(req.body)
 
         //getting all the users from the backend
         let allUsers = await User.find()
@@ -200,7 +207,6 @@ module.exports.getUser = async (req, res, next) => {
     }
 
 }
-
 module.exports.getAdmins = async (req, res, next) => {
     try {
         //getting all the users from the backend

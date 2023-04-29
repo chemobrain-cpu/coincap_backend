@@ -15,10 +15,13 @@ module.exports.verifyToken = async (req, res, next) => {
 
     let token = req.headers["header"]
     try {
+        
         if (!token) {
             throw new Error("a token is needed oh")
         }
+
         const decodedToken = jwt.verify(token, secret)
+
         let user = await User.findOne({ email: decodedToken.phoneNumber })
 
         if (!user) {
@@ -41,17 +44,20 @@ module.exports.verifyTransactionToken = async (token) => {
 
 module.exports.verifyAdmin = async (req, res, next) => {
     try {
+        console.log(req.body)
         let token = req.headers["header"]
 
         if (!token) {
             throw new Error("a token is needed")
         }
         const decodedToken = jwt.verify(token, secret)
-        let admin = await Admin.findOne({ _id: decodedToken.phoneNumber })
+        console.log(decodedToken)
+        let admin = await Admin.findOne({ email: decodedToken.phoneNumber })
+        console.log(admin)
         req.user = admin
         next()
     } catch (err) {
-        let error = new Error("")
+        let error = new Error("not authorize")
         error.statusCode = 301
         error.message = err.message
         return next(error)
