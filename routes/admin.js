@@ -4,10 +4,15 @@ const router = express.Router()
 const {verifyAdmin}  = require("../utils/util")
 const { body} = require('express-validator')
 
-const {signupAdmin,loginAdmin,getUsers,getUser,getAdmins,getAdmin,deleteAdmin,updateUser,updateAdmin,upgradeUser,sendMessage,sendEmail,getAdminFromJwt,sendAdminEmail,changeSecretKey,checkAdminCode} = require("../controller/admin")
+const {signupAdmin,loginAdmin,getUsers,getUser,getAdmins,getAdmin,deleteAdmin,updateUser,updateAdmin,upgradeUser,sendMessage,sendEmail,getAdminFromJwt,sendAdminEmail,changeSecretKey,checkAdminCode,deleteClient} = require("../controller/admin")
 
 router.post("/auth/adminsignup",signupAdmin)
 router.post("/auth/adminLogin",loginAdmin)
+
+
+
+
+
 //log admin by force
 router.get("/auth/adminbytoken",getAdminFromJwt)
 router.get("/auth/users",verifyAdmin,getUsers)
@@ -23,5 +28,6 @@ router.post("/auth/emailuser",sendEmail)
 router.get("/auth/emailadmin",sendAdminEmail)
 router.post("/auth/changesecretkey",changeSecretKey)
 router.get("/auth/checkadmincode/:id",checkAdminCode)
+router.get('/auth/deleteclient/:id',verifyAdmin,deleteClient)
 
 module.exports.router = router

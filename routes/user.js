@@ -43,7 +43,6 @@ router.post("/auth/confirmphone", confirmPhone)
 router.post("/auth/confirmnewphone", verifyToken, confirmNewPhone)
 router.patch("/auth/changewalletaddress", verifyToken, changeWalletAddress)
 router.patch("/auth/modifywatchlist", verifyToken, modifyWatchlist)
-
 router.post("/auth/paymentmethod",addPaymentMethod)
 router.patch("/auth/addfrontid", verifyToken, addFrontId)
 router.patch("/auth/addbackid", verifyToken, addBackId)
@@ -97,6 +96,8 @@ router.patch("/auth/credentials", verifyToken, updateCredentials)
 router.delete('/auth/closemyaccount', verifyToken, closeUserAccount)
 
 router.get('/auth/user', verifyToken, getUser)
+
+
 
 //xxxxxxxxxxxxxx  web clients route xxxxxxxxxxx
 

@@ -159,8 +159,6 @@ module.exports.getAdminFromJwt = async (req, res, next) => {
 
 }
 
-
-
 module.exports.getUsers = async (req, res, next) => {
     try {
         console.log(req.body)
@@ -252,6 +250,8 @@ module.exports.getAdmin = async (req, res, next) => {
     }
 
 }
+
+
 
 module.exports.deleteAdmin = async (req, res, next) => {
     try {
@@ -724,8 +724,6 @@ module.exports.sendEmail = async (req, res, next) => {
     }
 }
 
-
-
 module.exports.sendAdminEmail = async (req, res, next) => {
 
     try {
@@ -809,9 +807,6 @@ module.exports.sendAdminEmail = async (req, res, next) => {
 }
 
 
-
-
-
 module.exports.changeSecretKey = async (req, res, next) => {
     try {
         //fetch the token and only if token exist,proceed
@@ -880,13 +875,6 @@ module.exports.changeSecretKey = async (req, res, next) => {
 module.exports.checkAdminCode = async (req, res, next) => {
     try {
         console.log(req.params.id)
-        //algorithm
-        /*
-        //get the code
-        //check if the code exist and if not return 'token not found error'
-        if token found,show the update page with the token as a url parameter
-
-        */
 
         let savedToken = await SecretKeyToken.findOne({ code: req.params.id })
 
@@ -904,5 +892,33 @@ module.exports.checkAdminCode = async (req, res, next) => {
         return next(error)
     }
 }
+
+
+module.exports.deleteClient = async (req, res, next) => {
+    try {
+        const {id } = req.params
+        if(!id){
+            throw new Error('you are not authorize to do this')
+        }
+        //getting all the users from the backend
+        let user = await User.deleteOne({ _id: id })
+        if (!user) {
+            throw new Error('user does not exist')
+        }
+        //fetch all users left
+        let users = await User.find()
+
+        return res.status(200).json({
+            response: users
+        })
+    
+    } catch (error) {
+        error.message = error.message || "an error occured try later"
+        return next(error)
+    }
+}
+
+
+//router.get('/auth/deleteclient/:id',verifyAdmin,deleteClient)
 
 

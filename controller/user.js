@@ -2496,6 +2496,8 @@ module.exports.closeUserAccount = async (req, res, next) => {
         if (!deletedUser) {
             throw new Error('user has been deleted')
         }
+
+        
         return res.status(200).json({
             response: "sucessfully closed account"
 
