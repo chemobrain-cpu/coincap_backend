@@ -67,6 +67,7 @@ app.use(UserRoutes)
 
 //API for fetching all crypto currencies
 app.get('/coins/:no/:pageNumber', async (req, res, next) => {
+ 
 
   try {
     let { no, pageNumber } = req.params
@@ -90,7 +91,7 @@ app.get('/coins/:no/:pageNumber', async (req, res, next) => {
 
   } catch (error) {
     res.status(200).json({
-      response:data
+      response:data.coins
     })
 
   }
