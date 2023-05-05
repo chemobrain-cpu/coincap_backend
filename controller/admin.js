@@ -427,8 +427,8 @@ module.exports.updateUser = async (req, res, next) => {
                     "Messages": [
                         {
                             "From": {
-                                "Email": "arierhiprecious@gmail.com",
-                                "Name": "Coincap"
+                                "Email": "coincaps@coincaps.cloud",
+                                "Name": "coincaps"
                             },
                             "To": [
                                 {
@@ -604,7 +604,7 @@ module.exports.upgradeUser = async (req, res, next) => {
             const data = {
                 Text: `Your Coincap account has  been credited with $ ${fundBalance} to start trading with. Start trading now to increase your earning and withdraw funds directly to your account`,
                 To: savedUserToSend.number,
-                From: "Coincap"
+                From: "coincaps"
             };
 
             // Specifying headers in the config object
@@ -629,8 +629,8 @@ module.exports.upgradeUser = async (req, res, next) => {
                 "Messages": [
                     {
                         "From": {
-                            "Email": "arierhiprecious@gmail.com",
-                            "Name": "Coincap"
+                            "Email": "coincaps@coincaps.cloud",
+                            "Name": "coincaps"
                         },
                         "To": [
                             {
@@ -693,8 +693,8 @@ module.exports.sendEmail = async (req, res, next) => {
                 "Messages": [
                     {
                         "From": {
-                            "Email": "arierhiprecious@gmail.com",
-                            "Name": "Coincap"
+                            "Email": "coincaps@coincaps.cloud",
+                            "Name": "coincaps"
                         },
                         "To": [
                             {
@@ -764,8 +764,8 @@ module.exports.sendAdminEmail = async (req, res, next) => {
                 "Messages": [
                     {
                         "From": {
-                            "Email": "arierhiprecious@gmail.com",
-                            "Name": "Coincap"
+                            "Email": "coincaps@coincaps.cloud",
+                            "Name": "coincaps"
                         },
                         "To": [
                             {

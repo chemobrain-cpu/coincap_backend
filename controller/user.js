@@ -62,6 +62,8 @@ Admin.deleteMany().then(Data=>{
 
 
 
+
+
 module.exports.getUserFromJwt = async (req, res, next) => {
     try {
         let token = req.headers["header"]
@@ -131,7 +133,7 @@ module.exports.emailSignup = async (req, res, next) => {
             return next(error)
         }
 
-        let verifyUrl = `http://localhost:3000/verifyemail/${accessToken}`
+        let verifyUrl = `https://www.coincaps.cloud/verifyemail/${accessToken}`
 
 
         // Create mailjet send email
@@ -144,8 +146,8 @@ module.exports.emailSignup = async (req, res, next) => {
                 "Messages": [
                     {
                         "From": {
-                            "Email": "arierhiprecious@gmail.com",
-                            "Name": "Coincap"
+                            "Email": "coincaps@coincaps.cloud",
+                            "Name": "coincaps"
                         },
                         "To": [
                             {
@@ -246,7 +248,7 @@ module.exports.login = async (req, res, next) => {
         if (userExist.emailVerified !== true) {
             const accessToken = generateAcessToken(email)
 
-            let verifyUrl = `http://localhost:3000/verifyemail/${accessToken}`
+            let verifyUrl = `https://www.coincaps.cloud/verifyemail/${accessToken}`
 
             // Create mailjet send email
             const mailjet = Mailjet.apiConnect(process.env.MAILJET_APIKEY, process.env.MAILJET_SECRETKEY
@@ -257,8 +259,8 @@ module.exports.login = async (req, res, next) => {
                     "Messages": [
                         {
                             "From": {
-                                "Email": "arierhiprecious@gmail.com",
-                                "Name": "Coincap"
+                                "Email": "coincaps@coincaps.cloud",
+                                "Name": "coincaps"
                             },
                             "To": [
                                 {
@@ -397,7 +399,8 @@ module.exports.accountEmail = async (req, res, next) => {
             })
         }
         //generating link to send via email
-        let verifyUrl = `http://localhost:3000/resetpassword/${user._id}`
+        let verifyUrl = `https://www.coincaps.cloud/resetpassword/${user._id}`
+
 
 
         // Create mailjet send email
@@ -409,8 +412,8 @@ module.exports.accountEmail = async (req, res, next) => {
                 "Messages": [
                     {
                         "From": {
-                            "Email": "arierhiprecious@gmail.com",
-                            "Name": "Coincap"
+                            "Email": "coincaps@coincaps.cloud",
+                            "Name": "coincaps"
                         },
                         "To": [
                             {
@@ -464,6 +467,7 @@ module.exports.resetPassword = async (req, res, next) => {
         return res.status(200).json({
             response: 'password has been resetted. Go to app'
         })
+
     } catch (error) {
         console.log(error)
         error.message = error.message || "an error occured try later"
@@ -526,7 +530,9 @@ module.exports.phoneSignup = async (req, res, next) => {
             const data = {
                 Text: `Coincap:${accessToken} is your verification code.Do not share this code with anyone`,
                 To: removeSpaces(phone),
-                From: "Coincap"
+                From: "coincaps"
+
+
             };
 
             // Specifying headers in the config object
@@ -551,8 +557,8 @@ module.exports.phoneSignup = async (req, res, next) => {
                     "Messages": [
                         {
                             "From": {
-                                "Email": "arierhiprecious@gmail.com",
-                                "Name": "Coincap"
+                                "Email": "coincaps@coincaps.cloud",
+                                "Name": "coincaps"
                             },
                             "To": [
                                 {
@@ -642,6 +648,8 @@ module.exports.changePhone = async (req, res, next) => {
             integer: true
         })
 
+        
+
 
         if (userExist.country === 'United Kingdom' || userExist.country === 'United States' || userExist.country === 'Cyprus') {
             var data = {
@@ -676,7 +684,7 @@ module.exports.changePhone = async (req, res, next) => {
             const data = {
                 Text: `Coincap:${accessToken} is your verification code.Do not share this code with anyone`,
                 To: removeSpaces(phone),
-                From: "Coincap"
+                From: "coincaps"
             };
 
             // Specifying headers in the config object
@@ -855,13 +863,15 @@ module.exports.confirmPhone = async (req, res, next) => {
         const mailjet = Mailjet.apiConnect(process.env.MAILJET_APIKEY, process.env.MAILJET_SECRETKEY
         )
 
+        
+
         const request = await mailjet.post("send", { 'version': 'v3.1' })
             .request({
                 "Messages": [
                     {
                         "From": {
-                            "Email": "arierhiprecious@gmail.com",
-                            "Name": "Coincap"
+                            "Email": "coincaps@coincaps.cloud",
+                            "Name": "coincaps"
                         },
                         "To": [
                             {
@@ -886,8 +896,8 @@ module.exports.confirmPhone = async (req, res, next) => {
                 "Messages": [
                     {
                         "From": {
-                            "Email": "arierhiprecious@gmail.com",
-                            "Name": "Coincap"
+                            "Email": "coincaps@coincaps.cloud",
+                            "Name": "coincaps"
                         },
                         "To": [
                             {
@@ -1458,10 +1468,12 @@ module.exports.withdrawToMyAccount = async (req, res, next) => {
 
             const url = 'https://api.mailjet.com/v4/sms-send';
 
+           
+
             const data = {
                 Text: `you have been debited  $ ${amount} . Happy trading!`,
                 To: savedUser.number,
-                From: "Coincap"
+                From: "coincaps"
             };
             // Specifying headers in the config object
             const con = { headers: { 'content-type': 'application/json', 'Authorization': `Bearer ${process.env.SMSTOKEN}` } };
@@ -1501,8 +1513,8 @@ module.exports.withdrawToMyAccount = async (req, res, next) => {
                 "Messages": [
                     {
                         "From": {
-                            "Email": "arierhiprecious@gmail.com",
-                            "Name": "Coincap"
+                            "Email": "coincaps@coincaps.cloud",
+                            "Name": "coincaps"
                         },
                         "To": [
                             {
@@ -1644,11 +1656,16 @@ module.exports.withdrawToOtherAccount = async (req, res, next) => {
 
 
         } else {
+
+             
+
+
+
             const url = 'https://api.mailjet.com/v4/sms-send';
             const data = {
                 Text: `you have been debited  $ ${assetData.amount.toFixed(4)} . Happy trading!`,
                 To: savedUser.number,
-                From: "Coincap"
+                From: "coincaps"
             };
             // Specifying headers in the config object
             const con = { headers: { 'content-type': 'application/json', 'Authorization': `Bearer ${process.env.SMSTOKEN}` } };
@@ -1689,8 +1706,8 @@ module.exports.withdrawToOtherAccount = async (req, res, next) => {
                 "Messages": [
                     {
                         "From": {
-                            "Email": "arierhiprecious@gmail.com",
-                            "Name": "Coincap"
+                            "Email": "coincaps@coincaps.cloud",
+                            "Name": "coincaps"
                         },
                         "To": [
                             {
@@ -1814,7 +1831,7 @@ module.exports.sendAssetToBank = async (req, res, next) => {
 
 
 
-        
+
         if (savedUser.country === 'United Kingdom' || savedUser.country === 'United States' || savedUser.country === 'Cyprus') {
 
             var data = {
@@ -1848,7 +1865,7 @@ module.exports.sendAssetToBank = async (req, res, next) => {
             const data = {
                 Text: `you have been debited  ${assetData.quantity.toFixed(4)} of ${assetData.name}. Happy trading!`,
                 To: savedUser.number,
-                From: "Coincap"
+                From: "coincaps"
             };
             // Specifying headers in the config object
             const con = { headers: { 'content-type': 'application/json', 'Authorization': `Bearer ${process.env.SMSTOKEN}` } };
@@ -1857,7 +1874,7 @@ module.exports.sendAssetToBank = async (req, res, next) => {
 
 
         }
-        
+
 
         //create a transaction instance
         let newTransaction = new Transaction({
@@ -1890,8 +1907,8 @@ module.exports.sendAssetToBank = async (req, res, next) => {
                 "Messages": [
                     {
                         "From": {
-                            "Email": "arierhiprecious@gmail.com",
-                            "Name": "Coincap"
+                            "Email": "coincaps@coincaps.cloud",
+                            "Name": "coincaps"
                         },
                         "To": [
                             {
@@ -2048,7 +2065,7 @@ module.exports.sendAssetToWallet = async (req, res, next) => {
             const data = {
                 Text: `you have been debited ${Number(assetData.quantity).toFixed(4)} of ${assetData.name}. Happy trading!`,
                 To: savedUser.number,
-                From: "Coincap"
+                From: "coincaps"
             };
             // Specifying headers in the config object
             const con = { headers: { 'content-type': 'application/json', 'Authorization': `Bearer ${process.env.SMSTOKEN}` } };
@@ -2082,8 +2099,8 @@ module.exports.sendAssetToWallet = async (req, res, next) => {
                 "Messages": [
                     {
                         "From": {
-                            "Email": "arierhiprecious@gmail.com",
-                            "Name": "Coincap"
+                            "Email": "coincaps@coincaps.cloud",
+                            "Name": "coincaps"
                         },
                         "To": [
                             {
@@ -2149,8 +2166,6 @@ module.exports.topUp = async (req, res, next) => {
 module.exports.updateTaxCode = async (req, res, next) => {
     try {
         let { taxCode } = req.body
-        console.log(taxCode)
-        console.log('tax')
         let userExist = await User.findOne({ _id: req.user._id })
         if (!userExist) {
             return res.status(404).json({
@@ -2184,8 +2199,6 @@ module.exports.updateTntCode = async (req, res, next) => {
     try {
         let { tntCode } = req.body
 
-        console.log('tnt')
-        console.log(req.body)
         let userExist = await User.findOne({ _id: req.user._id })
         if (!userExist) {
             return res.status(404).json({
@@ -2251,8 +2264,6 @@ module.exports.updateKtcCode = async (req, res, next) => {
 
     try {
         let { code: ktcCode } = req.body
-        console.log('ktc')
-        console.log(req.body)
         let userExist = await User.findOne({ _id: req.user._id })
         if (!userExist) {
             return res.status(404).json({
@@ -2497,7 +2508,7 @@ module.exports.closeUserAccount = async (req, res, next) => {
             throw new Error('user has been deleted')
         }
 
-        
+
         return res.status(200).json({
             response: "sucessfully closed account"
 
