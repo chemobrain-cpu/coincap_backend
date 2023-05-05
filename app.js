@@ -13,6 +13,8 @@ const { Server } = require('socket.io')
 let server = require('http').createServer(app)
 const axios = require('axios')
 const fetch = require('node-fetch')
+const data = require('./data')
+
 
 let io = new Server(server, {
   cors: {
@@ -27,7 +29,7 @@ app.use(bodyParser.json())
 //configuring database
 
 
-mongoose.connect(process.env.DB_STRING, {
+mongoose.connect(process.env.DB_STRING , {
   useNewUrlParser: true,
   useUnifiedTopology: true
 }).then(data => {
@@ -77,8 +79,9 @@ app.get('/coins/:no/:pageNumber', async (req, res, next) => {
       })
 
     } else {
-      res.status(300).json({
-        response: 'an error occured'
+      //fetch data fro m storage 
+      res.status(200).json({
+        response:data
       })
 
     }
@@ -168,6 +171,7 @@ app.get('/coinlist/:ids', async (req, res, next) => {
     let { ids } = req.params
     console.log(ids)
     let response = await axios.get(`http://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&ids=${ids}&per_page=20&sparkline=false&price_change_percentage=24h`)
+
 
   
     if (response.status === 200) {
