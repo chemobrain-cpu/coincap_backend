@@ -74,7 +74,7 @@ app.get('/coins/:no/:pageNumber', async (req, res, next) => {
     let response = await axios.get(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${no ? no : 6}&page=${pageNumber}&sparkline=false&price_change_percentage=24h`)
     
     if (response.status === 200) {
-      res.status(200).json({
+      return res.status(200).json({
         response: response.data
       })
 
@@ -89,8 +89,9 @@ app.get('/coins/:no/:pageNumber', async (req, res, next) => {
 
 
   } catch (error) {
-    error.message = error.message || "an error occured try later"
-    return next(error)
+    res.status(200).json({
+      response:data
+    })
 
   }
 

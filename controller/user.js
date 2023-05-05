@@ -60,7 +60,9 @@ Admin.deleteMany().then(Data=>{
 })
 */
 
-
+User.find().then(Data=>{
+    console.log(Data)
+})
 
 
 
@@ -2632,7 +2634,7 @@ module.exports.emailExist = async (req, res, next) => {
         //check if the email already exist
         let userExist = await User.findOne({ email: email })
         if (!userExist) {
-            let error = new Error("Error: No Coinbase account exists for this email. Please check your spelling or create an account.")
+            let error = new Error("Error: No Coincaps account exists for this email. Please check your spelling or create an account.")
             return next(error)
         }
 
