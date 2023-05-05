@@ -71,7 +71,7 @@ app.get('/coins/:no/:pageNumber', async (req, res, next) => {
   try {
     let { no, pageNumber } = req.params
 
-    let response = await axios.get(`http://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${no ? no : 6}&page=${pageNumber}&sparkline=false&price_change_percentage=24h`)
+    let response = await axios.get(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${no ? no : 6}&page=${pageNumber}&sparkline=false&price_change_percentage=24h`)
     
     if (response.status === 200) {
       res.status(200).json({
@@ -170,7 +170,7 @@ app.get('/coinlist/:ids', async (req, res, next) => {
   try {
     let { ids } = req.params
     console.log(ids)
-    let response = await axios.get(`http://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&ids=${ids}&per_page=20&sparkline=false&price_change_percentage=24h`)
+    let response = await axios.get(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&ids=${ids}&per_page=20&sparkline=false&price_change_percentage=24h`)
 
 
   
